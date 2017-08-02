@@ -1,4 +1,4 @@
-package com.xingjian.xjbike;
+package com.xingjian.xjmtkpad;
 
 import org.junit.Test;
 

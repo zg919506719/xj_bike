@@ -1,7 +1,9 @@
-package com.xingjian.xjbike;
+package com.xingjian.xjmtkpad.activity;
 
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+
+import com.xingjian.xjmtkpad.R;
 
 public class MainActivity extends AppCompatActivity {
 

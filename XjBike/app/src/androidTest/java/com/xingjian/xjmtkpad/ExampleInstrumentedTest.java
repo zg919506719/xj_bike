@@ -1,4 +1,4 @@
-package com.xingjian.xjbike;
+package com.xingjian.xjmtkpad;
 
 import android.content.Context;
 import android.support.test.InstrumentationRegistry;
@@ -21,6 +21,6 @@ public class ExampleInstrumentedTest {
         // Context of the app under test.
         Context appContext = InstrumentationRegistry.getTargetContext();
 
-        assertEquals("com.xingjian.xjbike", appContext.getPackageName());
+        assertEquals("com.xingjian.xjmtkpad", appContext.getPackageName());
     }
 }
