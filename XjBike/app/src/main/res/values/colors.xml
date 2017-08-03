@@ -4,5 +4,18 @@
     <color name="colorPrimaryDark">#303F9F</color>
     <color name="colorAccent">#FF4081</color>
     <color name="colorBlack">#000000</color>
-    <color name="colorWhite">#ffffff</color>
+    <color name="colorGrey">#bcbbbb</color>
+    <color name="colorBlue">#2eaaf3</color>
+    <color name="colorDark">#1c2124</color>
+    <color name="colorDarkGrey">#202020</color>
+    <color name="colorDarkTitle">#131313</color>
+    <color name="colorGreyLight">#f6f6f6</color>
+    <color name="colorBlueLight">#f0f9fa</color>
+    <color name="colorBluePay">#02a0e7</color>
+    <color name="colorWhiteLight">#f0f0ed</color>
+    <color name="colorRed">#e11919</color>
+    <color name="colorCoffee">#a61817</color>
+    <color name="colorClear">#df564c</color>
+    <color name="colorGreyNum">#ececec</color>
+    <color name="colorText">#504c4c</color>
 </resources>

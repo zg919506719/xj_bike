@@ -4,7 +4,11 @@ import android.app.Activity;
 import android.app.Application;
 import android.content.Context;
 import android.content.SharedPreferences;
+import android.posapi.PosApi;
 import android.widget.Toast;
+
+import com.vilyever.socketclient.SocketClient;
+import com.xingjian.xjmtkpad.utils.MySocket;
 
 import java.util.ArrayList;
 
@@ -15,11 +19,16 @@ import java.util.ArrayList;
 public class MyApp extends Application {
     private static Context context;
     private static ArrayList<Activity> activityList = new ArrayList<Activity>();
-
+    public static SocketClient Client;
+    public static PosApi posApi;
     @Override
     public void onCreate() {
         super.onCreate();
-        context=this;
+        context = this;
+        Client = new MySocket().getLocalSocketClient();
+        Client.connect();
+        posApi=PosApi.getInstance(this);
+        posApi.initPosDev("ima3511");
     }
 
     public static SharedPreferences getPreference() {
@@ -46,4 +55,8 @@ public class MyApp extends Application {
         }
 
     }
+
+
+
+
 }
