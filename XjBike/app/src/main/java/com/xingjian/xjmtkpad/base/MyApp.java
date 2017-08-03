@@ -25,7 +25,7 @@ public class MyApp extends Application {
     public void onCreate() {
         super.onCreate();
         context = this;
-        Client = new MySocket().getLocalSocketClient();
+        Client =new MySocket().getLocalSocketClient();
         Client.connect();
         posApi=PosApi.getInstance(this);
         posApi.initPosDev("ima3511");

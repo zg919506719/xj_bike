@@ -73,31 +73,22 @@ public class PresentLogin {
         });
     }
 //账号密码登录
-    private void login(final String username, final String password) {
-        final Dialog dialog = new Dialog(context, R.style.LodingDialog);
-        View view = View.inflate(context, R.layout.progress_dialog, null);
-        final TextView tv = (TextView) view.findViewById(R.id.tv_show);
-        final TextView tv_can = (TextView) view.findViewById(R.id.tv_show1);
-        final TextView tv_rec = (TextView) view.findViewById(R.id.tv_show2);
-        tv.setText("正在登录中。。。");
-        dialog.setContentView(view);
-        dialog.show();
+    public void login(final String username, final String password) {
+        LoginReq req=new LoginReq();
+        req.setSiteId("59");
+        req.setCmd("d2");
+        req.setWay("1");
+        req.setSn("0");
+        req.setAddress("北京");
+        LoginReq.DataBean data = new LoginReq.DataBean();
+        data.setUsername(username);
+        data.setPassword(password);
+        req.setData(data);
+        String s = JSON.toJSONString(req);
+        client.sendString(s);
         client.registerSocketClientDelegate(new SocketClientDelegate() {
             @Override
             public void onConnected(SocketClient client) {
-                LoginReq req=new LoginReq();
-                req.setSiteId("59");
-                req.setCmd("d2");
-                req.setWay("1");
-                req.setSn("0");
-                req.setAddress("北京");
-                LoginReq.DataBean data = new LoginReq.DataBean();
-                data.setUsername(username);
-                data.setPassword(password);
-                req.setData(data);
-                String s = JSON.toJSONString(req);
-                Log.i(TAG, s);
-                client.sendString(s);
             }
 
             @Override
@@ -108,8 +99,6 @@ public class PresentLogin {
             @Override
             public void onResponse(SocketClient client, @NonNull SocketResponsePacket responsePacket) {
 //                dialog.dismiss();
-                Log.i(TAG, responsePacket.getMessage());
-                tv.setText(responsePacket.getMessage());
             }
         });
     }
