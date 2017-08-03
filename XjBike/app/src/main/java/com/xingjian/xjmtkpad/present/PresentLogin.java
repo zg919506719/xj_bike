@@ -4,15 +4,22 @@ import android.app.Dialog;
 import android.content.Context;
 import android.posapi.Conversion;
 import android.posapi.PosApi;
+import android.support.annotation.NonNull;
 import android.support.v7.app.AlertDialog;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.TextView;
 
+import com.alibaba.fastjson.JSON;
+import com.vilyever.socketclient.SocketClient;
+import com.vilyever.socketclient.helper.SocketClientDelegate;
+import com.vilyever.socketclient.helper.SocketResponsePacket;
 import com.xingjian.xjmtkpad.R;
 import com.xingjian.xjmtkpad.base.MyApp;
+import com.xingjian.xjmtkpad.beanrequest.LoginReq;
 import com.xingjian.xjmtkpad.inter.InterLogin;
 import com.xingjian.xjmtkpad.utils.StringDialog;
 
@@ -24,9 +31,14 @@ public class PresentLogin {
     private Context context;
     private InterLogin interLogin;
     private PosApi mPosApi;
+    private SocketClient client ;
+
+    private static String TAG="haha";
     public PresentLogin(InterLogin interLogin) {
         this.interLogin = interLogin;
         context = interLogin.getContext();
+        mPosApi=interLogin.getApi();
+        client = MyApp.Client;
     }
 
     public void showNoCardDialog() {
@@ -60,9 +72,46 @@ public class PresentLogin {
             }
         });
     }
+//账号密码登录
+    private void login(final String username, final String password) {
+        final Dialog dialog = new Dialog(context, R.style.LodingDialog);
+        View view = View.inflate(context, R.layout.progress_dialog, null);
+        final TextView tv = (TextView) view.findViewById(R.id.tv_show);
+        final TextView tv_can = (TextView) view.findViewById(R.id.tv_show1);
+        final TextView tv_rec = (TextView) view.findViewById(R.id.tv_show2);
+        tv.setText("正在登录中。。。");
+        dialog.setContentView(view);
+        dialog.show();
+        client.registerSocketClientDelegate(new SocketClientDelegate() {
+            @Override
+            public void onConnected(SocketClient client) {
+                LoginReq req=new LoginReq();
+                req.setSiteId("59");
+                req.setCmd("d2");
+                req.setWay("1");
+                req.setSn("0");
+                req.setAddress("北京");
+                LoginReq.DataBean data = new LoginReq.DataBean();
+                data.setUsername(username);
+                data.setPassword(password);
+                req.setData(data);
+                String s = JSON.toJSONString(req);
+                Log.i(TAG, s);
+                client.sendString(s);
+            }
 
-    private void login(String username, String password) {
+            @Override
+            public void onDisconnected(SocketClient client) {
+               client.connect();
+            }
 
+            @Override
+            public void onResponse(SocketClient client, @NonNull SocketResponsePacket responsePacket) {
+//                dialog.dismiss();
+                Log.i(TAG, responsePacket.getMessage());
+                tv.setText(responsePacket.getMessage());
+            }
+        });
     }
 
     public void initView() {
@@ -73,7 +122,6 @@ public class PresentLogin {
         final TextView tv_rec = (TextView) view.findViewById(R.id.tv_show2);
         dialog.setContentView(view);
         dialog.show();
-        mPosApi= MyApp.posApi;
 //        设备初始化
         mPosApi.setOnComEventListener(new PosApi.OnCommEventListener() {
             @Override
@@ -117,8 +165,12 @@ public class PresentLogin {
 //                    respons.append("Card UID:"+uid+"\n");
                 }else{
 //                    respons.append("M1 寻卡失败\n");
+
+                    showM1Dialog();
                 }
             }
+
+
 
             @Override
             public void onAuth(int i) {
@@ -147,6 +199,7 @@ public class PresentLogin {
             public void onInit(int state) {
                 if(state == PosApi.COMM_STATUS_SUCCESS){
                     tv_can.setText("CAN 设置成功\n");
+                    dialog.dismiss();
                 }else{
                    tv_can.setText("CAN 设置失败\n");
                 }
@@ -180,5 +233,9 @@ public class PresentLogin {
                 }
             }
         });
+    }
+
+    private void showM1Dialog() {
+
     }
 }
