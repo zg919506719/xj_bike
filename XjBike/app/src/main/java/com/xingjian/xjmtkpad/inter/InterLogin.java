@@ -20,4 +20,8 @@ public interface InterLogin {
     TextView getDevice();
 
     TextView getLocation();
+
+    TextView getRentDay();
+
+    TextView getRentHour();
 }

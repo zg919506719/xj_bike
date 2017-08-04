@@ -14,38 +14,8 @@ public class Constant {
     public static String HEADRES="{\"siteId\":\"59\",\"cmd\":\"heartbeat\",\"sn\":\"0\",\"heart\":30}";
 //                    client.sendString(new JSONObject(reqJson.reqStr0b).toString());//骑行计费标准请求
     public String reqStr0b = "{\"siteId\":\"59\",\"cmd\":\"0b\",\"way\":\"1\",\"sn\":\"0\",\"data\":{\"address\":\"\\u6d4e\\u5357\",\"mode\":\"1\"}}";
-//    {
-//        "siteId": "1234",
-//            "cmd": "21",
-//            "way": "1",
-//            "sn": "0",
-//            "data": {
-//        "type": "1",
-//                "value": "1234"
-//    }
-//    }
-//
-//    //注释
-//    type 类型（1-用户刷卡查询，2-用户卡ID输入查询，3-身份证号输入查询）
-//    value 用户卡内部ID、用户卡ID或身份证号
-//{
-//    "siteId": "1234",
-//        "cmd": "21",
-//        "way": "2",
-//        "sn": "0",
-//        "data": {
-//    "user_cardId": "1234",
-//            "user_name": "小青",
-//            "user_identity": "130129198902031613",
-//            "user_phone": "15810466677",
-//}
-//}
 
-    //注释
-//    user_cardId 用户卡ID
-//    user_name 用户姓名
-//    user_identity 身份证号码
-//    user_phone 手机号码
+
 
 //    4.4.2 站点用户信息修改（cmd = 22）
 //

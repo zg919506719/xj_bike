@@ -1,5 +1,6 @@
 package com.xingjian.xjmtkpad.activity;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v7.app.AppCompatActivity;
@@ -24,26 +25,39 @@ public class UserDataActivity extends AppCompatActivity {
         MyApp.addActivity(this);
     }
 
-    @OnClick({R.id.btn_back, R.id.user_info, R.id.card_info, R.id.search, R.id.money, R.id.map_info, R.id.net_info, R.id.help})
+    @OnClick({R.id.btn_back, R.id.user_info, R.id.card_info, R.id.search, R.id.money, R.id.borrow, R.id.returnBike, R.id.help})
     public void onClick(View view) {
         switch (view.getId()) {
             case R.id.btn_back:
                 MyApp.exit();
                 break;
             case R.id.user_info:
-//                startActivity();
+//                用户信息
+                startActivity(new Intent(this,UserInfoActivity.class));
                 break;
             case R.id.card_info:
+//                卡片信息
+                startActivity(new Intent(this,CardInfoActivity.class));
                 break;
             case R.id.search:
+//                租还车信息
+                startActivity(new Intent(this,ReturnInfoActivity.class));
                 break;
             case R.id.money:
+//                金额信息
+                startActivity(new Intent(this,MoneyInfoActivity.class));
                 break;
-            case R.id.map_info:
+            case R.id.borrow:
+//                借车
+                startActivity(new Intent(this,BorrowActivity.class));
                 break;
-            case R.id.net_info:
+            case R.id.returnBike:
+//                还车
+                startActivity(new Intent(this,ReturnActivity.class));
                 break;
             case R.id.help:
+//                帮助
+                startActivity(new Intent(this,HelpActivity.class));
                 break;
         }
     }

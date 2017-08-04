@@ -47,19 +47,18 @@
         <activity
             android:name=".activity.MainActivity"
             android:launchMode="singleInstance">
-
-        </activity>
-        <activity android:name=".activity.UserDataActivity" />
-        <activity android:name=".activity.NetActivity" />
-        <activity android:name=".activity.StationActivity" />
-        <activity android:name=".activity.CardInfoActivity">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-        <activity android:name=".activity.UserInfoActivity" >
+        <activity android:name=".activity.UserDataActivity" />
+        <activity android:name=".activity.NetActivity" />
+        <activity android:name=".activity.StationActivity" />
+        <activity android:name=".activity.CardInfoActivity" />
+
+        <activity android:name=".activity.UserInfoActivity">
 
         </activity>
         <activity android:name=".activity.ReturnInfoActivity" />

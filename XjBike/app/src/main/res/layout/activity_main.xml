@@ -65,6 +65,18 @@
                 android:layout_height="wrap_content"
                 android:text="定位信息："
                 android:textSize="24sp" />
+            <TextView
+                android:id="@+id/rent_hour"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="时租信息："
+                android:textSize="24sp" />
+            <TextView
+                android:id="@+id/rent_day"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="日租信息："
+                android:textSize="24sp" />
         </LinearLayout>
 
         <LinearLayout

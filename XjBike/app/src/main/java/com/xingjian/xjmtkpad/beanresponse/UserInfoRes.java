@@ -1,7 +1,5 @@
 package com.xingjian.xjmtkpad.beanresponse;
 
-import java.util.List;
-
 /**
  * Created by thinkpad on 2017/8/4.
  */
@@ -10,10 +8,10 @@ public class UserInfoRes {
 
     /**
      * siteId : 59
-     * cmd : 23
+     * cmd : 21
      * way : 2
      * sn : 0
-     * data : {"user_cardId":"3","user_name":"card7","user_cardState":"0","count":"3","page":"1","prepage":"10","list":[{"operate_type":"1","operates_time":"2017-06-30 12:06:56.0","operates_result":"1"},{"operate_type":"0","operates_time":"2017-06-30 12:07:33.0","operates_result":"1"},{"operate_type":"1","operates_time":"2017-06-30 12:08:16.0","operates_result":"1"}]}
+     * data : {"user_cardId":"658D17E2","user_name":"card8","user_identity":"1404261993052136111","user_phone":"18515194217"}
      */
 
     private String siteId;
@@ -64,22 +62,16 @@ public class UserInfoRes {
 
     public static class DataBean {
         /**
-         * user_cardId : 3
-         * user_name : card7
-         * user_cardState : 0
-         * count : 3
-         * page : 1
-         * prepage : 10
-         * list : [{"operate_type":"1","operates_time":"2017-06-30 12:06:56.0","operates_result":"1"},{"operate_type":"0","operates_time":"2017-06-30 12:07:33.0","operates_result":"1"},{"operate_type":"1","operates_time":"2017-06-30 12:08:16.0","operates_result":"1"}]
+         * user_cardId : 658D17E2
+         * user_name : card8
+         * user_identity : 1404261993052136111
+         * user_phone : 18515194217
          */
 
         private String user_cardId;
         private String user_name;
-        private String user_cardState;
-        private String count;
-        private String page;
-        private String prepage;
-        private List<ListBean> list;
+        private String user_identity;
+        private String user_phone;
 
         public String getUser_cardId() {
             return user_cardId;
@@ -97,80 +89,20 @@ public class UserInfoRes {
             this.user_name = user_name;
         }
 
-        public String getUser_cardState() {
-            return user_cardState;
+        public String getUser_identity() {
+            return user_identity;
         }
 
-        public void setUser_cardState(String user_cardState) {
-            this.user_cardState = user_cardState;
+        public void setUser_identity(String user_identity) {
+            this.user_identity = user_identity;
         }
 
-        public String getCount() {
-            return count;
+        public String getUser_phone() {
+            return user_phone;
         }
 
-        public void setCount(String count) {
-            this.count = count;
-        }
-
-        public String getPage() {
-            return page;
-        }
-
-        public void setPage(String page) {
-            this.page = page;
-        }
-
-        public String getPrepage() {
-            return prepage;
-        }
-
-        public void setPrepage(String prepage) {
-            this.prepage = prepage;
-        }
-
-        public List<ListBean> getList() {
-            return list;
-        }
-
-        public void setList(List<ListBean> list) {
-            this.list = list;
-        }
-
-        public static class ListBean {
-            /**
-             * operate_type : 1
-             * operates_time : 2017-06-30 12:06:56.0
-             * operates_result : 1
-             */
-
-            private String operate_type;
-            private String operates_time;
-            private String operates_result;
-
-            public String getOperate_type() {
-                return operate_type;
-            }
-
-            public void setOperate_type(String operate_type) {
-                this.operate_type = operate_type;
-            }
-
-            public String getOperates_time() {
-                return operates_time;
-            }
-
-            public void setOperates_time(String operates_time) {
-                this.operates_time = operates_time;
-            }
-
-            public String getOperates_result() {
-                return operates_result;
-            }
-
-            public void setOperates_result(String operates_result) {
-                this.operates_result = operates_result;
-            }
+        public void setUser_phone(String user_phone) {
+            this.user_phone = user_phone;
         }
     }
 }

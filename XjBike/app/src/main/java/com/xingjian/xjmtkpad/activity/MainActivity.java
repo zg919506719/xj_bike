@@ -31,6 +31,10 @@ public class MainActivity extends AppCompatActivity implements InterLogin {
     TextView location;
     @BindView(R.id.videoplayer)
     JCVideoPlayerStandard videoplayer;
+    @BindView(R.id.rent_hour)
+    TextView rentHour;
+    @BindView(R.id.rent_day)
+    TextView rentDay;
     private PresentLogin presentLogin;
     private PosApi mPosApi;
 
@@ -45,7 +49,7 @@ public class MainActivity extends AppCompatActivity implements InterLogin {
         mPosApi = MyApp.posApi;
         presentLogin = new PresentLogin(this);
         presentLogin.initView();
-        videoplayer.setUp( "http://2449.vod.myqcloud.com/2449_22ca37a6ea9011e5acaaf51d105342e3.f20.mp4"
+        videoplayer.setUp("http://2449.vod.myqcloud.com/2449_22ca37a6ea9011e5acaaf51d105342e3.f20.mp4"
                 , JCVideoPlayerStandard.SCREEN_LAYOUT_NORMAL, "演示");
     }
 
@@ -78,6 +82,16 @@ public class MainActivity extends AppCompatActivity implements InterLogin {
     @Override
     public TextView getLocation() {
         return location;
+    }
+
+    @Override
+    public TextView getRentDay() {
+        return rentDay;
+    }
+
+    @Override
+    public TextView getRentHour() {
+        return rentHour;
     }
 
     @OnClick({R.id.net, R.id.station, R.id.btn_login, R.id.btn_card_login})

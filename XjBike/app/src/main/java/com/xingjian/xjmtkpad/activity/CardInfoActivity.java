@@ -55,6 +55,7 @@ public class CardInfoActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_card);
         ButterKnife.bind(this);
+        MyApp.addActivity(this);
         client = MyApp.Client;
         SharedPreferences preference = MyApp.getPreference();
         String cardId = preference.getString("cardId", "");
@@ -118,5 +119,6 @@ public class CardInfoActivity extends AppCompatActivity {
 
     @OnClick(R.id.btn_back)
     public void onClick() {
+        finish();
     }
 }

@@ -4,10 +4,8 @@ import android.app.Dialog;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
-import android.os.AsyncTask;
 import android.os.Handler;
 import android.os.Message;
-import android.posapi.Conversion;
 import android.posapi.PosApi;
 import android.support.annotation.NonNull;
 import android.support.v7.app.AlertDialog;
@@ -29,8 +27,11 @@ import com.xingjian.xjmtkpad.activity.UserDataActivity;
 import com.xingjian.xjmtkpad.base.MyApp;
 import com.xingjian.xjmtkpad.beanrequest.LoginReq;
 import com.xingjian.xjmtkpad.beanrequest.NameReq;
+import com.xingjian.xjmtkpad.beanrequest.RentReq;
 import com.xingjian.xjmtkpad.beanrequest.TimeReq;
 import com.xingjian.xjmtkpad.beanresponse.NameRes;
+import com.xingjian.xjmtkpad.beanresponse.RentResHour;
+import com.xingjian.xjmtkpad.beanresponse.RentRes;
 import com.xingjian.xjmtkpad.beanresponse.TimeRes;
 import com.xingjian.xjmtkpad.inter.InterLogin;
 import com.xingjian.xjmtkpad.utils.StringDialog;
@@ -44,10 +45,24 @@ public class PresentLogin {
     private InterLogin interLogin;
     private PosApi mPosApi;
     private SocketClient client;
-    private TextView tv_time, tv_temp, tv_name, tv_location, tv_show;
+    private TextView tv_time, tv_temp, tv_name, tv_location, tv_show, rentDay, rentHour;
     private static String TAG = "haha";
     private ProgressBar progressBar;
     private Dialog dialog_wel;
+
+    public PresentLogin(InterLogin interLogin) {
+        this.interLogin = interLogin;
+        context = interLogin.getContext();
+        mPosApi = interLogin.getApi();
+        client = MyApp.Client;
+        tv_time = interLogin.getTime();
+        tv_location = interLogin.getLocation();
+        tv_name = interLogin.getDevice();
+        tv_temp = interLogin.getTemp();
+        rentDay = interLogin.getRentDay();
+        rentHour = interLogin.getRentHour();
+    }
+
     private Handler handler = new Handler() {
         @Override
         public void handleMessage(Message msg) {
@@ -66,7 +81,6 @@ public class PresentLogin {
                     break;
                 case 3:
                     //获取时间
-//                    String message = "{\"siteId\":\"59\",\"cmd\":\"05\",\"way\":\"1\",\"sn\":\"0\",\"data\":{}";
                     TimeReq req = new TimeReq();
                     req.setSiteId("59");
                     req.setCmd("05");
@@ -78,7 +92,6 @@ public class PresentLogin {
                     break;
                 case 4:
                     //获取站点名称
-//                    String message="{\"siteId\":\"59\",\"cmd\":\"03\",\"way\":\"1\",\"sn\":\"0\",\"data\":{\"address\":\"\\u6d4e\\u5357\"}}";
                     NameReq req_name = new NameReq();
                     req_name.setSiteId("59");
                     req_name.setCmd("03");
@@ -89,28 +102,51 @@ public class PresentLogin {
                     req_name.setData(data);
                     String message = JSON.toJSONString(req_name);
                     client.sendString(message);
-                    sendEmptyMessage(5);
+                    sendEmptyMessage(6);
                     break;
                 case 5:
 //                    M1初始化
                     setM1();
-                    //        进行扫码操作
-                    mPosApi.m1Search(500);
+                    break;
+                case 6:
+                    //注释
+//                    mode 计费模式（1-时租、2-日租）
+//                    cost 费用（日租：单位角；时租：阶梯次数，起始1小时-结束1小时-费用）
+//                    ladder_num 阶梯次数
+//                    start 起始时间
+//                    end 结束时间
+                    RentReq req_rent = new RentReq();
+                    req_rent.setSiteId("59");
+                    req_rent.setCmd("0b");
+                    req_rent.setWay("1");
+                    req_rent.setSn("0");
+                    RentReq.DataBean data1 = new RentReq.DataBean();
+                    data1.setAddress("济南");
+                    data1.setMode("1");
+                    req_rent.setData(data1);
+                    String message1 = JSON.toJSONString(req_rent);
+                    client.sendString(message1);
+                    sendEmptyMessage(7);
+//                    日租信息
+                    break;
+                case 7:
+                    RentReq req_rent1 = new RentReq();
+                    req_rent1.setSiteId("59");
+                    req_rent1.setCmd("0b");
+                    req_rent1.setWay("1");
+                    req_rent1.setSn("0");
+                    RentReq.DataBean data2 = new RentReq.DataBean();
+                    data2.setAddress("济南");
+                    data2.setMode("2");
+                    req_rent1.setData(data2);
+                    String message2 = JSON.toJSONString(req_rent1);
+                    client.sendString(message2);
+//                    时租信息
                     break;
             }
         }
     };
 
-    public PresentLogin(InterLogin interLogin) {
-        this.interLogin = interLogin;
-        context = interLogin.getContext();
-        mPosApi = interLogin.getApi();
-        client = MyApp.Client;
-        tv_time = interLogin.getTime();
-        tv_location = interLogin.getLocation();
-        tv_name = interLogin.getDevice();
-        tv_temp = interLogin.getTemp();
-    }
 
     public void showNoCardDialog() {
         final AlertDialog.Builder dialog = new AlertDialog.Builder(context);
@@ -186,11 +222,19 @@ public class PresentLogin {
                     TimeRes timeRes = JSONObject.parseObject(message, TimeRes.class);
                     String time = timeRes.getData().getTime();
                     tv_time.setText(time);
+                } else if (message.contains("\"cmd\":\"0b\"")) {
+                    if (message.contains("\"mode\":\"1\"")) {
+                        RentRes rentRes = JSONObject.parseObject(message, RentRes.class);
+                        RentRes.DataBean data = rentRes.getData();
+                        String text = "日租为："+(Double.parseDouble(data.getCost()) / 10) + "元";
+                        rentDay.setText(text);
+                    } else if (message.contains("\"mode\":\"2\"")) {
+                        RentResHour rentResHour = JSONObject.parseObject(message, RentResHour.class);
+                        RentResHour.DataBean data = rentResHour.getData();
+                        String text = "时租为："+(Double.parseDouble(data.getCost()) / 10) + "元";
+                        rentHour.setText(text);
+                    }
                 }
-//                SharedPreferences.Editor editor = MyApp.getEditor();
-//                editor.putString("cardId",uid);
-//                editor.commit();
-//                context.startActivity(new Intent(context, UserDataActivity.class));
             }
         });
     }

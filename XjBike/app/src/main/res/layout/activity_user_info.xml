@@ -28,11 +28,12 @@
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="卡片号码:"
+            android:text="用户卡ID:"
             android:textColor="@color/Black"
             android:textSize="24sp" />
 
         <TextView
+            android:id="@+id/cardId"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="XXX"
@@ -51,11 +52,12 @@
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="卡片号码:"
+            android:text="用户姓名:"
             android:textColor="@color/Black"
             android:textSize="24sp" />
 
         <TextView
+            android:id="@+id/name"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="XXX"
@@ -73,11 +75,12 @@
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="卡片号码:"
+            android:text="用户身份证:"
             android:textColor="@color/Black"
             android:textSize="24sp" />
 
         <TextView
+            android:id="@+id/identity"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="XXX"
@@ -86,6 +89,52 @@
             android:layout_marginStart="50dp"/>
 
     </LinearLayout>
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="50dp"
+        android:gravity="center">
 
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="用户手机号:"
+            android:textColor="@color/Black"
+            android:textSize="24sp" />
+
+        <TextView
+            android:id="@+id/phone"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="XXX"
+            android:textColor="@color/Black"
+            android:textSize="24sp"
+            android:layout_marginStart="50dp"/>
+
+    </LinearLayout>
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="50dp"
+        android:gravity="center">
+
+        <Button
+            android:id="@+id/btn_phone"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="修改手机号"
+            android:textColor="@color/Black"
+            android:textSize="24sp" />
+
+        <Button
+            android:id="@+id/btn_password"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="修改密码"
+            android:textColor="@color/Black"
+            android:textSize="24sp"
+            android:layout_marginStart="50dp"/>
+
+    </LinearLayout>
 
 </LinearLayout>
