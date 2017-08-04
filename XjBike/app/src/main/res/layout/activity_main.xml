@@ -21,35 +21,61 @@
             android:layout_width="0dp"
             android:layout_height="match_parent"
             android:layout_weight="1"
-            android:orientation="vertical"
-            android:gravity="center">
+            android:gravity="center"
+            android:orientation="vertical">
 
-            <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="持卡用户"
-                android:textSize="24sp"
-                android:textColor="@color/colorBlack"/>
-
-            <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="请在下方感应区放入卡后在点击登录"
-                android:textColor="@color/colorBlack"
-                android:textSize="18sp" />
-
-            <ImageView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:src="@mipmap/card_reader_area" />
             <Button
-                android:id="@+id/btn_card_login"
-                android:layout_width="wrap_content"
+                android:id="@+id/net"
+                android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:background="@mipmap/button"
-                android:text="刷卡登录"
-                android:textColor="#fff"
-                android:textSize="22sp" />
+                android:text="查看附近网点"
+                android:textSize="24sp" />
+
+            <Button
+                android:id="@+id/station"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="查看附近站点"
+                android:textSize="24sp" />
+
+            <TextView
+                android:id="@+id/time"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="当前时间："
+                android:textSize="24sp" />
+
+            <TextView
+                android:id="@+id/temp"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="当前温度："
+                android:textSize="24sp" />
+
+            <TextView
+                android:id="@+id/name"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="站点名称："
+                android:textSize="24sp" />
+
+            <TextView
+                android:id="@+id/location"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="定位信息："
+                android:textSize="24sp" />
+        </LinearLayout>
+
+        <LinearLayout
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_weight="1"
+            android:background="@color/colorGrey"
+            android:gravity="center"
+            android:orientation="vertical">
+
+
         </LinearLayout>
 
         <LinearLayout
@@ -59,31 +85,75 @@
             android:gravity="center"
             android:orientation="vertical">
 
-            <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="无卡用户"
-                android:textColor="#000"
-                android:textSize="24sp" />
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="0dp"
+                android:layout_weight="1"
+                android:gravity="center"
+                android:orientation="vertical">
 
-            <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_alignLeft="@+id/iv_loginnc"
-                android:layout_below="@+id/tv_nc"
-                android:layout_marginLeft="10dp"
-                android:text="请点击【登录】按键登录"
-                android:textColor="#000"
-                android:textSize="24sp" />
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="无卡用户"
+                    android:textColor="#000"
+                    android:textSize="24sp" />
 
-            <Button
-                android:id="@+id/btn_login"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:background="@mipmap/button"
-                android:text="登        录"
-                android:textColor="#fff"
-                android:textSize="22sp" />
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_alignLeft="@+id/iv_loginnc"
+                    android:layout_below="@+id/tv_nc"
+                    android:layout_marginLeft="10dp"
+                    android:text="请点击【登录】按键登录"
+                    android:textColor="#000"
+                    android:textSize="24sp" />
+
+                <Button
+                    android:id="@+id/btn_login"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:background="@mipmap/button"
+                    android:text="登        录"
+                    android:textColor="#fff"
+                    android:textSize="22sp" />
+            </LinearLayout>
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="0dp"
+                android:layout_weight="1"
+                android:gravity="center"
+                android:orientation="vertical">
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="持卡用户"
+                    android:textColor="@color/colorBlack"
+                    android:textSize="24sp" />
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="请在下方感应区放入卡后在点击登录"
+                    android:textColor="@color/colorBlack"
+                    android:textSize="18sp" />
+
+                <ImageView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:src="@mipmap/card_reader_area" />
+
+                <Button
+                    android:id="@+id/btn_card_login"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:background="@mipmap/button"
+                    android:text="刷卡登录"
+                    android:textColor="#fff"
+                    android:textSize="22sp" />
+            </LinearLayout>
         </LinearLayout>
 
     </LinearLayout>

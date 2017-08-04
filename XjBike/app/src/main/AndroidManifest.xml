@@ -10,7 +10,7 @@
     <!--这个权限用于获取wifi的获取权限，wifi信息会用来进行网络定位-->
     <uses-permission android:name="android.permission.CHANGE_WIFI_STATE" />
     <!--允许应用程序改变网络状态-->
-    <uses-permission android:name="android.permission.CHANGE_NETWORK_STATE"/>
+    <uses-permission android:name="android.permission.CHANGE_NETWORK_STATE" />
     <uses-permission android:name="android.permission.CHANGE_CONFIGURATION" />
     <!-- 请求网络 -->
     <uses-permission android:name="android.permission.INTERNET" />
@@ -35,6 +35,7 @@
     <uses-permission android:name="android.permission.NFC" />
     <uses-permission android:name="android.permission.READ_PHONE_STATE" />
     <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE" />
+
     <application
         android:name=".base.MyApp"
         android:allowBackup="true"
@@ -43,14 +44,22 @@
         android:roundIcon="@mipmap/page_logo"
         android:supportsRtl="true"
         android:theme="@style/Theme.AppCompat.Light.NoActionBar">
-        <activity android:name=".activity.MainActivity" android:launchMode="singleInstance">
+        <activity
+            android:name=".activity.MainActivity"
+            android:launchMode="singleInstance">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-        <service android:name=".service.ServiceSocket" android:enabled="true"/>
+        <activity android:name=".activity.UserDataActivity" />
+        <activity android:name=".activity.NetActivity" />
+        <activity android:name=".activity.StationActivity" />
+
+        <service
+            android:name=".service.ServiceSocket"
+            android:enabled="true" />
     </application>
 
 </manifest>

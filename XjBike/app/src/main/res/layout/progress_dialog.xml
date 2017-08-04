@@ -6,31 +6,29 @@
     android:gravity="center"
     android:orientation="vertical">
 
+    <!--<ProgressBar-->
+        <!--android:id="@+id/progress"-->
+        <!--style="@android:style/Widget.ProgressBar.Inverse"-->
+        <!--android:layout_width="wrap_content"-->
+        <!--android:layout_height="wrap_content"-->
+        <!--android:layout_gravity="center" />-->
     <ProgressBar
-        style="@android:style/Widget.ProgressBar.Inverse"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_gravity="center" />
-
+        android:id="@+id/progress"
+        style="?android:attr/progressBarStyleHorizontal"
+        android:layout_width="600dp"
+        android:layout_height="10dp"
+        android:layout_gravity="center"
+        android:progress="0"
+        android:max="4"
+        android:progressDrawable="@drawable/shape_pbar"
+        android:background="@mipmap/progressbar_base"/>
     <TextView
         android:id="@+id/tv_show"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:layout_marginTop="20dp"
         android:layout_gravity="center"
         android:background="@null"
-        />
-    <TextView
-        android:id="@+id/tv_show1"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_gravity="center"
-        android:background="@null"
-        />
-    <TextView
-        android:id="@+id/tv_show2"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_gravity="center"
-        android:background="@null"
+        android:textSize="24sp"
         />
 </LinearLayout>

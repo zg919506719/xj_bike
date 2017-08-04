@@ -45,7 +45,7 @@ public class ServiceSocket extends Service {
 
             @Override
             public void onResponse(SocketClient client, @NonNull SocketResponsePacket responsePacket) {
-//                Log.i(TAG, responsePacket.getMessage());
+                Log.i(TAG, responsePacket.getMessage());
             }
         });
     }

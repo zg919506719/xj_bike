@@ -1,0 +1,114 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    android:padding="30dp"
+    tools:context=".activity.UserDataActivity"
+    android:background="@mipmap/background">
+
+<LinearLayout
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content">
+    <Button
+        android:id="@+id/btn_back"
+        android:layout_width="68dp"
+        android:layout_height="63dp"
+        android:background="@mipmap/home_icon"/>
+</LinearLayout>
+
+<LinearLayout
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:layout_marginTop="50dp"
+    android:gravity="center">
+    <Button
+        android:id="@+id/user_info"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="用  户  信  息"
+        android:textSize="22sp"
+        android:textColor="#fff"
+        android:background="@mipmap/button"/>
+    <Button
+        android:id="@+id/card_info"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="卡    信    息"
+        android:layout_marginStart="50dp"
+        android:textSize="22sp"
+        android:textColor="#fff"
+        android:background="@mipmap/button"/>
+</LinearLayout>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="50dp"
+        android:gravity="center">
+        <Button
+            android:id="@+id/search"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="租 还 车 查 询"
+            android:textSize="22sp"
+            android:textColor="#fff"
+            android:background="@mipmap/button"/>
+        <Button
+            android:id="@+id/money"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="费  用  相  关"
+            android:layout_marginStart="50dp"
+            android:textSize="22sp"
+            android:textColor="#fff"
+            android:background="@mipmap/button"/>
+    </LinearLayout>
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="50dp"
+        android:gravity="center">
+        <Button
+            android:id="@+id/map_info"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="站  点  信  息"
+            android:textSize="22sp"
+            android:textColor="#fff"
+            android:background="@mipmap/button"/>
+        <Button
+            android:id="@+id/net_info"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="网  点  信  息"
+            android:layout_marginStart="50dp"
+            android:textSize="22sp"
+            android:textColor="#fff"
+            android:background="@mipmap/button"/>
+    </LinearLayout>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="50dp"
+        android:gravity="center">
+        <Button
+            android:id="@+id/help"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="使  用  帮  助"
+            android:layout_marginStart="50dp"
+            android:textSize="22sp"
+            android:textColor="#fff"
+            android:background="@mipmap/button"/>
+    </LinearLayout>
+
+
+
+
+
+
+
+</LinearLayout>
