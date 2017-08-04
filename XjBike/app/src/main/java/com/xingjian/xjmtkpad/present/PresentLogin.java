@@ -69,7 +69,7 @@ public class PresentLogin {
             switch (msg.what) {
                 case 0:
                     //获取温度
-                    mPosApi.getTemperatureHumidity();
+                            mPosApi.getTemperatureHumidity();
                     break;
                 case 1:
                     dialog_wel.dismiss();
@@ -102,11 +102,12 @@ public class PresentLogin {
                     req_name.setData(data);
                     String message = JSON.toJSONString(req_name);
                     client.sendString(message);
-                    sendEmptyMessage(6);
+                    sendEmptyMessage(5);
                     break;
                 case 5:
 //                    M1初始化
                     setM1();
+                    sendEmptyMessage(6);
                     break;
                 case 6:
                     //注释
@@ -246,8 +247,9 @@ public class PresentLogin {
         progressBar = (ProgressBar) view.findViewById(R.id.progress);
         dialog_wel.setContentView(view);
         dialog_wel.show();
-        //设备初始化
-        deviceInit();
+        tv_show.setText("正在获取温度");
+        progressBar.setProgress(2);
+        handler.sendEmptyMessage(0);
         //温度检测
         setTemp();
         socketRegister();
@@ -297,7 +299,6 @@ public class PresentLogin {
                         sb.append(chars[0]);
                         sb.append(chars[1]);
                     }
-                    Log.i(TAG, sb.toString());
                     String test = "{\n" +
                             "    \"siteId\": \"59\",\n" +
                             "    \"cmd\": \"d3\",\n" +
@@ -310,7 +311,7 @@ public class PresentLogin {
                             "}";
                     client.sendString(test);
                     SharedPreferences.Editor editor = MyApp.getEditor();
-                    editor.putString("cardId", uid);
+                    editor.putString("cardId", sb.toString());
                     editor.commit();
                     context.startActivity(new Intent(context, UserDataActivity.class));
                 } else {
@@ -385,26 +386,6 @@ public class PresentLogin {
         });
     }
 
-    private void deviceInit() {
-        //        设备初始化
-        mPosApi.setOnComEventListener(new PosApi.OnCommEventListener() {
-            @Override
-            public void onCommState(int cmdFlag, int state, byte[] resp, int respLen) {
-                switch (cmdFlag) {
-                    case PosApi.POS_INIT:
-                        if (state == PosApi.COMM_STATUS_SUCCESS) {
-                            tv_show.setText("正在获取温度");
-                            progressBar.setProgress(1);
-                            handler.sendEmptyMessage(0);
-                        } else if (state == PosApi.COMM_STATUS_FAILED) {
-                            tv_show.setText("设备初始化失败，请重启");
-                            progressBar.setProgress(1);
-                        }
-                        break;
-                }
-            }
-        });
-    }
 
 
 }

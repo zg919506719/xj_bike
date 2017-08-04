@@ -29,6 +29,25 @@ public class MyApp extends Application {
         Client.connect();
         posApi=PosApi.getInstance(this);
         posApi.initPosDev("ima3511");
+        //设备初始化
+        deviceInit();
+    }
+    private void deviceInit() {
+        //        设备初始化
+        posApi.setOnComEventListener(new PosApi.OnCommEventListener() {
+            @Override
+            public void onCommState(int cmdFlag, int state, byte[] resp, int respLen) {
+                switch (cmdFlag) {
+                    case PosApi.POS_INIT:
+                        if (state == PosApi.COMM_STATUS_SUCCESS) {
+                            MyApp.showToast("设备初始化成功");
+                        } else if (state == PosApi.COMM_STATUS_FAILED) {
+                            MyApp.showToast("设备初始化失败，请重启");
+                        }
+                        break;
+                }
+            }
+        });
     }
 
     public static SharedPreferences getPreference() {

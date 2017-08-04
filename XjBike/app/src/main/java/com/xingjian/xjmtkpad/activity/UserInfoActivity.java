@@ -56,10 +56,11 @@ public class UserInfoActivity extends AppCompatActivity {
         req.setSn("0");
         UserInfoReq.DataBean data = new UserInfoReq.DataBean();
         data.setType("2");
-//        if (!cardId.isEmpty()){
-//            data.setValue(cardId);
-//        }
-        data.setValue("658D17E2");
+        Log.i("haha", cardId);
+        if (!cardId.isEmpty()){
+            data.setValue(cardId);
+        }
+//        data.setValue("658D17E2");
 //        data.setValue("2B0EF1E4");
         req.setData(data);
         String s = JSON.toJSONString(req);

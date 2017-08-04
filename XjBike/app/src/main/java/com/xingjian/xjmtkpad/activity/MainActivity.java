@@ -45,7 +45,7 @@ public class MainActivity extends AppCompatActivity implements InterLogin {
 //        全屏模式
         getWindow().setFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN, WindowManager.LayoutParams.FLAG_FULLSCREEN);
         ButterKnife.bind(this);
-        startService(new Intent(this, ServiceSocket.class));
+//        startService(new Intent(this, ServiceSocket.class));
         mPosApi = MyApp.posApi;
         presentLogin = new PresentLogin(this);
         presentLogin.initView();
