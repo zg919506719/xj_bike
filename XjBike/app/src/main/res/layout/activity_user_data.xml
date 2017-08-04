@@ -74,7 +74,7 @@
             android:id="@+id/map_info"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="站  点  信  息"
+            android:text="借 车 操 作"
             android:textSize="22sp"
             android:textColor="#fff"
             android:background="@mipmap/button"/>
@@ -82,7 +82,7 @@
             android:id="@+id/net_info"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="网  点  信  息"
+            android:text="还 车 操 作"
             android:layout_marginStart="50dp"
             android:textSize="22sp"
             android:textColor="#fff"

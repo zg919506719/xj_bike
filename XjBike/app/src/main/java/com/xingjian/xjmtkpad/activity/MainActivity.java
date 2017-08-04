@@ -18,6 +18,7 @@ import com.xingjian.xjmtkpad.service.ServiceSocket;
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
+import fm.jiecao.jcvideoplayer_lib.JCVideoPlayerStandard;
 
 public class MainActivity extends AppCompatActivity implements InterLogin {
     @BindView(R.id.time)
@@ -28,6 +29,8 @@ public class MainActivity extends AppCompatActivity implements InterLogin {
     TextView name;
     @BindView(R.id.location)
     TextView location;
+    @BindView(R.id.videoplayer)
+    JCVideoPlayerStandard videoplayer;
     private PresentLogin presentLogin;
     private PosApi mPosApi;
 
@@ -42,6 +45,8 @@ public class MainActivity extends AppCompatActivity implements InterLogin {
         mPosApi = MyApp.posApi;
         presentLogin = new PresentLogin(this);
         presentLogin.initView();
+        videoplayer.setUp( "http://2449.vod.myqcloud.com/2449_22ca37a6ea9011e5acaaf51d105342e3.f20.mp4"
+                , JCVideoPlayerStandard.SCREEN_LAYOUT_NORMAL, "演示");
     }
 
 
@@ -79,16 +84,17 @@ public class MainActivity extends AppCompatActivity implements InterLogin {
     public void onClick(View view) {
         switch (view.getId()) {
             case R.id.net:
-                startActivity(new Intent(MainActivity.this,NetActivity.class));
+                startActivity(new Intent(MainActivity.this, NetActivity.class));
                 break;
             case R.id.station:
-                startActivity(new Intent(MainActivity.this,StationActivity.class));
+                startActivity(new Intent(MainActivity.this, StationActivity.class));
                 break;
             case R.id.btn_login:
                 presentLogin.showNoCardDialog();
                 break;
             case R.id.btn_card_login:
-                mPosApi.getTemperatureHumidity();
+//        进行扫码操作
+                mPosApi.m1Search(500);
                 break;
         }
     }

@@ -3,6 +3,7 @@ package com.xingjian.xjmtkpad.present;
 import android.app.Dialog;
 import android.content.Context;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.os.AsyncTask;
 import android.os.Handler;
 import android.os.Message;
@@ -64,6 +65,7 @@ public class PresentLogin {
                     mPosApi.canInit(4);
                     break;
                 case 3:
+                    //获取时间
 //                    String message = "{\"siteId\":\"59\",\"cmd\":\"05\",\"way\":\"1\",\"sn\":\"0\",\"data\":{}";
                     TimeReq req = new TimeReq();
                     req.setSiteId("59");
@@ -75,6 +77,7 @@ public class PresentLogin {
                     client.sendString(s);
                     break;
                 case 4:
+                    //获取站点名称
 //                    String message="{\"siteId\":\"59\",\"cmd\":\"03\",\"way\":\"1\",\"sn\":\"0\",\"data\":{\"address\":\"\\u6d4e\\u5357\"}}";
                     NameReq req_name = new NameReq();
                     req_name.setSiteId("59");
@@ -86,8 +89,14 @@ public class PresentLogin {
                     req_name.setData(data);
                     String message = JSON.toJSONString(req_name);
                     client.sendString(message);
+                    sendEmptyMessage(5);
                     break;
-
+                case 5:
+//                    M1初始化
+                    setM1();
+                    //        进行扫码操作
+                    mPosApi.m1Search(500);
+                    break;
             }
         }
     };
@@ -169,15 +178,19 @@ public class PresentLogin {
                 String message = responsePacket.getMessage();
                 Log.i(TAG, message);
                 //获取服务器时间
-                if (message.contains("\"cmd\":\"03\"")){
+                if (message.contains("\"cmd\":\"03\"")) {
                     NameRes nameRes = JSONObject.parseObject(message, NameRes.class);
                     String name = nameRes.getData().getSite_name();
                     tv_name.setText(name);
-                }else  if (message.contains("\"cmd\":\"05\"")){
+                } else if (message.contains("\"cmd\":\"05\"")) {
                     TimeRes timeRes = JSONObject.parseObject(message, TimeRes.class);
                     String time = timeRes.getData().getTime();
                     tv_time.setText(time);
                 }
+//                SharedPreferences.Editor editor = MyApp.getEditor();
+//                editor.putString("cardId",uid);
+//                editor.commit();
+//                context.startActivity(new Intent(context, UserDataActivity.class));
             }
         });
     }
@@ -228,6 +241,34 @@ public class PresentLogin {
                 if (state == PosApi.COMM_STATUS_SUCCESS) {
 //                    respons.append("M1 寻卡成功\n");
 //                    respons.append("Card UID:"+uid+"\n");
+                    char[] chars = uid.toCharArray();
+                    StringBuffer sb = new StringBuffer();
+                    if (chars.length == 8) {
+                        sb.append(chars[6]);
+                        sb.append(chars[7]);
+                        sb.append(chars[4]);
+                        sb.append(chars[5]);
+                        sb.append(chars[2]);
+                        sb.append(chars[3]);
+                        sb.append(chars[0]);
+                        sb.append(chars[1]);
+                    }
+                    Log.i(TAG, sb.toString());
+                    String test = "{\n" +
+                            "    \"siteId\": \"59\",\n" +
+                            "    \"cmd\": \"d3\",\n" +
+                            "    \"way\": \"1\",\n" +
+                            "    \"sn\": \"0\",\n" +
+                            "    \"address\": \"济南\",\n" +
+                            "    \"data\": {\n" +
+                            "        \"user_cardId\": " + sb.toString() + "\n" +
+                            "    }\n" +
+                            "}";
+                    client.sendString(test);
+                    SharedPreferences.Editor editor = MyApp.getEditor();
+                    editor.putString("cardId", uid);
+                    editor.commit();
+                    context.startActivity(new Intent(context, UserDataActivity.class));
                 } else {
 //                    respons.append("M1 寻卡失败\n");
                 }
@@ -254,8 +295,7 @@ public class PresentLogin {
 
             }
         });
-        //        mApi.m1Search(500);
-//        进行扫码操作
+
     }
 
     private void setCan() {
