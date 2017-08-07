@@ -1,0 +1,41 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:padding="30dp"
+    android:background="@mipmap/background">
+
+
+    <Button
+        android:id="@+id/btn_home"
+        android:layout_width="68dp"
+        android:layout_height="63dp"
+        android:layout_alignParentTop="true"
+        android:layout_alignParentLeft="true"
+        android:background="@mipmap/home_icon"/>
+
+    <Button
+        android:id="@+id/btn_rechargerecord"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="充值记录查询"
+        android:textSize="22sp"
+        android:textColor="#fff"
+        android:layout_below="@+id/btn_home"
+        android:layout_centerHorizontal="true"
+        android:layout_marginTop="150dp"
+        android:background="@mipmap/button"/>
+
+    <Button
+        android:id="@+id/btn_chargerecord"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="扣款记录查询"
+        android:textSize="22sp"
+        android:textColor="#fff"
+        android:layout_below="@+id/btn_rechargerecord"
+        android:layout_centerHorizontal="true"
+        android:layout_marginTop="100dp"
+        android:background="@mipmap/button"/>
+
+</RelativeLayout>

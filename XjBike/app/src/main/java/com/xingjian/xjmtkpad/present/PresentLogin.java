@@ -189,12 +189,13 @@ public class PresentLogin {
         req.setCmd("d2");
         req.setWay("1");
         req.setSn("0");
-        req.setAddress("北京");
+        req.setAddress("济南");
         LoginReq.DataBean data = new LoginReq.DataBean();
         data.setUsername(username);
         data.setPassword(password);
         req.setData(data);
         String s = JSON.toJSONString(req);
+        Log.i(TAG, s);
         client.sendString(s);
     }
 
@@ -253,6 +254,7 @@ public class PresentLogin {
         //温度检测
         setTemp();
         socketRegister();
+        login("17310267331","123456");
     }
 
     private void setTemp() {

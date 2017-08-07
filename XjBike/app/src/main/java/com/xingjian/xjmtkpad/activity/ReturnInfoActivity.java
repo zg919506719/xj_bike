@@ -4,14 +4,11 @@ import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
-import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
-import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
-import android.widget.Button;
 import android.widget.ListView;
 import android.widget.SimpleAdapter;
 import android.widget.Spinner;
@@ -31,6 +28,7 @@ import java.util.ArrayList;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
+import butterknife.OnClick;
 
 /**
  * Created by thinkpad on 2017/8/4.
@@ -100,7 +98,7 @@ public class ReturnInfoActivity extends AppCompatActivity {
                         req.setData(data);
                         client.sendString(JSONObject.toJSONString(req));
                         break;
-                    case 2://站点ID
+                    case 2://站点ID 59
                         ArrayList<RentRecordReq.DataBean.QueryBean> query2 = new ArrayList<>();
                         RentRecordReq.DataBean.QueryBean element2 = new RentRecordReq.DataBean.QueryBean();
                         element2.setQuery_type("4");
@@ -112,7 +110,7 @@ public class ReturnInfoActivity extends AppCompatActivity {
                         req.setData(data);
                         client.sendString(JSONObject.toJSONString(req));
                         break;
-                    case 3://站点ID+锁桩ID
+                    case 3://站点ID+锁桩ID 59 1
                         ArrayList<RentRecordReq.DataBean.QueryBean> query3 = new ArrayList<>();
                         RentRecordReq.DataBean.QueryBean element3 = new RentRecordReq.DataBean.QueryBean();
                         element3.setQuery_type("8");
@@ -125,7 +123,7 @@ public class ReturnInfoActivity extends AppCompatActivity {
                         req.setData(data);
                         client.sendString(JSONObject.toJSONString(req));
                         break;
-                    case 4://车辆ID
+                    case 4://车辆ID 0D2A0F91
                         ArrayList<RentRecordReq.DataBean.QueryBean> query4 = new ArrayList<>();
                         RentRecordReq.DataBean.QueryBean element4 = new RentRecordReq.DataBean.QueryBean();
                         element4.setQuery_type("10");
@@ -144,7 +142,7 @@ public class ReturnInfoActivity extends AppCompatActivity {
 //                                "\"query_way\":{\"vehicle_id\":\"0D2A0F91\"}}]}}";
 //                        client.sendString(reqJson25_10);
                         break;
-                    case 5://扣费范围
+                    case 5://扣费范围 0-10
                         ArrayList<RentRecordReq.DataBean.QueryBean> query5 = new ArrayList<>();
                         RentRecordReq.DataBean.QueryBean element5 = new RentRecordReq.DataBean.QueryBean();
                         element5.setQuery_type("20");
@@ -199,4 +197,8 @@ public class ReturnInfoActivity extends AppCompatActivity {
         });
     }
 
+    @OnClick(R.id.btn_back)
+    public void onClick() {
+        finish();
+    }
 }
