@@ -46,11 +46,7 @@
         android:theme="@style/Theme.AppCompat.Light.NoActionBar">
         <activity
             android:name=".activity.MainActivity">
-            <intent-filter>
-                <action android:name="android.intent.action.MAIN" />
 
-                <category android:name="android.intent.category.LAUNCHER" />
-            </intent-filter>
         </activity>
         <activity android:name=".activity.UserDataActivity" />
         <activity android:name=".activity.NetActivity" />
@@ -60,10 +56,17 @@
         <activity android:name=".activity.UserInfoActivity">
 
         </activity>
-        <activity android:name=".activity.ReturnInfoActivity" />
+        <activity android:name=".activity.ReturnInfoActivity" >
+            <intent-filter>
+                <action android:name="android.intent.action.MAIN" />
+                <category android:name="android.intent.category.LAUNCHER" />
+            </intent-filter>
+        </activity>
         <activity android:name=".activity.HelpActivity" />
         <activity android:name=".activity.ReturnActivity" />
-        <activity android:name=".activity.BorrowActivity" />
+        <activity android:name=".activity.BorrowActivity" >
+
+        </activity>
         <activity android:name=".activity.MoneyInfoActivity" />
 
         <service

@@ -343,48 +343,7 @@ public class PresentLogin {
 
     }
 
-    private void setCan() {
-        mPosApi.setOnCanEventListener(new PosApi.OnCanEventListener() {
-            @Override
-            public void onInit(int state) {
-                if (state == PosApi.COMM_STATUS_SUCCESS) {
-                    tv_show.setText("CAN 设置成功");
-                    progressBar.setProgress(3);
-                    handler.sendEmptyMessage(2);
-                } else {
-                    tv_show.setText("CAN 设置失败");
-                    progressBar.setProgress(3);
-                }
-            }
 
-            @Override
-            public void onCmd(int state) {
-                if (state == PosApi.COMM_STATUS_SUCCESS) {
-//                    respons.append("CAN 发送成功\n");
-                } else {
-//                    respons.append("CAN 发送失败\n");
-                }
-            }
-
-            @Override
-            public void onReceived(int i, byte[] resp, int i1) {
-//                respons.append("接收数据:"+"\n");
-//                if(resp!=null){
-//                    //psam 执行成功
-//                    respons.append("接收数据:"+ Conversion.Bytes2HexString(resp)+"\n");
-//                }
-            }
-
-            @Override
-            public void onClose(int state) {
-                if (state == PosApi.COMM_STATUS_SUCCESS) {
-//                    respons.append("CAN 关闭成功\n");
-                } else {
-//                    respons.append("CAN 关闭失败\n");
-                }
-            }
-        });
-    }
 
 
 

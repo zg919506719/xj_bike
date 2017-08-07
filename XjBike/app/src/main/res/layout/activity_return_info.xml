@@ -1,0 +1,220 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@mipmap/background"
+    android:padding="30dp">
+
+
+    <TextView
+        android:id="@+id/tv_ccn"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="当前卡号 : "
+        android:textColor="#000"
+        android:textSize="20sp" />
+
+    <TextView
+        android:id="@+id/tv_cardnumbernow"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_toEndOf="@+id/tv_ccn"
+        android:textColor="#000"
+        android:textSize="20sp" />
+
+    <TextView
+        android:id="@+id/tv_rbr"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_centerHorizontal="true"
+        android:layout_marginTop="40dp"
+        android:text="租还车记录"
+        android:textColor="#000"
+        android:textSize="24sp" />
+
+    <Spinner
+        android:id="@+id/sp_item"
+        android:layout_width="150dp"
+        android:layout_height="25dp"
+        android:layout_alignParentLeft="true"
+        android:layout_below="@+id/tv_rbr"
+        android:layout_marginTop="10dp"
+        android:background="@mipmap/filterbox"
+        android:clickable="true"
+        android:focusable="true" />
+
+    <ImageView
+        android:id="@+id/iv_sfbb"
+        android:layout_width="25dp"
+        android:layout_height="25dp"
+        android:layout_alignBottom="@+id/sp_item"
+        android:layout_alignRight="@+id/sp_item"
+        android:clickable="false"
+        android:focusable="false"
+        android:src="@mipmap/search_filter_button_background" />
+
+    <Button
+        android:id="@+id/btn_filter"
+        android:layout_width="10dp"
+        android:layout_height="8dp"
+        android:layout_alignRight="@+id/iv_sfbb"
+        android:layout_alignTop="@+id/iv_sfbb"
+        android:layout_marginRight="7dp"
+        android:layout_marginTop="8dp"
+        android:background="@mipmap/filter_button"
+        android:clickable="false"
+        android:focusable="false" />
+
+    <!--<EditText-->
+    <!--android:id="@+id/et_filter"-->
+    <!--android:layout_width="wrap_content"-->
+    <!--android:layout_height="25dp"-->
+    <!--android:layout_alignBottom="@+id/sp_item"-->
+    <!--android:layout_toRightOf="@+id/sp_item"-->
+    <!--android:background="@mipmap/search_inputbox" />-->
+
+    <!--<ImageView-->
+    <!--android:id="@+id/iv_sfbb2"-->
+    <!--android:layout_width="25dp"-->
+    <!--android:layout_height="25dp"-->
+    <!--android:layout_alignBottom="@+id/sp_item"-->
+    <!--android:layout_alignRight="@+id/et_filter"-->
+    <!--android:clickable="false"-->
+    <!--android:focusable="false"-->
+    <!--android:src="@mipmap/search_filter_button_background" />-->
+
+    <!--<Button-->
+    <!--android:id="@+id/btn_search"-->
+    <!--android:layout_width="10dp"-->
+    <!--android:layout_height="8dp"-->
+    <!--android:layout_alignRight="@+id/et_filter"-->
+    <!--android:layout_alignTop="@+id/iv_sfbb"-->
+    <!--android:layout_marginRight="7dp"-->
+    <!--android:layout_marginTop="8dp"-->
+    <!--android:background="@mipmap/search_button"-->
+    <!--android:clickable="true"-->
+    <!--android:focusable="true" />-->
+
+    <LinearLayout
+        android:id="@+id/ll_title"
+        android:layout_width="match_parent"
+        android:layout_height="40dp"
+        android:layout_alignLeft="@+id/sp_item"
+        android:layout_below="@+id/sp_item"
+        android:orientation="horizontal"
+        android:weightSum="7">
+
+        <TextView
+            android:id="@+id/tv_renttime"
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_weight="1"
+            android:gravity="center"
+            android:text="租车时间"
+            android:textColor="#000"
+            android:textSize="20sp" />
+
+        <TextView
+            android:id="@+id/tv_returntime"
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_weight="1"
+            android:gravity="center"
+            android:text="还车时间"
+            android:textColor="#000"
+            android:textSize="20sp" />
+
+        <TextView
+            android:id="@+id/tv_timelong"
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_weight="1"
+            android:gravity="center"
+            android:text="时长（分钟）"
+            android:textColor="#000"
+            android:textSize="20sp" />
+
+        <TextView
+            android:id="@+id/tv_money"
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_weight="1"
+            android:gravity="center"
+            android:text="扣费（元）"
+            android:textColor="#000"
+            android:textSize="20sp" />
+
+        <TextView
+            android:id="@+id/tv_sitenumber"
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_weight="1"
+            android:gravity="center"
+            android:text="站点编号"
+            android:textColor="#000"
+            android:textSize="20sp" />
+
+        <TextView
+            android:id="@+id/tv_locknumber"
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_weight="1"
+            android:gravity="center"
+            android:text="锁桩编号"
+            android:textColor="#000"
+            android:textSize="20sp" />
+
+        <TextView
+            android:id="@+id/tv_bikenumber"
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_weight="1"
+            android:gravity="center"
+            android:text="车辆编号"
+            android:textColor="#000"
+            android:textSize="20sp" />
+    </LinearLayout>
+
+    <ListView
+        android:id="@+id/lv_rentrecord"
+        android:layout_below="@id/ll_title"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_above="@+id/btn_up"
+        android:layout_alignParentStart="true" />
+
+    <Button
+        android:id="@+id/btn_up"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignLeft="@+id/lv_rentrecord"
+        android:layout_alignParentBottom="true"
+        android:layout_marginBottom="25dp"
+        android:background="@mipmap/backward"
+        android:text="前  页"
+        android:textColor="#fff"
+        android:textSize="22sp" />
+
+    <Button
+        android:id="@+id/btn_back"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignBottom="@+id/btn_up"
+        android:layout_centerHorizontal="true"
+        android:background="@mipmap/button"
+        android:text="返  回  主  页"
+        android:textColor="#fff"
+        android:textSize="22sp" />
+
+    <Button
+        android:id="@+id/btn_down"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignBottom="@+id/btn_back"
+        android:layout_alignRight="@+id/lv_rentrecord"
+        android:background="@mipmap/forward"
+        android:text="后  页"
+        android:textColor="#fff"
+        android:textSize="22sp" />
+
+</RelativeLayout>

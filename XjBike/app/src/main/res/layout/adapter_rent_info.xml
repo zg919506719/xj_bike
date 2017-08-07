@@ -1,0 +1,71 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="40dp"
+    android:orientation="horizontal"
+    android:weightSum="7">
+
+    <TextView
+        android:id="@+id/tv_renttime"
+        android:layout_width="0dp"
+        android:layout_height="match_parent"
+        android:layout_weight="1"
+        android:gravity="center"
+        android:text="@string/replace"
+        android:textColor="#000" />
+
+    <TextView
+        android:id="@+id/tv_returntime"
+        android:layout_width="0dp"
+        android:layout_height="match_parent"
+        android:layout_weight="1"
+        android:gravity="center"
+        android:text="@string/replace"
+        android:textColor="#000" />
+
+    <TextView
+        android:id="@+id/tv_timelong"
+        android:layout_width="0dp"
+        android:layout_height="match_parent"
+        android:layout_weight="1"
+        android:gravity="center"
+        android:text="@string/replace"
+        android:textColor="#000" />
+
+    <TextView
+        android:id="@+id/tv_money"
+        android:layout_width="0dp"
+        android:layout_height="match_parent"
+        android:layout_weight="1"
+        android:gravity="center"
+        android:text="@string/replace"
+        android:textColor="#000" />
+
+    <TextView
+        android:id="@+id/tv_sitenumber"
+        android:layout_width="0dp"
+        android:layout_height="match_parent"
+        android:layout_weight="1"
+        android:gravity="center"
+        android:text="@string/replace"
+        android:textColor="#000" />
+
+    <TextView
+        android:id="@+id/tv_locknumber"
+        android:layout_width="0dp"
+        android:layout_height="match_parent"
+        android:layout_weight="1"
+        android:gravity="center"
+        android:text="@string/replace"
+        android:textColor="#000" />
+
+    <TextView
+        android:id="@+id/tv_bikenumber"
+        android:layout_width="0dp"
+        android:layout_height="match_parent"
+        android:layout_weight="1"
+        android:gravity="center"
+        android:text="@string/replace"
+        android:textColor="#000" />
+
+</LinearLayout>
