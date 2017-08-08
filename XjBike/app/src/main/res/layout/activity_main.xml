@@ -15,78 +15,129 @@
 
     <LinearLayout
         android:layout_width="match_parent"
-        android:layout_height="match_parent">
+        android:layout_height="0dp"
+        android:layout_weight="1">
 
         <LinearLayout
             android:layout_width="0dp"
             android:layout_height="match_parent"
             android:layout_weight="1"
-            android:gravity="center"
             android:orientation="vertical">
 
-            <Button
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content">
+                <ImageView
+                    android:src="@mipmap/timee"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content" />
+                <TextView
+                    android:id="@+id/time"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:text="当前时间："
+                    android:textSize="24sp" />
+            </LinearLayout>
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content">
+                <ImageView
+                    android:src="@mipmap/tempe"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content" />
+                <TextView
+                    android:id="@+id/temp"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:text="当前温度："
+                    android:textSize="24sp" />
+            </LinearLayout>
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content">
+                <ImageView
+                    android:src="@mipmap/humidity"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content" />
+                <TextView
+                    android:id="@+id/humidity"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:text="当前适度："
+                    android:textSize="24sp" />
+            </LinearLayout>
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content">
+                <ImageView
+                    android:src="@mipmap/parking"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content" />
+                <TextView
+                    android:id="@+id/name"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:text="站点名称："
+                    android:textSize="24sp" />
+            </LinearLayout>
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content">
+                <ImageView
+                    android:src="@mipmap/sitee"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content" />
+                <TextView
+                    android:id="@+id/location"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:text="定位信息："
+                    android:textSize="24sp" />
+            </LinearLayout>
+
+
+
+
+            <LinearLayout
                 android:id="@+id/net"
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:text="查看附近网点"
-                android:textSize="24sp" />
+                android:layout_height="wrap_content">
+                <ImageView
+                    android:src="@mipmap/webb"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content" />
+                <TextView
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:text="查看附近网点"
+                    android:textSize="24sp" />
+            </LinearLayout>
 
-            <Button
+            <LinearLayout
                 android:id="@+id/station"
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:text="查看附近站点"
-                android:textSize="24sp" />
-
-            <TextView
-                android:id="@+id/time"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:text="当前时间："
-                android:textSize="24sp" />
-
-            <TextView
-                android:id="@+id/temp"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:text="当前温度："
-                android:textSize="24sp" />
-
-            <TextView
-                android:id="@+id/name"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:text="站点名称："
-                android:textSize="24sp" />
-
-            <TextView
-                android:id="@+id/location"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:text="定位信息："
-                android:textSize="24sp" />
-            <TextView
-                android:id="@+id/rent_hour"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:text="时租信息："
-                android:textSize="24sp" />
-            <TextView
-                android:id="@+id/rent_day"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:text="日租信息："
-                android:textSize="24sp" />
+                android:layout_height="wrap_content">
+                <ImageView
+                    android:src="@mipmap/station"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content" />
+                <TextView
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:text="查看附近站点"
+                    android:textSize="24sp" />
+            </LinearLayout>
         </LinearLayout>
 
         <LinearLayout
             android:layout_width="0dp"
             android:layout_height="match_parent"
             android:layout_weight="1"
-            android:background="@color/colorGrey"
             android:gravity="center"
             android:orientation="vertical">
-            <fm.jiecao.jcvideoplayer_lib.JCVideoPlayerStandard
+            <VideoView
                 android:id="@+id/videoplayer"
                 android:layout_width="match_parent"
                 android:layout_height="200dp"/>
@@ -159,19 +210,15 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:src="@mipmap/card_reader_area" />
-
-                <Button
-                    android:id="@+id/btn_card_login"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:background="@mipmap/button"
-                    android:text="刷卡登录"
-                    android:textColor="#fff"
-                    android:textSize="22sp" />
             </LinearLayout>
         </LinearLayout>
 
     </LinearLayout>
 
-
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="50dp"
+        android:gravity="center"
+        android:text="@string/app_company"
+        android:textSize="16sp" />
 </LinearLayout>

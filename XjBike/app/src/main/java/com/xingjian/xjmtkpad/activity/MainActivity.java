@@ -2,23 +2,23 @@ package com.xingjian.xjmtkpad.activity;
 
 import android.content.Context;
 import android.content.Intent;
+import android.media.MediaPlayer;
 import android.os.Bundle;
 import android.posapi.PosApi;
 import android.support.v7.app.AppCompatActivity;
 import android.view.View;
 import android.view.WindowManager;
 import android.widget.TextView;
+import android.widget.VideoView;
 
 import com.xingjian.xjmtkpad.R;
 import com.xingjian.xjmtkpad.base.MyApp;
 import com.xingjian.xjmtkpad.inter.InterLogin;
 import com.xingjian.xjmtkpad.present.PresentLogin;
-import com.xingjian.xjmtkpad.service.ServiceSocket;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
-import fm.jiecao.jcvideoplayer_lib.JCVideoPlayerStandard;
 
 public class MainActivity extends AppCompatActivity implements InterLogin {
     @BindView(R.id.time)
@@ -30,11 +30,9 @@ public class MainActivity extends AppCompatActivity implements InterLogin {
     @BindView(R.id.location)
     TextView location;
     @BindView(R.id.videoplayer)
-    JCVideoPlayerStandard videoplayer;
-    @BindView(R.id.rent_hour)
-    TextView rentHour;
-    @BindView(R.id.rent_day)
-    TextView rentDay;
+    VideoView videoplayer;
+    @BindView(R.id.humidity)
+    TextView humidity;
     private PresentLogin presentLogin;
     private PosApi mPosApi;
 
@@ -45,12 +43,33 @@ public class MainActivity extends AppCompatActivity implements InterLogin {
 //        全屏模式
         getWindow().setFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN, WindowManager.LayoutParams.FLAG_FULLSCREEN);
         ButterKnife.bind(this);
-//        startService(new Intent(this, ServiceSocket.class));
         mPosApi = MyApp.posApi;
         presentLogin = new PresentLogin(this);
         presentLogin.initView();
-        videoplayer.setUp("http://2449.vod.myqcloud.com/2449_22ca37a6ea9011e5acaaf51d105342e3.f20.mp4"
-                , JCVideoPlayerStandard.SCREEN_LAYOUT_NORMAL, "演示");
+        initVideo();
+    }
+
+    private void initVideo() {
+
+//        Uri parse = Uri.parse("file:///android_asset/test.mp4");
+//        MediaController mediaController = new MediaController(this);
+//        videoplayer.setMediaController(mediaController);
+//        videoplayer.setVideoURI(parse);
+
+        videoplayer.setVideoPath( "android.resource://" + getPackageName() + "/" + R.raw.test);
+        videoplayer.setOnPreparedListener(new MediaPlayer.OnPreparedListener() {
+            @Override
+            public void onPrepared(MediaPlayer mediaPlayer) {
+                mediaPlayer.start();
+            }
+        });
+        videoplayer.setOnCompletionListener(new MediaPlayer.OnCompletionListener() {
+            @Override
+            public void onCompletion(MediaPlayer mediaPlayer) {
+                mediaPlayer.start();
+            }
+        });
+
     }
 
 
@@ -75,6 +94,11 @@ public class MainActivity extends AppCompatActivity implements InterLogin {
     }
 
     @Override
+    public TextView getHumidity() {
+        return humidity;
+    }
+
+    @Override
     public TextView getDevice() {
         return name;
     }
@@ -84,17 +108,7 @@ public class MainActivity extends AppCompatActivity implements InterLogin {
         return location;
     }
 
-    @Override
-    public TextView getRentDay() {
-        return rentDay;
-    }
-
-    @Override
-    public TextView getRentHour() {
-        return rentHour;
-    }
-
-    @OnClick({R.id.net, R.id.station, R.id.btn_login, R.id.btn_card_login})
+    @OnClick({R.id.net, R.id.station, R.id.btn_login})
     public void onClick(View view) {
         switch (view.getId()) {
             case R.id.net:
@@ -106,10 +120,14 @@ public class MainActivity extends AppCompatActivity implements InterLogin {
             case R.id.btn_login:
                 presentLogin.showNoCardDialog();
                 break;
-            case R.id.btn_card_login:
-//        进行扫码操作
-                mPosApi.m1Search(500);
-                break;
+        }
+    }
+
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+        if (mPosApi != null) {
+            mPosApi.closeDev();
         }
     }
 }

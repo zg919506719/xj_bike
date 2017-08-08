@@ -17,11 +17,10 @@ public interface InterLogin {
 
     TextView getTemp();
 
+    TextView getHumidity();
+
     TextView getDevice();
 
     TextView getLocation();
 
-    TextView getRentDay();
-
-    TextView getRentHour();
 }

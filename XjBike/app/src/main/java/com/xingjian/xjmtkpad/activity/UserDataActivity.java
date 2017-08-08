@@ -17,12 +17,14 @@ import butterknife.OnClick;
  */
 
 public class UserDataActivity extends AppCompatActivity {
+    private boolean isOpen=false;
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_user_data);
         ButterKnife.bind(this);
         MyApp.addActivity(this);
+        isOpen=true;
     }
 
     @OnClick({R.id.btn_back, R.id.user_info, R.id.card_info, R.id.search, R.id.money, R.id.borrow, R.id.returnBike, R.id.help})
@@ -60,5 +62,11 @@ public class UserDataActivity extends AppCompatActivity {
                 startActivity(new Intent(this,HelpActivity.class));
                 break;
         }
+    }
+
+    @Override
+    public void onBackPressed() {
+        super.onBackPressed();
+        MyApp.exit();
     }
 }

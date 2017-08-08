@@ -1,35 +1,38 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@null"
-    android:gravity="center"
-    android:orientation="vertical">
+    android:background="@mipmap/background">
 
-    <!--<ProgressBar-->
-        <!--android:id="@+id/progress"-->
-        <!--style="@android:style/Widget.ProgressBar.Inverse"-->
-        <!--android:layout_width="wrap_content"-->
-        <!--android:layout_height="wrap_content"-->
-        <!--android:layout_gravity="center" />-->
+    <ImageView
+        android:layout_width="141dp"
+        android:layout_height="144dp"
+        android:id="@+id/iv_logo"
+        android:layout_alignParentTop="true"
+        android:layout_centerHorizontal="true"
+        android:layout_marginTop="160dp"
+        android:src="@mipmap/loading_page_logo"/>
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="上海行践公共自行车有限公司"
+        android:textSize="30dp"
+        android:textStyle="bold"
+        android:layout_centerHorizontal="true"
+        android:layout_below="@+id/iv_logo"
+        android:layout_marginTop="20dp"/>
+
     <ProgressBar
-        android:id="@+id/progress"
         style="?android:attr/progressBarStyleHorizontal"
         android:layout_width="600dp"
         android:layout_height="10dp"
-        android:layout_gravity="center"
+        android:id="@+id/pb_start"
+        android:layout_alignParentBottom="true"
+        android:layout_centerHorizontal="true"
+        android:layout_marginBottom="260dp"
         android:progress="0"
-        android:max="4"
+        android:max="100"
         android:progressDrawable="@drawable/shape_pbar"
         android:background="@mipmap/progressbar_base"/>
-    <TextView
-        android:id="@+id/tv_show"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="20dp"
-        android:layout_gravity="center"
-        android:background="@null"
-        android:textSize="24sp"
-        android:textColor="@color/White"
-        />
-</LinearLayout>
+</RelativeLayout>

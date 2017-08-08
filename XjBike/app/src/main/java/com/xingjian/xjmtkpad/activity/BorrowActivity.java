@@ -11,15 +11,8 @@ import android.widget.TextView;
 import com.xingjian.xjmtkpad.R;
 import com.xingjian.xjmtkpad.base.MyApp;
 
-import org.json.JSONObject;
-
-import java.text.SimpleDateFormat;
-import java.util.Date;
-
 import butterknife.BindView;
 import butterknife.ButterKnife;
-
-import static com.xingjian.xjmtkpad.R.id.tv_show;
 
 /**
  * Created by thinkpad on 2017/8/4.
@@ -70,19 +63,19 @@ public class BorrowActivity extends AppCompatActivity {
                     cmd = Conversion.Bytes2HexString(resp);
                     tv.append("接收数据:" + cmd + "\n");
                     StringBuffer s = new StringBuffer();
-                    for (int c=0;c<resp.length;c++){
+                    for (int c = 0; c < resp.length; c++) {
                         s.append(resp[c]);
                     }
-                    tv.append("没转之前数据："+s.toString()+"\n");
+                    tv.append("没转之前数据：" + s.toString() + "\n");
                 }
-                Log.i("===", "接收数据:"+ cmd+"\n");
+                Log.i("===", "接收数据:" + cmd + "\n");
                 String protocol = cmd.substring(4, 6);
 //                5，6
-                tv.append("发送请求为:"+protocol);
+                tv.append("发送请求为:" + protocol);
                 mPileID = cmd.substring(0, 2);
-                tv.append("车辆编号为："+mPileID+"\n");
+                tv.append("车辆编号为：" + mPileID + "\n");
 //                0109815417031501020304
-                tv.append("车辆请求为："+protocol+"\n");
+                tv.append("车辆请求为：" + protocol + "\n");
                 String[] pileInIdArr = new String[100];
                 String[] pileOutIdArr = new String[100];
 
@@ -99,12 +92,12 @@ public class BorrowActivity extends AppCompatActivity {
                                 }
                                 byte[] mCmd = Conversion.HexString2Bytes("0100C1" + pileInIdArr[i] + pileOutIdArr[i]);
                                 StringBuffer s = new StringBuffer();
-                                for (int c=0;c<mCmd.length;c++){
+                                for (int c = 0; c < mCmd.length; c++) {
                                     s.append(mCmd[c]);
                                 }
-                                tv.append("传过去"+s.toString()+"\n");
+                                tv.append("传过去" + s.toString() + "\n");
                                 String s1 = Conversion.Bytes2HexString(mCmd);
-                                tv.append("传过去的解析"+s1.toString()+"\n");
+                                tv.append("传过去的解析" + s1.toString() + "\n");
                                 api.canCmd(0, mCmd, mCmd.length);
                                 byte[] mCmd0B = Conversion.HexString2Bytes(pileOutIdArr[i] + "000B");//0x0B 锁桩车辆状态读取
                                 api.canCmd(0, mCmd0B, mCmd0B.length);

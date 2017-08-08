@@ -3,6 +3,7 @@ package com.xingjian.xjmtkpad.base;
 import android.app.Activity;
 import android.app.Application;
 import android.content.Context;
+import android.content.Intent;
 import android.content.SharedPreferences;
 import android.posapi.PosApi;
 import android.widget.Toast;
@@ -18,7 +19,7 @@ import java.util.ArrayList;
 
 public class MyApp extends Application {
     private static Context context;
-    private static ArrayList<Activity> activityList = new ArrayList<Activity>();
+    public static ArrayList<Activity> activityList = new ArrayList<Activity>();
     public static SocketClient Client;
     public static PosApi posApi;
     @Override
@@ -29,25 +30,7 @@ public class MyApp extends Application {
         Client.connect();
         posApi=PosApi.getInstance(this);
         posApi.initPosDev("ima3511");
-        //设备初始化
-        deviceInit();
-    }
-    private void deviceInit() {
-        //        设备初始化
-        posApi.setOnComEventListener(new PosApi.OnCommEventListener() {
-            @Override
-            public void onCommState(int cmdFlag, int state, byte[] resp, int respLen) {
-                switch (cmdFlag) {
-                    case PosApi.POS_INIT:
-                        if (state == PosApi.COMM_STATUS_SUCCESS) {
-                            MyApp.showToast("设备初始化成功");
-                        } else if (state == PosApi.COMM_STATUS_FAILED) {
-                            MyApp.showToast("设备初始化失败，请重启");
-                        }
-                        break;
-                }
-            }
-        });
+
     }
 
     public static SharedPreferences getPreference() {
@@ -74,6 +57,7 @@ public class MyApp extends Application {
         }
 
     }
+
 
 
 
