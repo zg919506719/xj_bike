@@ -5,6 +5,7 @@ import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.media.MediaPlayer;
 import android.os.Handler;
 import android.os.Message;
 import android.posapi.PosApi;
@@ -17,6 +18,7 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ProgressBar;
 import android.widget.TextView;
+import android.widget.VideoView;
 
 import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONObject;
@@ -49,6 +51,7 @@ public class PresentLogin {
     private SocketClient client;
     private TextView tv_time, tv_temp, tv_name, tv_location, tv_humidity;
     private static String TAG = "haha";
+    private VideoView videoplayer;
 
     public PresentLogin(InterLogin interLogin) {
         this.interLogin = interLogin;
@@ -60,6 +63,7 @@ public class PresentLogin {
         tv_name = interLogin.getDevice();
         tv_temp = interLogin.getTemp();
         tv_humidity = interLogin.getHumidity();
+        videoplayer=interLogin.getVideoView();
     }
 
 
@@ -80,7 +84,7 @@ public class PresentLogin {
 //        setwelcomeDialog();
 //        m1监听
 //获取温度
-
+        initVideo();
     }
 
     public void showNoCardDialog() {
@@ -218,10 +222,10 @@ public class PresentLogin {
                 tv_humidity.setText("湿度:" + hum + "%");
                 if (tem > 30) {
                     //开风扇
-                    mPosApi.gpioControl((byte) 0x00, 0, 0);
+                    mPosApi.gpioControl((byte) 0x00, 0, 1);
                 } else {
                     //关风扇
-                    mPosApi.gpioControl((byte) 0x00, 0, 1);
+                    mPosApi.gpioControl((byte) 0x00, 0, 0);
                 }
             }
         });
@@ -317,6 +321,23 @@ public class PresentLogin {
         req_name.setData(data);
         String message = JSON.toJSONString(req_name);
         client.sendString(message);
+    }
+
+    private void initVideo() {
+        videoplayer.setVideoPath( "android.resource://com.xingjian.xjmtkpad/" + R.raw.test);
+        videoplayer.setOnPreparedListener(new MediaPlayer.OnPreparedListener() {
+            @Override
+            public void onPrepared(MediaPlayer mediaPlayer) {
+                mediaPlayer.start();
+            }
+        });
+        videoplayer.setOnCompletionListener(new MediaPlayer.OnCompletionListener() {
+            @Override
+            public void onCompletion(MediaPlayer mediaPlayer) {
+                mediaPlayer.start();
+            }
+        });
+
     }
 
 }

@@ -46,31 +46,8 @@ public class MainActivity extends AppCompatActivity implements InterLogin {
         mPosApi = MyApp.posApi;
         presentLogin = new PresentLogin(this);
         presentLogin.initView();
-        initVideo();
     }
 
-    private void initVideo() {
-
-//        Uri parse = Uri.parse("file:///android_asset/test.mp4");
-//        MediaController mediaController = new MediaController(this);
-//        videoplayer.setMediaController(mediaController);
-//        videoplayer.setVideoURI(parse);
-
-        videoplayer.setVideoPath( "android.resource://" + getPackageName() + "/" + R.raw.test);
-        videoplayer.setOnPreparedListener(new MediaPlayer.OnPreparedListener() {
-            @Override
-            public void onPrepared(MediaPlayer mediaPlayer) {
-                mediaPlayer.start();
-            }
-        });
-        videoplayer.setOnCompletionListener(new MediaPlayer.OnCompletionListener() {
-            @Override
-            public void onCompletion(MediaPlayer mediaPlayer) {
-                mediaPlayer.start();
-            }
-        });
-
-    }
 
 
     @Override
@@ -106,6 +83,11 @@ public class MainActivity extends AppCompatActivity implements InterLogin {
     @Override
     public TextView getLocation() {
         return location;
+    }
+
+    @Override
+    public VideoView getVideoView() {
+        return videoplayer;
     }
 
     @OnClick({R.id.net, R.id.station, R.id.btn_login})
