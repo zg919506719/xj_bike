@@ -1,13 +1,10 @@
 package com.xingjian.xjmtkpad.present;
 
 import android.app.Dialog;
-import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.media.MediaPlayer;
-import android.os.Handler;
-import android.os.Message;
 import android.posapi.PosApi;
 import android.support.annotation.NonNull;
 import android.support.v7.app.AlertDialog;
@@ -28,13 +25,12 @@ import com.vilyever.socketclient.helper.SocketResponsePacket;
 import com.xingjian.xjmtkpad.R;
 import com.xingjian.xjmtkpad.activity.UserDataActivity;
 import com.xingjian.xjmtkpad.base.MyApp;
+import com.xingjian.xjmtkpad.beanrequest.CardLLoginReq;
 import com.xingjian.xjmtkpad.beanrequest.LoginReq;
 import com.xingjian.xjmtkpad.beanrequest.NameReq;
-import com.xingjian.xjmtkpad.beanrequest.RentReq;
 import com.xingjian.xjmtkpad.beanrequest.TimeReq;
+import com.xingjian.xjmtkpad.beanresponse.CardLoginRes;
 import com.xingjian.xjmtkpad.beanresponse.NameRes;
-import com.xingjian.xjmtkpad.beanresponse.RentResHour;
-import com.xingjian.xjmtkpad.beanresponse.RentRes;
 import com.xingjian.xjmtkpad.beanresponse.TimeRes;
 import com.xingjian.xjmtkpad.inter.InterLogin;
 import com.xingjian.xjmtkpad.service.ServiceDevice;
@@ -52,6 +48,7 @@ public class PresentLogin {
     private TextView tv_time, tv_temp, tv_name, tv_location, tv_humidity;
     private static String TAG = "haha";
     private VideoView videoplayer;
+    private String cardId;
 
     public PresentLogin(InterLogin interLogin) {
         this.interLogin = interLogin;
@@ -63,13 +60,13 @@ public class PresentLogin {
         tv_name = interLogin.getDevice();
         tv_temp = interLogin.getTemp();
         tv_humidity = interLogin.getHumidity();
-        videoplayer=interLogin.getVideoView();
+        videoplayer = interLogin.getVideoView();
     }
 
 
     public void initView() {
         SharedPreferences.Editor editor = MyApp.getEditor();
-        editor.putBoolean("isLogin",false);
+        editor.putBoolean("isLogin", false);
         editor.commit();
         //设备初始化
         deviceInit();
@@ -85,6 +82,7 @@ public class PresentLogin {
 //        m1监听
 //获取温度
         initVideo();
+        login("123456","123456");
     }
 
     public void showNoCardDialog() {
@@ -162,6 +160,22 @@ public class PresentLogin {
                     TimeRes timeRes = JSONObject.parseObject(message, TimeRes.class);
                     String time = timeRes.getData().getTime();
                     tv_time.setText(time);
+                } else if (message.contains("\"cmd\":\"d3\"")) {
+                    CardLoginRes cardLoginRes = JSONObject.parseObject(message, CardLoginRes.class);
+                    String result = cardLoginRes.getData().getResult();
+                    if (result.equals("1")){
+                        boolean isLogin = MyApp.getPreference().getBoolean("isLogin", false);
+                        if (!isLogin) {
+                            SharedPreferences.Editor editor = MyApp.getEditor();
+                            editor.putString("cardId", cardId);
+                            editor.putBoolean("isLogin", true);
+                            editor.commit();
+                            context.startActivity(new Intent(context, UserDataActivity.class));
+                        }
+                    }else {
+                        MyApp.showToast("卡的身份有误，登录失败");
+                    }
+
                 }
             }
         });
@@ -174,18 +188,18 @@ public class PresentLogin {
         final ProgressBar progressBar = (ProgressBar) view.findViewById(R.id.pb_start);
         dialog.setContentView(view);
         dialog.show();
-        new Thread(){
+        new Thread() {
             @Override
             public void run() {
                 super.run();
-                while (progressBar.getProgress()<100){
+                while (progressBar.getProgress() < 100) {
                     try {
                         Thread.sleep(100);
                     } catch (InterruptedException e) {
                         e.printStackTrace();
                     }
-                    progressBar.setProgress(progressBar.getProgress()+1);
-                    if (progressBar.getProgress()==100){
+                    progressBar.setProgress(progressBar.getProgress() + 1);
+                    if (progressBar.getProgress() == 100) {
                         dialog.dismiss();
                     }
                 }
@@ -252,26 +266,17 @@ public class PresentLogin {
                         sb.append(chars[0]);
                         sb.append(chars[1]);
                     }
-                    String test = "{\n" +
-                            "    \"siteId\": \"59\",\n" +
-                            "    \"cmd\": \"d3\",\n" +
-                            "    \"way\": \"1\",\n" +
-                            "    \"sn\": \"0\",\n" +
-                            "    \"address\": \"济南\",\n" +
-                            "    \"data\": {\n" +
-                            "        \"user_cardId\": " + sb.toString() + "\n" +
-                            "    }\n" +
-                            "}";
-                    client.sendString(test);
-                    boolean isLogin = MyApp.getPreference().getBoolean("isLogin", false);
-                    if (!isLogin){
-                        SharedPreferences.Editor editor = MyApp.getEditor();
-                        editor.putString("cardId", sb.toString());
-                        editor.putBoolean("isLogin",true);
-                        editor.commit();
-                        context.startActivity(new Intent(context, UserDataActivity.class));
-                    }
-
+                    cardId = sb.toString();
+                    CardLLoginReq req = new CardLLoginReq();
+                    req.setSiteId("59");
+                    req.setCmd("d3");
+                    req.setWay("1");
+                    req.setSn("0");
+                    req.setAddress("上海");
+                    CardLLoginReq.DataBean bean = new CardLLoginReq.DataBean();
+                    bean.setUser_cardId(cardId);
+                    req.setData(bean);
+                    client.sendString(JSONObject.toJSONString(req));
                 }
             }
 
@@ -324,7 +329,7 @@ public class PresentLogin {
     }
 
     private void initVideo() {
-        videoplayer.setVideoPath( "android.resource://com.xingjian.xjmtkpad/" + R.raw.test);
+        videoplayer.setVideoPath("android.resource://com.xingjian.xjmtkpad/" + R.raw.test);
         videoplayer.setOnPreparedListener(new MediaPlayer.OnPreparedListener() {
             @Override
             public void onPrepared(MediaPlayer mediaPlayer) {

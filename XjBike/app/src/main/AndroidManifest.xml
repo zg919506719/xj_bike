@@ -52,10 +52,7 @@
         <service android:name="com.amap.api.location.APSService" />
 
         <activity android:name=".activity.MainActivity">
-            <intent-filter>
-                <action android:name="android.intent.action.MAIN" />
-                <category android:name="android.intent.category.LAUNCHER" />
-            </intent-filter>
+
         </activity>
         <activity android:name=".activity.UserDataActivity" />
         <activity android:name=".activity.NetActivity" />
@@ -71,7 +68,10 @@
         <activity android:name=".activity.HelpActivity" />
         <activity android:name=".activity.ReturnActivity" />
         <activity android:name=".activity.BorrowActivity">
-
+            <intent-filter>
+                <action android:name="android.intent.action.MAIN" />
+                <category android:name="android.intent.category.LAUNCHER" />
+            </intent-filter>
         </activity>
         <activity android:name=".activity.MoneyInfoActivity" />
         <activity android:name=".activity.RechargeActivity" />
