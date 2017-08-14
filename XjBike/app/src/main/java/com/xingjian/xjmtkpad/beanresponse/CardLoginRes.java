@@ -6,12 +6,13 @@ package com.xingjian.xjmtkpad.beanresponse;
 
 public class CardLoginRes {
 
+
     /**
      * siteId : 59
      * cmd : d3
      * way : 2
      * sn : 0
-     * data : {"result":"1004"}
+     * data : {"code":"1000","message":"success","id":"000001","cardType":"staff"}
      */
 
     private String siteId;
@@ -62,17 +63,47 @@ public class CardLoginRes {
 
     public static class DataBean {
         /**
-         * result : 1004
+         * code : 1000
+         * message : success
+         * id : 000001
+         * cardType : staff
          */
 
-        private String result;
+        private String code;
+        private String message;
+        private String id;
+        private String cardType;
 
-        public String getResult() {
-            return result;
+        public String getCode() {
+            return code;
         }
 
-        public void setResult(String result) {
-            this.result = result;
+        public void setCode(String code) {
+            this.code = code;
+        }
+
+        public String getMessage() {
+            return message;
+        }
+
+        public void setMessage(String message) {
+            this.message = message;
+        }
+
+        public String getId() {
+            return id;
+        }
+
+        public void setId(String id) {
+            this.id = id;
+        }
+
+        public String getCardType() {
+            return cardType;
+        }
+
+        public void setCardType(String cardType) {
+            this.cardType = cardType;
         }
     }
 }

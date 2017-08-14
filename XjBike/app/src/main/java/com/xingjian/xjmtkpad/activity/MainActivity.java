@@ -2,7 +2,6 @@ package com.xingjian.xjmtkpad.activity;
 
 import android.content.Context;
 import android.content.Intent;
-import android.media.MediaPlayer;
 import android.os.Bundle;
 import android.posapi.PosApi;
 import android.support.v7.app.AppCompatActivity;
@@ -49,7 +48,6 @@ public class MainActivity extends AppCompatActivity implements InterLogin {
     }
 
 
-
     @Override
     public Context getContext() {
         return this;
@@ -90,7 +88,7 @@ public class MainActivity extends AppCompatActivity implements InterLogin {
         return videoplayer;
     }
 
-    @OnClick({R.id.net, R.id.station, R.id.btn_login})
+    @OnClick({R.id.net, R.id.station, R.id.btn_login, R.id.btn_login_staff})
     public void onClick(View view) {
         switch (view.getId()) {
             case R.id.net:
@@ -100,7 +98,10 @@ public class MainActivity extends AppCompatActivity implements InterLogin {
                 startActivity(new Intent(MainActivity.this, StationActivity.class));
                 break;
             case R.id.btn_login:
-                presentLogin.showNoCardDialog();
+                presentLogin.showNoCardDialog(0);
+                break;
+            case R.id.btn_login_staff:
+                startActivity(new Intent(MainActivity.this, StaffLoginActivity.class));
                 break;
         }
     }
@@ -112,4 +113,5 @@ public class MainActivity extends AppCompatActivity implements InterLogin {
             mPosApi.closeDev();
         }
     }
+
 }

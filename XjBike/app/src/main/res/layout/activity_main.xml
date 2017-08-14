@@ -28,10 +28,12 @@
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content">
+
                 <ImageView
-                    android:src="@mipmap/timee"
                     android:layout_width="wrap_content"
-                    android:layout_height="wrap_content" />
+                    android:layout_height="wrap_content"
+                    android:src="@mipmap/timee" />
+
                 <TextView
                     android:id="@+id/time"
                     android:layout_width="match_parent"
@@ -43,10 +45,12 @@
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content">
+
                 <ImageView
-                    android:src="@mipmap/tempe"
                     android:layout_width="wrap_content"
-                    android:layout_height="wrap_content" />
+                    android:layout_height="wrap_content"
+                    android:src="@mipmap/tempe" />
+
                 <TextView
                     android:id="@+id/temp"
                     android:layout_width="match_parent"
@@ -54,13 +58,16 @@
                     android:text="当前温度："
                     android:textSize="24sp" />
             </LinearLayout>
+
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content">
+
                 <ImageView
-                    android:src="@mipmap/humidity"
                     android:layout_width="wrap_content"
-                    android:layout_height="wrap_content" />
+                    android:layout_height="wrap_content"
+                    android:src="@mipmap/humidity" />
+
                 <TextView
                     android:id="@+id/humidity"
                     android:layout_width="match_parent"
@@ -68,13 +75,16 @@
                     android:text="当前适度："
                     android:textSize="24sp" />
             </LinearLayout>
+
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content">
+
                 <ImageView
-                    android:src="@mipmap/parking"
                     android:layout_width="wrap_content"
-                    android:layout_height="wrap_content" />
+                    android:layout_height="wrap_content"
+                    android:src="@mipmap/parking" />
+
                 <TextView
                     android:id="@+id/name"
                     android:layout_width="match_parent"
@@ -82,13 +92,16 @@
                     android:text="站点名称："
                     android:textSize="24sp" />
             </LinearLayout>
+
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content">
+
                 <ImageView
-                    android:src="@mipmap/sitee"
                     android:layout_width="wrap_content"
-                    android:layout_height="wrap_content" />
+                    android:layout_height="wrap_content"
+                    android:src="@mipmap/sitee" />
+
                 <TextView
                     android:id="@+id/location"
                     android:layout_width="match_parent"
@@ -98,16 +111,16 @@
             </LinearLayout>
 
 
-
-
             <LinearLayout
                 android:id="@+id/net"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content">
+
                 <ImageView
-                    android:src="@mipmap/webb"
                     android:layout_width="wrap_content"
-                    android:layout_height="wrap_content" />
+                    android:layout_height="wrap_content"
+                    android:src="@mipmap/webb" />
+
                 <TextView
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
@@ -119,10 +132,12 @@
                 android:id="@+id/station"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content">
+
                 <ImageView
-                    android:src="@mipmap/station"
                     android:layout_width="wrap_content"
-                    android:layout_height="wrap_content" />
+                    android:layout_height="wrap_content"
+                    android:src="@mipmap/station" />
+
                 <TextView
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
@@ -137,10 +152,11 @@
             android:layout_weight="2"
             android:gravity="center"
             android:orientation="vertical">
+
             <VideoView
                 android:id="@+id/videoplayer"
                 android:layout_width="match_parent"
-                android:layout_height="400dp"/>
+                android:layout_height="400dp" />
 
         </LinearLayout>
 
@@ -211,6 +227,15 @@
                     android:layout_height="wrap_content"
                     android:src="@mipmap/card_reader_area" />
             </LinearLayout>
+
+            <Button
+                android:id="@+id/btn_login_staff"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:background="@mipmap/button"
+                android:text="员工无卡登录"
+                android:textColor="#fff"
+                android:textSize="22sp" />
         </LinearLayout>
 
     </LinearLayout>

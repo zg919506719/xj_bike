@@ -76,15 +76,15 @@ public class LoginReq {
          * password : 123456
          */
 
-        private String username;
+        private String code;
         private String password;
 
-        public String getUsername() {
-            return username;
+        public String getCode() {
+            return code;
         }
 
-        public void setUsername(String username) {
-            this.username = username;
+        public void setCode(String code) {
+            this.code = code;
         }
 
         public String getPassword() {

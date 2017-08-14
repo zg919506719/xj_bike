@@ -51,7 +51,10 @@ public class MyApp extends Application {
     }
 
     public static void exit() {
-
+        SharedPreferences.Editor editor = MyApp.getEditor();
+        editor.putBoolean("isLogin", false);
+        editor.putString("cardId", "");
+        editor.commit();
         for (Activity activity : activityList) {
             activity.finish();
         }

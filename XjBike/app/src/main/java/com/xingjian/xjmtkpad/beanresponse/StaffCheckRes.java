@@ -1,18 +1,17 @@
 package com.xingjian.xjmtkpad.beanresponse;
 
 /**
- * Created by thinkpad on 2017/8/3.
+ * Created by thinkpad on 2017/8/14.
  */
 
-public class LoginRes {
-
+public class StaffCheckRes {
 
     /**
      * siteId : 59
-     * cmd : d2
+     * cmd : 27
      * way : 2
      * sn : 0
-     * data : {"code":"1000","message":"登陆成功！","idCard":"000003"}
+     * data : {"staff_cardId":"5","operate_type":"1","operate_result":"1"}
      */
 
     private String siteId;
@@ -63,37 +62,37 @@ public class LoginRes {
 
     public static class DataBean {
         /**
-         * code : 1000
-         * message : 登陆成功！
-         * idCard : 000003
+         * staff_cardId : 5
+         * operate_type : 1
+         * operate_result : 1
          */
 
-        private String code;
-        private String message;
-        private String idCard;
+        private String staff_cardId;
+        private String operate_type;
+        private String operate_result;
 
-        public String getCode() {
-            return code;
+        public String getStaff_cardId() {
+            return staff_cardId;
         }
 
-        public void setCode(String code) {
-            this.code = code;
+        public void setStaff_cardId(String staff_cardId) {
+            this.staff_cardId = staff_cardId;
         }
 
-        public String getMessage() {
-            return message;
+        public String getOperate_type() {
+            return operate_type;
         }
 
-        public void setMessage(String message) {
-            this.message = message;
+        public void setOperate_type(String operate_type) {
+            this.operate_type = operate_type;
         }
 
-        public String getIdCard() {
-            return idCard;
+        public String getOperate_result() {
+            return operate_result;
         }
 
-        public void setIdCard(String idCard) {
-            this.idCard = idCard;
+        public void setOperate_result(String operate_result) {
+            this.operate_result = operate_result;
         }
     }
 }

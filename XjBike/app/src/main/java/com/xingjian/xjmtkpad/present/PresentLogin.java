@@ -23,6 +23,7 @@ import com.vilyever.socketclient.SocketClient;
 import com.vilyever.socketclient.helper.SocketClientDelegate;
 import com.vilyever.socketclient.helper.SocketResponsePacket;
 import com.xingjian.xjmtkpad.R;
+import com.xingjian.xjmtkpad.activity.StaffDataActivity;
 import com.xingjian.xjmtkpad.activity.UserDataActivity;
 import com.xingjian.xjmtkpad.base.MyApp;
 import com.xingjian.xjmtkpad.beanrequest.CardLLoginReq;
@@ -30,6 +31,7 @@ import com.xingjian.xjmtkpad.beanrequest.LoginReq;
 import com.xingjian.xjmtkpad.beanrequest.NameReq;
 import com.xingjian.xjmtkpad.beanrequest.TimeReq;
 import com.xingjian.xjmtkpad.beanresponse.CardLoginRes;
+import com.xingjian.xjmtkpad.beanresponse.LoginRes;
 import com.xingjian.xjmtkpad.beanresponse.NameRes;
 import com.xingjian.xjmtkpad.beanresponse.TimeRes;
 import com.xingjian.xjmtkpad.inter.InterLogin;
@@ -79,13 +81,11 @@ public class PresentLogin {
         setTime();
         context.startService(new Intent(context, ServiceDevice.class));
 //        setwelcomeDialog();
-//        m1监听
-//获取温度
         initVideo();
-        login("123456","123456");
+//        login("18045167739", "111111a");
     }
 
-    public void showNoCardDialog() {
+    public void showNoCardDialog(int i) {
         final AlertDialog.Builder dialog = new AlertDialog.Builder(context);
         View view = LayoutInflater.from(context).inflate(R.layout.dialog_login, null);
         Button login = (Button) view.findViewById(R.id.btn_login);
@@ -104,8 +104,7 @@ public class PresentLogin {
                 } else if (password1.isEmpty()) {
                     new StringDialog().showString(context, "请输入密码");
                 } else {
-//                    login(username1, password1);
-                    context.startActivity(new Intent(context, UserDataActivity.class));
+                    login(username1, password1);
                 }
                 show.dismiss();
             }
@@ -127,7 +126,7 @@ public class PresentLogin {
         req.setSn("0");
         req.setAddress("济南");
         LoginReq.DataBean data = new LoginReq.DataBean();
-        data.setUsername(username);
+        data.setCode(username);
         data.setPassword(password);
         req.setData(data);
         String s = JSON.toJSONString(req);
@@ -162,20 +161,47 @@ public class PresentLogin {
                     tv_time.setText(time);
                 } else if (message.contains("\"cmd\":\"d3\"")) {
                     CardLoginRes cardLoginRes = JSONObject.parseObject(message, CardLoginRes.class);
-                    String result = cardLoginRes.getData().getResult();
-                    if (result.equals("1")){
+                    CardLoginRes.DataBean data = cardLoginRes.getData();
+                    String result = data.getCode();
+//                    {"code":"1000","message":"success","id":"000001","cardType":"staff"员工,user，用户}}
+//                    "code":"1004","message":"error"
+                    if (result.equals("1000")) {
                         boolean isLogin = MyApp.getPreference().getBoolean("isLogin", false);
                         if (!isLogin) {
                             SharedPreferences.Editor editor = MyApp.getEditor();
-                            editor.putString("cardId", cardId);
+                            editor.putString("cardId", data.getId());
                             editor.putBoolean("isLogin", true);
                             editor.commit();
-                            context.startActivity(new Intent(context, UserDataActivity.class));
+                            if (data.getCardType().equals("staff")) {
+                                Intent intent = new Intent(context, StaffDataActivity.class);
+                                intent.putExtra("staff", data.getId());
+                                context.startActivity(intent);
+                            } else if (data.getCardType().equals("user")) {
+                                context.startActivity(new Intent(context, UserDataActivity.class));
+                            }
                         }
-                    }else {
+                    } else {
                         MyApp.showToast("卡的身份有误，登录失败");
                     }
 
+                } else if (message.contains("\"cmd\":\"d2\"")) {
+                    LoginRes loginRes = JSONObject.parseObject(message, LoginRes.class);
+                    LoginRes.DataBean data = loginRes.getData();
+                    if (data.getCode().equals("1000")) {
+                        boolean isLogin = MyApp.getPreference().getBoolean("isLogin", false);
+                        if (!isLogin) {
+                            SharedPreferences.Editor editor = MyApp.getEditor();
+                            editor.putString("cardId", data.getIdCard());
+                            editor.putBoolean("isLogin", true);
+                            editor.commit();
+                            context.startActivity(new Intent(context, UserDataActivity.class));
+//                                Intent intent = new Intent(context, StaffDataActivity.class);
+//                                intent.putExtra("staff", data.getIdCard());
+//                                context.startActivity(intent);
+                        }
+                    } else {
+                        MyApp.showToast("卡的身份有误，登录失败");
+                    }
                 }
             }
         });
@@ -274,7 +300,9 @@ public class PresentLogin {
                     req.setSn("0");
                     req.setAddress("上海");
                     CardLLoginReq.DataBean bean = new CardLLoginReq.DataBean();
-                    bean.setUser_cardId(cardId);
+//                    bean.setUser_cardId(cardId);
+//                    员工卡测试
+                    bean.setUser_cardId("000001");
                     req.setData(bean);
                     client.sendString(JSONObject.toJSONString(req));
                 }

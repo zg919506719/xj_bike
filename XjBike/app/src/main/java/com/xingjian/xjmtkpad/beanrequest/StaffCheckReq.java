@@ -1,18 +1,17 @@
-package com.xingjian.xjmtkpad.beanresponse;
+package com.xingjian.xjmtkpad.beanrequest;
 
 /**
- * Created by thinkpad on 2017/8/3.
+ * Created by thinkpad on 2017/8/14.
  */
 
-public class LoginRes {
-
+public class StaffCheckReq {
 
     /**
      * siteId : 59
-     * cmd : d2
-     * way : 2
+     * cmd : 27
+     * way : 1
      * sn : 0
-     * data : {"code":"1000","message":"登陆成功！","idCard":"000003"}
+     * data : {"type":"2","value":"1","update_type":"1"}
      */
 
     private String siteId;
@@ -63,37 +62,37 @@ public class LoginRes {
 
     public static class DataBean {
         /**
-         * code : 1000
-         * message : 登陆成功！
-         * idCard : 000003
+         * type : 2
+         * value : 1
+         * update_type : 1
          */
 
-        private String code;
-        private String message;
-        private String idCard;
+        private String type;
+        private String value;
+        private String update_type;
 
-        public String getCode() {
-            return code;
+        public String getType() {
+            return type;
         }
 
-        public void setCode(String code) {
-            this.code = code;
+        public void setType(String type) {
+            this.type = type;
         }
 
-        public String getMessage() {
-            return message;
+        public String getValue() {
+            return value;
         }
 
-        public void setMessage(String message) {
-            this.message = message;
+        public void setValue(String value) {
+            this.value = value;
         }
 
-        public String getIdCard() {
-            return idCard;
+        public String getUpdate_type() {
+            return update_type;
         }
 
-        public void setIdCard(String idCard) {
-            this.idCard = idCard;
+        public void setUpdate_type(String update_type) {
+            this.update_type = update_type;
         }
     }
 }
