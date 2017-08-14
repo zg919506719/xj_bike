@@ -47,6 +47,9 @@ public class StaffAttendanceActivity extends AppCompatActivity {
         staff = getIntent().getExtras().getString("staff");
         tvAdmincardnumber.setText(staff);
         socketRegister();
+        Intent intent = new Intent(this, StaffRecordActivity.class);
+        intent.putExtra("staff", staff);
+        startActivity(intent);
     }
 
 
@@ -91,8 +94,9 @@ public class StaffAttendanceActivity extends AppCompatActivity {
                 client.sendString(message1);
                 break;
             case R.id.btn_checkrecords:// 考勤记录
-//                Intent intent4 = new Intent(AttendanceActivity.this, AttenRecordActivity.class);
-//                startActivity(intent4);
+                Intent intent = new Intent(this, StaffRecordActivity.class);
+                intent.putExtra("staff", staff);
+                startActivity(intent);
                 break;
         }
     }

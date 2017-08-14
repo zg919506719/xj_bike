@@ -60,7 +60,7 @@
         <activity android:name=".activity.UserDataActivity" />
         <activity android:name=".activity.StaffDataActivity" />
         <activity android:name=".activity.StaffLoginActivity" />
-
+        <activity android:name=".activity.StaffRecordActivity" />
         <activity android:name=".activity.StaffAbnormalActivity" />
         <activity android:name=".activity.StaffAttendanceActivity" />
         <activity android:name=".activity.NetActivity" />
