@@ -98,7 +98,7 @@ public class MainActivity extends AppCompatActivity implements InterLogin {
                 startActivity(new Intent(MainActivity.this, StationActivity.class));
                 break;
             case R.id.btn_login:
-                presentLogin.showNoCardDialog(0);
+                presentLogin.showNoCardDialog();
                 break;
             case R.id.btn_login_staff:
                 startActivity(new Intent(MainActivity.this, StaffLoginActivity.class));

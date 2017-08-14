@@ -1,17 +1,29 @@
 package com.xingjian.xjmtkpad.activity;
 
+import android.content.Intent;
+import android.content.SharedPreferences;
 import android.location.Location;
 import android.os.Bundle;
+import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
 
+import com.alibaba.fastjson.JSONObject;
 import com.amap.api.maps2d.AMap;
 import com.amap.api.maps2d.CameraUpdateFactory;
 import com.amap.api.maps2d.MapView;
 import com.amap.api.maps2d.UiSettings;
 import com.amap.api.maps2d.model.MyLocationStyle;
+import com.vilyever.socketclient.SocketClient;
+import com.vilyever.socketclient.helper.SocketClientDelegate;
+import com.vilyever.socketclient.helper.SocketResponsePacket;
 import com.xingjian.xjmtkpad.R;
+import com.xingjian.xjmtkpad.base.MyApp;
+import com.xingjian.xjmtkpad.beanresponse.CardLoginRes;
+import com.xingjian.xjmtkpad.beanresponse.LoginRes;
+import com.xingjian.xjmtkpad.beanresponse.NameRes;
+import com.xingjian.xjmtkpad.beanresponse.TimeRes;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -24,6 +36,8 @@ public class StationActivity extends AppCompatActivity {
     @BindView(R.id.map)
     MapView map;
 
+    private SocketClient client;
+
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -31,7 +45,37 @@ public class StationActivity extends AppCompatActivity {
         ButterKnife.bind(this);
         //在activity执行onCreate时执行map.onCreate(savedInstanceState)，创建地图
         map.onCreate(savedInstanceState);
+        client = MyApp.Client;
         locate();
+        socketRegister();
+        init();
+    }
+
+    private void init() {
+        String reqStr11 = "{\"siteId\":\"59\",\"cmd\":\"11\",\"way\":\"1\",\"sn\":\"0\",\"data\":{\"address\":\"\\u6d4e\\u5357\"}}";
+        client.sendString(reqStr11);
+    }
+
+    private void socketRegister() {
+        client.registerSocketClientDelegate(new SocketClientDelegate() {
+            @Override
+            public void onConnected(SocketClient client) {
+            }
+
+            @Override
+            public void onDisconnected(SocketClient client) {
+                client.connect();
+            }
+
+            @Override
+            public void onResponse(SocketClient client, @NonNull SocketResponsePacket responsePacket) {
+                String message = responsePacket.getMessage();
+                Log.i("haha",message);
+                //获取服务器时间
+                if (message.contains("\"cmd\":\"11\"")) {
+                }
+            }
+        });
     }
 
     private void locate() {
@@ -46,7 +90,7 @@ public class StationActivity extends AppCompatActivity {
 
 
 //        myLocationStyle.myLocationType(MyLocationStyle.LOCATION_TYPE_SHOW);//只定位一次。
-        myLocationStyle.myLocationType(MyLocationStyle.LOCATION_TYPE_LOCATE) ;//定位一次，且将视角移动到地图中心点。
+        myLocationStyle.myLocationType(MyLocationStyle.LOCATION_TYPE_LOCATE);//定位一次，且将视角移动到地图中心点。
 //        myLocationStyle.myLocationType(MyLocationStyle.LOCATION_TYPE_FOLLOW) ;//连续定位、且将视角移动到地图中心点，定位蓝点跟随设备移动。（1秒1次定位）
 //        myLocationStyle.myLocationType(MyLocationStyle.LOCATION_TYPE_MAP_ROTATE);//连续定位、且将视角移动到地图中心点，地图依照设备方向旋转，定位点会跟随设备移动。（1秒1次定位）
 //        myLocationStyle.myLocationType(MyLocationStyle.LOCATION_TYPE_LOCATION_ROTATE);//连续定位、且将视角移动到地图中心点，定位点依照设备方向旋转，并且会跟随设备移动。（1秒1次定位）默认执行此种模式。
@@ -66,7 +110,7 @@ public class StationActivity extends AppCompatActivity {
         aMap.setOnMyLocationChangeListener(new AMap.OnMyLocationChangeListener() {
             @Override
             public void onMyLocationChange(Location location) {
-                Log.i("haha", location.getLatitude()+"..."+location.getLongitude());
+                Log.i("haha", location.getLatitude() + "..." + location.getLongitude());
             }
         });
 

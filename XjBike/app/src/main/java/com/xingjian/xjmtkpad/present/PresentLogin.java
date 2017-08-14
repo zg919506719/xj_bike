@@ -85,7 +85,7 @@ public class PresentLogin {
 //        login("18045167739", "111111a");
     }
 
-    public void showNoCardDialog(int i) {
+    public void showNoCardDialog() {
         final AlertDialog.Builder dialog = new AlertDialog.Builder(context);
         View view = LayoutInflater.from(context).inflate(R.layout.dialog_login, null);
         Button login = (Button) view.findViewById(R.id.btn_login);
@@ -300,9 +300,9 @@ public class PresentLogin {
                     req.setSn("0");
                     req.setAddress("上海");
                     CardLLoginReq.DataBean bean = new CardLLoginReq.DataBean();
-//                    bean.setUser_cardId(cardId);
+                    bean.setUser_cardId(cardId);
 //                    员工卡测试
-                    bean.setUser_cardId("000001");
+//                    bean.setUser_cardId("000001");
                     req.setData(bean);
                     client.sendString(JSONObject.toJSONString(req));
                 }
