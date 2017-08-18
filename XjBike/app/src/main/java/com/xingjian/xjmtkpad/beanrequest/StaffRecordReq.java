@@ -68,6 +68,24 @@ public class StaffRecordReq {
 
         private String type;
         private String value;
+        private String page;
+        private String rows;
+
+        public String getPage() {
+            return page;
+        }
+
+        public void setPage(String page) {
+            this.page = page;
+        }
+
+        public String getRows() {
+            return rows;
+        }
+
+        public void setRows(String rows) {
+            this.rows = rows;
+        }
 
         public String getType() {
             return type;

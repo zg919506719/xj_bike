@@ -300,9 +300,9 @@ public class PresentLogin {
                     req.setSn("0");
                     req.setAddress("上海");
                     CardLLoginReq.DataBean bean = new CardLLoginReq.DataBean();
-                    bean.setUser_cardId(cardId);
+//                    bean.setUser_cardId(cardId);
 //                    员工卡测试
-//                    bean.setUser_cardId("000001");
+                    bean.setUser_cardId("000001");
                     req.setData(bean);
                     client.sendString(JSONObject.toJSONString(req));
                 }

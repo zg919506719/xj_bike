@@ -1,5 +1,6 @@
 package com.xingjian.xjmtkpad.activity;
 
+import android.app.ProgressDialog;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
@@ -7,6 +8,7 @@ import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
 import android.view.View;
 import android.widget.ListView;
+import android.widget.ProgressBar;
 import android.widget.TextView;
 
 import com.alibaba.fastjson.JSONObject;
@@ -14,8 +16,14 @@ import com.vilyever.socketclient.SocketClient;
 import com.vilyever.socketclient.helper.SocketClientDelegate;
 import com.vilyever.socketclient.helper.SocketResponsePacket;
 import com.xingjian.xjmtkpad.R;
+import com.xingjian.xjmtkpad.adapter.AdapterRecord;
 import com.xingjian.xjmtkpad.base.MyApp;
 import com.xingjian.xjmtkpad.beanrequest.StaffCheckReq;
+import com.xingjian.xjmtkpad.beanrequest.StaffRecordReq;
+import com.xingjian.xjmtkpad.beanresponse.StaffRecordRes;
+
+import java.util.ArrayList;
+import java.util.List;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -32,6 +40,8 @@ public class StaffRecordActivity extends AppCompatActivity {
     ListView lvRentrecord;
     private SocketClient client;
     private String staff;
+    private int page = 1;
+    private ProgressDialog progressDialog;
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
@@ -44,19 +54,29 @@ public class StaffRecordActivity extends AppCompatActivity {
     }
 
     private void initData() {
+        progressDialog = new ProgressDialog(this);
         staff = getIntent().getExtras().getString("staff");
         tvCard.setText(staff);
-        StaffCheckReq req = new StaffCheckReq();
+        sendReq(page + "");
+//        String reqJson28 = "{\"siteId\":\"59\",\"cmd\":\"28\",\"way\":\"1\",\"sn\":\"0\",\"data\":{\"type\":\"2\",\"value\":\"1234\"}}";
+    }
+
+    private void sendReq(String page) {
+        if (!progressDialog.isShowing()) {
+            progressDialog.show();
+        }
+        StaffRecordReq req = new StaffRecordReq();
         req.setSiteId("59");
         req.setCmd("28");
         req.setWay("1");
         req.setSn("0");
-        StaffCheckReq.DataBean dataBean = new StaffCheckReq.DataBean();
+        StaffRecordReq.DataBean dataBean = new StaffRecordReq.DataBean();
         dataBean.setType("2");
         dataBean.setValue(staff);
+        dataBean.setPage(page);
+        dataBean.setRows("10");
         req.setData(dataBean);
         client.sendString(JSONObject.toJSONString(req));
-//        String reqJson28 = "{\"siteId\":\"59\",\"cmd\":\"28\",\"way\":\"1\",\"sn\":\"0\",\"data\":{\"type\":\"2\",\"value\":\"1234\"}}";
     }
 
 
@@ -75,8 +95,18 @@ public class StaffRecordActivity extends AppCompatActivity {
             @Override
             public void onResponse(SocketClient client, @NonNull SocketResponsePacket responsePacket) {
                 String json = responsePacket.getMessage();
-                Log.i("===", json);
+                Log.i("test", json);
                 if (json.contains("\"cmd\":\"28\"")) {//考勤信息查询响应
+                    progressDialog.dismiss();
+                    StaffRecordRes staffRecordRes = JSONObject.parseObject(json, StaffRecordRes.class);
+                    StaffRecordRes.DataBean data = staffRecordRes.getData();
+                    if (data.getCount().equals("0")) {
+                        MyApp.showToast("没有数据");
+                    } else {
+                        ArrayList<StaffRecordRes.DataBean.ListBean> list = (ArrayList<StaffRecordRes.DataBean.ListBean>) data.getList();
+                        lvRentrecord.setAdapter(new AdapterRecord(list));
+                    }
+
                 }
             }
         });
@@ -91,10 +121,15 @@ public class StaffRecordActivity extends AppCompatActivity {
     public void onClick(View view) {
         switch (view.getId()) {
             case R.id.btn_up:
+                page--;
+                sendReq(page + "");
                 break;
             case R.id.btn_back:
+                finish();
                 break;
             case R.id.btn_down:
+                page++;
+                sendReq(page + "");
                 break;
         }
     }
