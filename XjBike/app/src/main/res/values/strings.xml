@@ -2,5 +2,5 @@
     <string name="app_name">行践云车</string>
     <string name="app_title">欢迎使用行践公共自行车租赁系统</string>
     <string name="replace">XXX</string>
-    <string name="app_company" >上海行践自行车桩车站点</string>
+    <string name="app_company" >上海行践自行车桩车站点:</string>
 </resources>

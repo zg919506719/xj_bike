@@ -113,7 +113,7 @@ public class StaffLoginActivity extends AppCompatActivity {
                             editor.putString("cardId", data.getIdCard());
                             editor.putBoolean("isLogin", true);
                             editor.commit();
-                            Intent intent = new Intent(StaffLoginActivity.this, StaffDataActivity.class);
+                            Intent intent = new Intent(StaffLoginActivity.this, StaffAttendanceActivity.class);
                             intent.putExtra("staff", data.getIdCard());
                             startActivity(intent);
                         }

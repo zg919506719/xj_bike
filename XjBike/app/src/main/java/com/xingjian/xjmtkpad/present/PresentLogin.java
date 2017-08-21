@@ -23,7 +23,7 @@ import com.vilyever.socketclient.SocketClient;
 import com.vilyever.socketclient.helper.SocketClientDelegate;
 import com.vilyever.socketclient.helper.SocketResponsePacket;
 import com.xingjian.xjmtkpad.R;
-import com.xingjian.xjmtkpad.activity.StaffDataActivity;
+import com.xingjian.xjmtkpad.activity.StaffAttendanceActivity;
 import com.xingjian.xjmtkpad.activity.UserDataActivity;
 import com.xingjian.xjmtkpad.base.MyApp;
 import com.xingjian.xjmtkpad.beanrequest.CardLLoginReq;
@@ -173,7 +173,7 @@ public class PresentLogin {
                             editor.putBoolean("isLogin", true);
                             editor.commit();
                             if (data.getCardType().equals("staff")) {
-                                Intent intent = new Intent(context, StaffDataActivity.class);
+                                Intent intent = new Intent(context, StaffAttendanceActivity.class);
                                 intent.putExtra("staff", data.getId());
                                 context.startActivity(intent);
                             } else if (data.getCardType().equals("user")) {

@@ -44,8 +44,8 @@ public class UserDataActivity extends AppCompatActivity {
                 startActivity(new Intent(this,ReturnInfoActivity.class));
                 break;
             case R.id.money:
-//                金额信息
-                startActivity(new Intent(this,MoneyInfoActivity.class));
+//                充值信息
+                startActivity(new Intent(this,RechargeActivity.class));
                 break;
             case R.id.borrow:
 //                借车

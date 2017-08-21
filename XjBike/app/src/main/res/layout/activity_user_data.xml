@@ -59,7 +59,7 @@
             android:id="@+id/money"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="费  用  相  关"
+            android:text="充 值 查 询"
             android:layout_marginStart="50dp"
             android:textSize="22sp"
             android:textColor="#fff"
