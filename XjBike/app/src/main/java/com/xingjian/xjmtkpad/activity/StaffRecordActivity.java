@@ -97,7 +97,9 @@ public class StaffRecordActivity extends AppCompatActivity {
                 String json = responsePacket.getMessage();
                 Log.i("test", json);
                 if (json.contains("\"cmd\":\"28\"")) {//考勤信息查询响应
-                    progressDialog.dismiss();
+                    if (progressDialog.isShowing()) {
+                        progressDialog.dismiss();
+                    }
                     StaffRecordRes staffRecordRes = JSONObject.parseObject(json, StaffRecordRes.class);
                     StaffRecordRes.DataBean data = staffRecordRes.getData();
                     if (data.getCount().equals("0")) {

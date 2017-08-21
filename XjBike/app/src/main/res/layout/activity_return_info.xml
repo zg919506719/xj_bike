@@ -32,68 +32,57 @@
         android:textColor="#000"
         android:textSize="24sp" />
 
-    <Spinner
+    <LinearLayout
         android:id="@+id/sp_item"
-        android:layout_width="150dp"
-        android:layout_height="25dp"
-        android:layout_alignParentLeft="true"
-        android:layout_below="@+id/tv_rbr"
-        android:layout_marginTop="10dp"
-        android:background="@mipmap/filterbox"
-        android:clickable="true"
-        android:focusable="true" />
+        android:layout_width="match_parent"
+        android:layout_height="40dp"
+        android:layout_below="@+id/tv_rbr">
 
-    <ImageView
-        android:id="@+id/iv_sfbb"
-        android:layout_width="25dp"
-        android:layout_height="25dp"
-        android:layout_alignBottom="@+id/sp_item"
-        android:layout_alignRight="@+id/sp_item"
-        android:clickable="false"
-        android:focusable="false"
-        android:src="@mipmap/search_filter_button_background" />
+        <TextView
+            android:layout_width="150dp"
+            android:layout_height="match_parent"
+            android:layout_marginTop="10dp"
+            android:gravity="center"
+            android:text="充值时间范围:"
+            android:textColor="#000"
+            android:textSize="18sp" />
 
-    <Button
-        android:id="@+id/btn_filter"
-        android:layout_width="10dp"
-        android:layout_height="8dp"
-        android:layout_alignRight="@+id/iv_sfbb"
-        android:layout_alignTop="@+id/iv_sfbb"
-        android:layout_marginRight="7dp"
-        android:layout_marginTop="8dp"
-        android:background="@mipmap/filter_button"
-        android:clickable="false"
-        android:focusable="false" />
+        <Button
+            android:id="@+id/start"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:background="@mipmap/button"
+            android:text="2017-01-01"
+            android:textColor="@color/White"
+            android:textSize="16sp" />
 
-    <!--<EditText-->
-    <!--android:id="@+id/et_filter"-->
-    <!--android:layout_width="wrap_content"-->
-    <!--android:layout_height="25dp"-->
-    <!--android:layout_alignBottom="@+id/sp_item"-->
-    <!--android:layout_toRightOf="@+id/sp_item"-->
-    <!--android:background="@mipmap/search_inputbox" />-->
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="10dp"
+            android:gravity="center"
+            android:text="---" />
 
-    <!--<ImageView-->
-    <!--android:id="@+id/iv_sfbb2"-->
-    <!--android:layout_width="25dp"-->
-    <!--android:layout_height="25dp"-->
-    <!--android:layout_alignBottom="@+id/sp_item"-->
-    <!--android:layout_alignRight="@+id/et_filter"-->
-    <!--android:clickable="false"-->
-    <!--android:focusable="false"-->
-    <!--android:src="@mipmap/search_filter_button_background" />-->
+        <Button
+            android:id="@+id/end"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:background="@mipmap/button"
+            android:text="2017-06-20"
+            android:textColor="@color/White"
+            android:textSize="16sp" />
+        <Button
+            android:id="@+id/sure"
+            android:layout_marginLeft="10dp"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:background="@mipmap/button"
+            android:text="确定"
+            android:textColor="@color/White"
+            android:textSize="16sp" />
+    </LinearLayout>
 
-    <!--<Button-->
-    <!--android:id="@+id/btn_search"-->
-    <!--android:layout_width="10dp"-->
-    <!--android:layout_height="8dp"-->
-    <!--android:layout_alignRight="@+id/et_filter"-->
-    <!--android:layout_alignTop="@+id/iv_sfbb"-->
-    <!--android:layout_marginRight="7dp"-->
-    <!--android:layout_marginTop="8dp"-->
-    <!--android:background="@mipmap/search_button"-->
-    <!--android:clickable="true"-->
-    <!--android:focusable="true" />-->
+
 
     <LinearLayout
         android:id="@+id/ll_title"

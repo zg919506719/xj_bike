@@ -47,9 +47,6 @@ public class StaffAttendanceActivity extends AppCompatActivity {
         staff = getIntent().getExtras().getString("staff");
         tvAdmincardnumber.setText(staff);
         socketRegister();
-        Intent intent = new Intent(this, StaffRecordActivity.class);
-        intent.putExtra("staff", staff);
-        startActivity(intent);
     }
 
 

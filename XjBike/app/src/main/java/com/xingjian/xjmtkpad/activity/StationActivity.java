@@ -1,8 +1,5 @@
 package com.xingjian.xjmtkpad.activity;
 
-import android.content.Intent;
-import android.content.SharedPreferences;
-import android.graphics.BitmapFactory;
 import android.location.Location;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
@@ -15,9 +12,7 @@ import com.amap.api.maps2d.AMap;
 import com.amap.api.maps2d.CameraUpdateFactory;
 import com.amap.api.maps2d.MapView;
 import com.amap.api.maps2d.UiSettings;
-import com.amap.api.maps2d.model.BitmapDescriptorFactory;
 import com.amap.api.maps2d.model.LatLng;
-import com.amap.api.maps2d.model.Marker;
 import com.amap.api.maps2d.model.MarkerOptions;
 import com.amap.api.maps2d.model.MyLocationStyle;
 import com.vilyever.socketclient.SocketClient;
@@ -26,15 +21,9 @@ import com.vilyever.socketclient.helper.SocketResponsePacket;
 import com.xingjian.xjmtkpad.R;
 import com.xingjian.xjmtkpad.base.MyApp;
 import com.xingjian.xjmtkpad.beanrequest.StationReq;
-import com.xingjian.xjmtkpad.beanresponse.CardLoginRes;
-import com.xingjian.xjmtkpad.beanresponse.LoginRes;
-import com.xingjian.xjmtkpad.beanresponse.NameRes;
-import com.xingjian.xjmtkpad.beanresponse.StaffRecordRes;
 import com.xingjian.xjmtkpad.beanresponse.StationRes;
-import com.xingjian.xjmtkpad.beanresponse.TimeRes;
 
 import java.util.Iterator;
-import java.util.List;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -91,6 +80,7 @@ public class StationActivity extends AppCompatActivity {
             public void onResponse(SocketClient client, @NonNull SocketResponsePacket responsePacket) {
                 String message = responsePacket.getMessage();
                 //获取服务器时间
+                Log.i("haha", message);
                 if (message.contains("\"cmd\":\"11\"")) {
                     StationRes stationRes = JSONObject.parseObject(message, StationRes.class);
                     StationRes.DataBean data = stationRes.getData();
@@ -105,7 +95,6 @@ public class StationActivity extends AppCompatActivity {
                              * site_addressLongitude : 117.083021,36.672009
                              */
                             String site_addressLongitude = bean.getSite_addressLongitude();
-                            Log.i("haha", site_addressLongitude);
                             String[] split = site_addressLongitude.split(",");
                             LatLng latLng = new LatLng(Double.parseDouble(split[1]), Double.parseDouble(split[0]));
                             aMap.addMarker(new MarkerOptions().position(latLng).title(bean.getSite_address()).snippet(bean.getSite_name()));
