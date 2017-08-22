@@ -1,9 +1,11 @@
 package com.xingjian.xjmtkpad.present;
 
 import android.app.Dialog;
+import android.app.Service;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.media.AudioManager;
 import android.media.MediaPlayer;
 import android.posapi.PosApi;
 import android.support.annotation.NonNull;
@@ -13,7 +15,9 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.MediaController;
 import android.widget.ProgressBar;
+import android.widget.SeekBar;
 import android.widget.TextView;
 import android.widget.VideoView;
 
@@ -37,6 +41,7 @@ import com.xingjian.xjmtkpad.beanresponse.TimeRes;
 import com.xingjian.xjmtkpad.inter.InterLogin;
 import com.xingjian.xjmtkpad.service.ServiceDevice;
 import com.xingjian.xjmtkpad.utils.StringDialog;
+import com.xingjian.xjmtkpad.view.MyVideoView;
 
 /**
  * Created by thinkpad on 2017/8/2.
@@ -49,8 +54,10 @@ public class PresentLogin {
     private SocketClient client;
     private TextView tv_time, tv_temp, tv_name, tv_location, tv_humidity;
     private static String TAG = "haha";
-    private VideoView videoplayer;
+    //    private VideoView videoplayer;
+    private MyVideoView videoplayer;
     private String cardId;
+    private SeekBar seek;
 
     public PresentLogin(InterLogin interLogin) {
         this.interLogin = interLogin;
@@ -63,6 +70,7 @@ public class PresentLogin {
         tv_temp = interLogin.getTemp();
         tv_humidity = interLogin.getHumidity();
         videoplayer = interLogin.getVideoView();
+        seek = interLogin.getSeekBar();
     }
 
 
@@ -243,13 +251,18 @@ public class PresentLogin {
                     case PosApi.POS_INIT:
                         if (state == PosApi.COMM_STATUS_SUCCESS) {
                             MyApp.showToast("设备初始化成功");
-                        } else if (state == PosApi.COMM_STATUS_FAILED) {
-                            MyApp.showToast("设备初始化失败，请重启");
+                        } else {
+                            mPosApi.initPosDev("ima3511");
                         }
+//                        if (state == PosApi.COMM_STATUS_FAILED) {
+//                            MyApp.showToast("设备初始化失败，请重启");
+//                        }
                         break;
                 }
             }
         });
+        mPosApi.initPosDev("ima3511");
+
     }
 
     private void setTemp() {
@@ -357,7 +370,7 @@ public class PresentLogin {
     }
 
     private void initVideo() {
-        videoplayer.setVideoPath("android.resource://com.xingjian.xjmtkpad/" + R.raw.test);
+        videoplayer.setVideoPath("android.resource://com.xingjian.xjmtkpad/" + R.raw.jinchen);
         videoplayer.setOnPreparedListener(new MediaPlayer.OnPreparedListener() {
             @Override
             public void onPrepared(MediaPlayer mediaPlayer) {
@@ -368,6 +381,39 @@ public class PresentLogin {
             @Override
             public void onCompletion(MediaPlayer mediaPlayer) {
                 mediaPlayer.start();
+            }
+        });
+        controlVoice();
+    }
+
+    private void controlVoice() {
+        final AudioManager audiomanage = (AudioManager) context.getSystemService(Context.AUDIO_SERVICE);
+        int maxVolume = audiomanage.getStreamMaxVolume(AudioManager.STREAM_MUSIC);
+        seek.setMax(maxVolume);   //拖动条最高值与系统最大声匹配
+        int currentVolume = audiomanage.getStreamVolume(AudioManager.STREAM_MUSIC);
+        //获取当前值
+        seek.setProgress(currentVolume);
+        seek.setOnSeekBarChangeListener(new SeekBar.OnSeekBarChangeListener() //调音监听器
+        {
+            public void onProgressChanged(SeekBar arg0, int progress, boolean fromUser) {
+                audiomanage.setStreamVolume(AudioManager.STREAM_MUSIC, progress, 0);
+                int streamVolume1 = audiomanage.getStreamVolume(AudioManager.STREAM_MUSIC);
+//                currentVolume = streamVolume1;  //获取当前值
+                seek.setProgress(streamVolume1);
+//                mVolume.setText(currentVolume*100/maxVolume + " %");
+            }
+
+            @Override
+            public void onStartTrackingTouch(SeekBar seekBar) {
+                // TODO Auto-generated method stub
+
+            }
+
+            @Override
+            public void onStopTrackingTouch(SeekBar seekBar) {
+                // TODO Auto-generated method stub
+
+
             }
         });
 

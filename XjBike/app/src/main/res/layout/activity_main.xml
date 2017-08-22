@@ -75,7 +75,7 @@
                     android:id="@+id/humidity"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:text="当前适度："
+                    android:text="当前湿度："
                     android:textSize="24sp" />
             </LinearLayout>
 
@@ -83,7 +83,8 @@
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="0dp"
-                android:layout_weight="1">
+                android:layout_weight="1"
+                android:visibility="gone">
 
                 <ImageView
                     android:layout_width="wrap_content"
@@ -98,20 +99,6 @@
                     android:textSize="24sp" />
             </LinearLayout>
 
-            <LinearLayout
-                android:layout_width="match_parent"
-                android:layout_height="0dp"
-                android:layout_weight="1">
-
-                <Button
-                    android:id="@+id/net"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:background="@mipmap/button"
-                    android:text="查看附近网点"
-                    android:textColor="@color/White"
-                    android:textSize="24sp" />
-            </LinearLayout>
 
             <LinearLayout
                 android:layout_width="match_parent"
@@ -120,10 +107,20 @@
 
                 <Button
                     android:id="@+id/station"
-                    android:layout_width="match_parent"
+                    android:layout_width="0dp"
+                    android:layout_weight="1"
                     android:layout_height="wrap_content"
                     android:background="@mipmap/button"
-                    android:text="查看附近站点"
+                    android:text="站点"
+                    android:textColor="@color/White"
+                    android:textSize="24sp" />
+                <Button
+                    android:id="@+id/net"
+                    android:layout_width="0dp"
+                    android:layout_weight="1"
+                    android:layout_height="wrap_content"
+                    android:background="@mipmap/button"
+                    android:text="网点"
                     android:textColor="@color/White"
                     android:textSize="24sp" />
             </LinearLayout>
@@ -131,19 +128,18 @@
 
         </LinearLayout>
 
-        <LinearLayout
+        <FrameLayout
             android:layout_width="0dp"
             android:layout_height="match_parent"
-            android:layout_weight="2"
-            android:gravity="center"
-            android:orientation="vertical">
+            android:layout_weight="2.5">
 
-            <VideoView
+            <com.xingjian.xjmtkpad.view.MyVideoView
                 android:id="@+id/videoplayer"
                 android:layout_width="match_parent"
-                android:layout_height="400dp" />
+                android:layout_height="600dp"
+                android:layout_gravity="center"/>
 
-        </LinearLayout>
+        </FrameLayout>
 
         <LinearLayout
             android:layout_width="0dp"
@@ -169,12 +165,9 @@
                 <TextView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:layout_alignLeft="@+id/iv_loginnc"
-                    android:layout_below="@+id/tv_nc"
-                    android:layout_marginLeft="10dp"
-                    android:text="请点击【登录】按键登录"
+                    android:text="请点击【登录】按键"
                     android:textColor="#000"
-                    android:textSize="24sp" />
+                    android:textSize="18sp" />
 
                 <Button
                     android:id="@+id/btn_login"
@@ -203,7 +196,7 @@
                 <TextView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="请在下方感应区放入卡后在点击登录"
+                    android:text="请在下方感应区放入卡"
                     android:textColor="@color/colorBlack"
                     android:textSize="18sp" />
 
@@ -224,7 +217,11 @@
         </LinearLayout>
 
     </LinearLayout>
-
+<SeekBar
+    android:id="@+id/seek"
+    android:layout_width="match_parent"
+    android:layout_height="50dp"
+    android:background="@color/White"/>
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content">

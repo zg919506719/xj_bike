@@ -29,8 +29,6 @@ public class MyApp extends Application {
         Client =new MySocket().getLocalSocketClient();
         Client.connect();
         posApi=PosApi.getInstance(this);
-        posApi.initPosDev("ima3511");
-
     }
 
     public static SharedPreferences getPreference() {

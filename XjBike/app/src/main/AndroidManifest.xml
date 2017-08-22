@@ -52,8 +52,13 @@
         <service android:name="com.amap.api.location.APSService" />
 
         <activity android:name=".activity.MainActivity">
-
+            <intent-filter>
+                <action android:name="android.intent.action.MAIN" />
+                <category android:name="android.intent.category.LAUNCHER"/>
+            </intent-filter>
         </activity>
+                <!--<category android:name="android.intent.category.HOME"/>-->
+                <!--<category android:name="android.intent.category.DEFAULT" />-->
         <activity android:name=".activity.UserDataActivity" />
         <activity android:name=".activity.StaffLoginActivity" />
         <activity android:name=".activity.StaffRecordActivity" />
@@ -77,10 +82,7 @@
         </activity>
         <activity android:name=".activity.MoneyInfoActivity" />
         <activity android:name=".activity.RechargeActivity">
-            <intent-filter>
-                <action android:name="android.intent.action.MAIN" />
-                <category android:name="android.intent.category.LAUNCHER" />
-            </intent-filter>
+
         </activity>
 
         <activity android:name=".activity.ChargeActivity" />

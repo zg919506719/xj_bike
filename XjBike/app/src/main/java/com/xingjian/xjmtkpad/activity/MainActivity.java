@@ -7,13 +7,14 @@ import android.posapi.PosApi;
 import android.support.v7.app.AppCompatActivity;
 import android.view.View;
 import android.view.WindowManager;
+import android.widget.SeekBar;
 import android.widget.TextView;
-import android.widget.VideoView;
 
 import com.xingjian.xjmtkpad.R;
 import com.xingjian.xjmtkpad.base.MyApp;
 import com.xingjian.xjmtkpad.inter.InterLogin;
 import com.xingjian.xjmtkpad.present.PresentLogin;
+import com.xingjian.xjmtkpad.view.MyVideoView;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -28,10 +29,12 @@ public class MainActivity extends AppCompatActivity implements InterLogin {
     TextView name;
     @BindView(R.id.location)
     TextView location;
-    @BindView(R.id.videoplayer)
-    VideoView videoplayer;
     @BindView(R.id.humidity)
     TextView humidity;
+    @BindView(R.id.videoplayer)
+    MyVideoView videoplayer;
+    @BindView(R.id.seek)
+    SeekBar seek;
     private PresentLogin presentLogin;
     private PosApi mPosApi;
 
@@ -84,8 +87,13 @@ public class MainActivity extends AppCompatActivity implements InterLogin {
     }
 
     @Override
-    public VideoView getVideoView() {
+    public MyVideoView getVideoView() {
         return videoplayer;
+    }
+
+    @Override
+    public SeekBar getSeekBar() {
+        return seek;
     }
 
     @OnClick({R.id.net, R.id.station, R.id.btn_login, R.id.btn_login_staff})

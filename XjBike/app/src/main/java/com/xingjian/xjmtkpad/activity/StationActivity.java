@@ -38,7 +38,6 @@ public class StationActivity extends AppCompatActivity {
 
     private SocketClient client;
     private AMap aMap;
-
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -61,6 +60,8 @@ public class StationActivity extends AppCompatActivity {
         req.setSn("0");
         StationReq.DataBean bean = new StationReq.DataBean();
         bean.setAddress("济南");
+        bean.setPage("1");
+        bean.setRows("50");
         req.setData(bean);
         client.sendString(JSONObject.toJSONString(req));
     }
@@ -126,7 +127,7 @@ public class StationActivity extends AppCompatActivity {
 //        myLocationStyle.myLocationType(MyLocationStyle.LOCATION_TYPE_LOCATION_ROTATE_NO_CENTER);//连续定位、蓝点不会移动到地图中心点，定位点依照设备方向旋转，并且蓝点会跟随设备移动。
 //        myLocationStyle.myLocationType(MyLocationStyle.LOCATION_TYPE_FOLLOW_NO_CENTER);//连续定位、蓝点不会移动到地图中心点，并且蓝点会跟随设备移动。
 //        myLocationStyle.myLocationType(MyLocationStyle.LOCATION_TYPE_MAP_ROTATE_NO_CENTER);//连续定位、蓝点不会移动到地图中心点，地图依照设备方向旋转，并且蓝点会跟随设备移动。
-        aMap.moveCamera(CameraUpdateFactory.zoomTo(6));
+        aMap.moveCamera(CameraUpdateFactory.zoomTo(8));
         UiSettings uiSettings = aMap.getUiSettings();
         uiSettings.setZoomControlsEnabled(true);
         uiSettings.setCompassEnabled(true);
@@ -139,6 +140,8 @@ public class StationActivity extends AppCompatActivity {
             @Override
             public void onMyLocationChange(Location location) {
                 Log.i("haha", location.getLatitude() + "..." + location.getLongitude());
+//                117.083021,36.672009
+
             }
         });
     }

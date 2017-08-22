@@ -72,7 +72,7 @@ public class RechargeActivity extends AppCompatActivity {
         progressDialog = new ProgressDialog(this);
         String text = cal.get(Calendar.YEAR) + "-" + (cal.get(Calendar.MONTH) + 1) + "-" + cal.get(Calendar.DAY_OF_MONTH);
         end.setText(text);
-        sendReq("2017-01-01 00:00:00", "2017-01-01" + " 24:00:00");
+        sendReq("2017-01-01 00:00:00", text + " 24:00:00");
     }
 
     private void sendReq(String start, String end) {
