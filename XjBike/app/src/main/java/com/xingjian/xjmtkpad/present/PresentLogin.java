@@ -386,6 +386,7 @@ public class PresentLogin {
         controlVoice();
     }
 
+//    控制系统媒体音量
     private void controlVoice() {
         final AudioManager audiomanage = (AudioManager) context.getSystemService(Context.AUDIO_SERVICE);
         int maxVolume = audiomanage.getStreamMaxVolume(AudioManager.STREAM_MUSIC);
