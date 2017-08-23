@@ -9,12 +9,15 @@ import android.media.AudioManager;
 import android.media.MediaPlayer;
 import android.posapi.PosApi;
 import android.support.annotation.NonNull;
+import android.support.v7.app.ActionBar;
 import android.support.v7.app.AlertDialog;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
+import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.FrameLayout;
 import android.widget.MediaController;
 import android.widget.ProgressBar;
 import android.widget.SeekBar;
@@ -41,6 +44,7 @@ import com.xingjian.xjmtkpad.beanresponse.TimeRes;
 import com.xingjian.xjmtkpad.inter.InterLogin;
 import com.xingjian.xjmtkpad.service.ServiceDevice;
 import com.xingjian.xjmtkpad.utils.StringDialog;
+import com.xingjian.xjmtkpad.utils.WeakHandler;
 import com.xingjian.xjmtkpad.view.MyVideoView;
 
 /**
@@ -58,6 +62,10 @@ public class PresentLogin {
     private MyVideoView videoplayer;
     private String cardId;
     private SeekBar seek;
+    private WeakHandler handler = new WeakHandler();
+    private long time = 1000;
+    private int count;
+    private Dialog videoDialog;
 
     public PresentLogin(InterLogin interLogin) {
         this.interLogin = interLogin;
@@ -91,7 +99,9 @@ public class PresentLogin {
 //        setwelcomeDialog();
         initVideo();
 //        login("18045167739", "111111a");
+        startTask();
     }
+
 
     public void showNoCardDialog() {
         final AlertDialog.Builder dialog = new AlertDialog.Builder(context);
@@ -215,32 +225,6 @@ public class PresentLogin {
         });
     }
 
-
-    private void setwelcomeDialog() {
-        final Dialog dialog = new Dialog(context, R.style.LodingDialog);
-        View view = View.inflate(context, R.layout.progress_dialog, null);
-        final ProgressBar progressBar = (ProgressBar) view.findViewById(R.id.pb_start);
-        dialog.setContentView(view);
-        dialog.show();
-        new Thread() {
-            @Override
-            public void run() {
-                super.run();
-                while (progressBar.getProgress() < 100) {
-                    try {
-                        Thread.sleep(100);
-                    } catch (InterruptedException e) {
-                        e.printStackTrace();
-                    }
-                    progressBar.setProgress(progressBar.getProgress() + 1);
-                    if (progressBar.getProgress() == 100) {
-                        dialog.dismiss();
-                    }
-                }
-            }
-        }.start();
-
-    }
 
     private void deviceInit() {
         //        设备初始化
@@ -386,7 +370,7 @@ public class PresentLogin {
         controlVoice();
     }
 
-//    控制系统媒体音量
+    //    控制系统媒体音量
     private void controlVoice() {
         final AudioManager audiomanage = (AudioManager) context.getSystemService(Context.AUDIO_SERVICE);
         int maxVolume = audiomanage.getStreamMaxVolume(AudioManager.STREAM_MUSIC);
@@ -420,4 +404,87 @@ public class PresentLogin {
 
     }
 
+
+
+    public void startTask() {
+//        stopTask
+        handler.removeCallbacks(task);
+        count = 0;
+//        每过1秒子线程运行
+        handler.postDelayed(task, time);
+    }
+
+
+
+    private final Runnable task = new Runnable() {
+        @Override
+        public void run() {
+            count++;
+            Log.i("count", "run: "+count);
+            if (count == 3) {
+                showVideoDialog();
+            }
+            handler.postDelayed(task, time);
+
+        }
+    };
+
+    private void showVideoDialog() {
+        videoDialog = new Dialog(context,R.style.Dialog_Fullscreen);
+        View inflate = LayoutInflater.from(context).inflate(R.layout.dialog_video, null);
+        MyVideoView videoView = (MyVideoView) inflate.findViewById(R.id.dialog_video);
+        FrameLayout frame = (FrameLayout) inflate.findViewById(R.id.frame);
+        videoView.setVideoPath("android.resource://com.xingjian.xjmtkpad/" + R.raw.jinchen);
+        videoView.setOnPreparedListener(new MediaPlayer.OnPreparedListener() {
+            @Override
+            public void onPrepared(MediaPlayer mediaPlayer) {
+                mediaPlayer.start();
+            }
+        });
+        videoView.setOnCompletionListener(new MediaPlayer.OnCompletionListener() {
+            @Override
+            public void onCompletion(MediaPlayer mediaPlayer) {
+                mediaPlayer.start();
+            }
+        });
+        frame.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                if (videoDialog.isShowing()){
+                    count = 0;
+                    videoDialog.dismiss();
+                    //        stopTask
+                    handler.removeCallbacks(task);
+                }
+            }
+        });
+        videoDialog.setContentView(inflate);
+        videoDialog.show();
+    }
+
+    private void setwelcomeDialog() {
+        final Dialog dialog = new Dialog(context, R.style.LodingDialog);
+        View view = View.inflate(context, R.layout.progress_dialog, null);
+        final ProgressBar progressBar = (ProgressBar) view.findViewById(R.id.pb_start);
+        dialog.setContentView(view);
+        dialog.show();
+        new Thread() {
+            @Override
+            public void run() {
+                super.run();
+                while (progressBar.getProgress() < 100) {
+                    try {
+                        Thread.sleep(100);
+                    } catch (InterruptedException e) {
+                        e.printStackTrace();
+                    }
+                    progressBar.setProgress(progressBar.getProgress() + 1);
+                    if (progressBar.getProgress() == 100) {
+                        dialog.dismiss();
+                    }
+                }
+            }
+        }.start();
+
+    }
 }

@@ -5,6 +5,7 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.posapi.PosApi;
 import android.support.v7.app.AppCompatActivity;
+import android.view.MotionEvent;
 import android.view.View;
 import android.view.WindowManager;
 import android.widget.SeekBar;
@@ -122,4 +123,18 @@ public class MainActivity extends AppCompatActivity implements InterLogin {
         }
     }
 
+    @Override
+    public boolean dispatchTouchEvent(MotionEvent ev) {
+        int action = ev.getAction();
+        switch (action) {
+            case MotionEvent.ACTION_UP:
+//                抬起按钮操作
+                presentLogin.startTask();
+                break;
+            case MotionEvent.ACTION_DOWN:
+//                点击屏幕操作
+                break;
+        }
+        return super.dispatchTouchEvent(ev);
+    }
 }
