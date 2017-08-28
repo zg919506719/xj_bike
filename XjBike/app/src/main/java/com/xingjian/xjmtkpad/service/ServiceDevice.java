@@ -11,6 +11,7 @@ import com.alibaba.fastjson.JSON;
 import com.vilyever.socketclient.SocketClient;
 import com.xingjian.xjmtkpad.base.MyApp;
 import com.xingjian.xjmtkpad.beanrequest.TimeReq;
+import com.xingjian.xjmtkpad.utils.WeakHandler;
 
 /**
  * Created by thinkpad on 2017/8/8.
@@ -19,34 +20,13 @@ import com.xingjian.xjmtkpad.beanrequest.TimeReq;
 public class ServiceDevice extends Service {
     private PosApi mPosApi=null;
     private SocketClient client;
+    private WeakHandler handler = new WeakHandler();
     @Override
     public void onCreate() {
         super.onCreate();
-        new Thread(){
-            @Override
-            public void run() {
-                super.run();
-                mPosApi= MyApp.posApi;
-                client = MyApp.Client;
-                while (true){
-                    mPosApi.m1Search(500);
-                    mPosApi.getTemperatureHumidity();
-                    TimeReq req = new TimeReq();
-                    req.setSiteId("59");
-                    req.setCmd("05");
-                    req.setWay("1");
-                    req.setSn("0");
-                    req.setData(new TimeReq.DataBean());
-                    String s = JSON.toJSONString(req);
-                    client.sendString(s);
-                    try {
-                        Thread.sleep(5000);
-                    } catch (InterruptedException e) {
-                        e.printStackTrace();
-                    }
-                }
-            }
-        }.start();
+        mPosApi= MyApp.posApi;
+        client = MyApp.Client;
+        handler.post(task);
     }
 
     @Nullable
@@ -54,4 +34,21 @@ public class ServiceDevice extends Service {
     public IBinder onBind(Intent intent) {
         return null;
     }
+
+    private Runnable task=new Runnable() {
+        @Override
+        public void run() {
+            mPosApi.m1Search(500);
+            mPosApi.getTemperatureHumidity();
+            TimeReq req = new TimeReq();
+            req.setSiteId("59");
+            req.setCmd("05");
+            req.setWay("1");
+            req.setSn("0");
+            req.setData(new TimeReq.DataBean());
+            String s = JSON.toJSONString(req);
+            client.sendString(s);
+            handler.postDelayed(task,5000);
+        }
+    };
 }
