@@ -27,8 +27,5 @@ public interface InterLogin {
 
     TextView getLocation();
 
-    //    VideoView getVideoView();
-    MyVideoView getVideoView();
-
     SeekBar getSeekBar();
 }

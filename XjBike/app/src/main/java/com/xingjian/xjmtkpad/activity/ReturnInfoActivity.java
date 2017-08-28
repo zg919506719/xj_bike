@@ -125,6 +125,8 @@ public class ReturnInfoActivity extends AppCompatActivity {
         ArrayList<RentRecordReq.DataBean.QueryBean> query = new ArrayList<>();
         RentRecordReq.DataBean.QueryBean element = new RentRecordReq.DataBean.QueryBean();
         element.setQuery_type("1");
+        element.setPage("1");
+        element.setRows("10");
         RentRecordReq.DataBean.QueryBean.QueryWayBean queryWayBean = new RentRecordReq.DataBean.QueryBean.QueryWayBean();
         queryWayBean.setStart_time(start);
         queryWayBean.setEnd_time(end);
@@ -132,7 +134,8 @@ public class ReturnInfoActivity extends AppCompatActivity {
         query.add(element);
         data.setQuery(query);
         req.setData(data);
-        client.sendString(JSONObject.toJSONString(req));
+        String message = JSONObject.toJSONString(req);
+        client.sendString(message);
     }
 
 //    private void initSpinner() {

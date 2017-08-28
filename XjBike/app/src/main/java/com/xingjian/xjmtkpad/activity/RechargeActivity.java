@@ -54,6 +54,7 @@ public class RechargeActivity extends AppCompatActivity {
     private String cardId;
     private ProgressDialog progressDialog;
     private Calendar cal;
+    private int page;
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
@@ -72,10 +73,12 @@ public class RechargeActivity extends AppCompatActivity {
         progressDialog = new ProgressDialog(this);
         String text = cal.get(Calendar.YEAR) + "-" + (cal.get(Calendar.MONTH) + 1) + "-" + cal.get(Calendar.DAY_OF_MONTH);
         end.setText(text);
-        sendReq("2017-01-01 00:00:00", text + " 24:00:00");
+        page=1;
+
+        sendReq("2017-01-01 00:00:00", "2017-01-01" + " 24:00:00",page+"");
     }
 
-    private void sendReq(String start, String end) {
+    private void sendReq(String start, String end,String page) {
         if (!progressDialog.isShowing()) {
             progressDialog.show();
         }
@@ -91,6 +94,8 @@ public class RechargeActivity extends AppCompatActivity {
         ArrayList<RechargeReq.DataBean.QueryBean> query = new ArrayList<>();
         RechargeReq.DataBean.QueryBean element = new RechargeReq.DataBean.QueryBean();
         element.setQuery_type("1");
+        element.setPage(page);
+        element.setRows("10");
         RechargeReq.DataBean.QueryBean.QueryWayBean queryWayBean = new RechargeReq.DataBean.QueryBean.QueryWayBean();
         queryWayBean.setStart_time(start);
         queryWayBean.setEnd_time(end);
@@ -98,7 +103,9 @@ public class RechargeActivity extends AppCompatActivity {
         query.add(element);
         data.setQuery(query);
         req.setData(data);
-        client.sendString(JSONObject.toJSONString(req));
+        String message = JSONObject.toJSONString(req);
+        Log.i("==", message);
+        client.sendString(message);
     }
 
 
@@ -163,14 +170,18 @@ public class RechargeActivity extends AppCompatActivity {
                 ).show();
                 break;
             case R.id.btn_up:
+                page--;
+                sendReq(start.getText() + " 00:00:00", end.getText() + " 24:00:00",page+"");
                 break;
             case R.id.btn_back:
                 finish();
                 break;
             case R.id.btn_down:
+                page++;
+                sendReq(start.getText() + " 00:00:00", end.getText() + " 24:00:00",page+"");
                 break;
             case R.id.sure:
-                sendReq(start.getText() + " 00:00:00", end.getText() + " 24:00:00");
+                sendReq(start.getText() + " 00:00:00", end.getText() + " 24:00:00",page+"");
                 break;
         }
     }

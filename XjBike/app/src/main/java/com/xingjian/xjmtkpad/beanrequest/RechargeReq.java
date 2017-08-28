@@ -105,6 +105,24 @@ public class RechargeReq {
 
             private String query_type;
             private QueryWayBean query_way;
+            private String page;
+            private String rows;
+
+            public String getPage() {
+                return page;
+            }
+
+            public void setPage(String page) {
+                this.page = page;
+            }
+
+            public String getRows() {
+                return rows;
+            }
+
+            public void setRows(String rows) {
+                this.rows = rows;
+            }
 
             public String getQuery_type() {
                 return query_type;

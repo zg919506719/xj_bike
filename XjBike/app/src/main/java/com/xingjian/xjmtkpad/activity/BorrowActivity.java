@@ -36,6 +36,19 @@ public class BorrowActivity extends AppCompatActivity {
         api = MyApp.posApi;
         setCan();
         api.canInit(4);
+        String data="  case \"81\"://0x01 锁桩ID编号请求"
+                +"\n" +"case \"8E\"://0x0E 请求时间"
+                +"\n" +"case \"83\"://0x03 锁桩上报方式请求"
+                +"\n" +" case \"44\"://0x04 锁桩上报方式设置"
+                +"\n" +" case \"85\"://0x05 锁桩工作模式请求"
+                +"\n" +" case \"87\"://0x07 站点id，发送的是站点id信息"
+                +"\n" +"case \"8A\"://0x0A 锁桩车辆状态上报"
+                +"\n" +"case \"4B\"://0x0B 锁桩车辆状态读取"
+                +"\n" +"case \"4C\"://0x0C 远程应急车辆锁定和解锁"
+                +"\n" +"case \"88\"://0x08 刷卡借车 cmd41"
+                +"\n" +" case \"8D\"://0x0D 还车未刷卡 cmd43"
+                +"\n" +"  case \"89\"://0x09 刷卡还车 cmd42";
+        tv.setText(data);
     }
 
     private void setCan() {
@@ -43,9 +56,9 @@ public class BorrowActivity extends AppCompatActivity {
             @Override
             public void onInit(int state) {
                 if (state == PosApi.COMM_STATUS_SUCCESS) {
-                    tv.setText("CAN 设置成功");
+                    tv.append("\nCAN 设置成功");
                 } else {
-                    tv.setText("CAN 设置失败");
+                    tv.append("CAN 设置失败");
                 }
             }
 
@@ -176,7 +189,11 @@ public class BorrowActivity extends AppCompatActivity {
 //                        mVehicle_type = cmd.substring(18, 20);
 //                        mVehicle_id = cmd.substring(20, 28);
 //                        mVehicle_state = cmd.substring(28);
-//                        String reqJson01 = "{\"siteId\":\"59\",\"cmd\":\"01\",\"way\":\"1\",\"sn\":\"0\",\"data\":{\"type\":\"" + mReport_type + "\",\"address\":\"\\u6d4e\\u5357\",\"site_state\":{\"site_state\":\"0\",\"pile_num\":\"1\",\"vehicle_num\":\"1\"},\"pile_num\":\"1\",\"piles\":[{\"pile_id\":\"" + mPile_id + "\",\"pile_state\":{\"pile_state\":\"" + mPile_state + "\",\"fault1\":\"" + mPile_fault1 + "\",\"fault2\":\"" + mPile_fault2 + "\"},\"vehicle_id\":\"" + mVehicle_id + "\",\"vehicle_state\":\"" + mVehicle_state + "\"}]}}";
+//                        String reqJson01 = "{\"siteId\":\"59\",\"cmd\":\"01\",\"way\":\"1\",\"sn\":\"0\",\"data\":{\"type\":\"" + mReport_type + "\",
+// \"address\":\"\\u6d4e\\u5357\",\"site_state\":{\"site_state\":\"0\",\"pile_num\":\"1\",\"vehicle_num\":\"1\"}
+// ,\"pile_num\":\"1\",\"piles\":[{\"pile_id\":\"" + mPile_id + "\",\"pile_state\":{\"pile_state\":\""
+// + mPile_state + "\",\"fault1\":\"" + mPile_fault1 + "\",\"fault2\":\"" + mPile_fault2 + "\"},
+// \"vehicle_id\":\"" + mVehicle_id + "\",\"vehicle_state\":\"" + mVehicle_state + "\"}]}}";
 //                        mSocketClient.sendString(new JSONObject(reqJson01).toString());
                         break;
 
@@ -191,7 +208,11 @@ public class BorrowActivity extends AppCompatActivity {
 //                            mVehicle_type = cmd.substring(18, 20);
 //                            mVehicle_id = cmd.substring(20, 28);
 //                            mVehicle_state = cmd.substring(28);
-//                            String reqJson82 = "{\"siteId\":\"59\",\"cmd\":\"01\",\"way\":\"1\",\"sn\":\"0\",\"data\":{\"type\":\"" + mReport_type + "\",\"address\":\"\\u6d4e\\u5357\",\"site_state\":{\"site_state\":\"0\",\"pile_num\":\"1\",\"vehicle_num\":\"1\"},\"pile_num\":\"1\",\"piles\":[{\"pile_id\":\"" + mPile_id + "\",\"pile_state\":{\"pile_state\":\"" + mPile_state + "\",\"fault1\":\"" + mPile_fault1 + "\",\"fault2\":\"" + mPile_fault2 + "\"},\"vehicle_id\":\"" + mVehicle_id + "\",\"vehicle_state\":\"" + mVehicle_state + "\"}]}}";
+//                            String reqJson82 = "{\"siteId\":\"59\",\"cmd\":\"01\",\"way\":\"1\",\"sn\":\"0\",\"data\"
+// :{\"type\":\"" + mReport_type + "\",\"address\":\"\\u6d4e\\u5357\",\"site_state\":{\"site_state\":\"0\",\"pile_num\":
+// \"1\",\"vehicle_num\":\"1\"},\"pile_num\":\"1\",\"piles\":[{\"pile_id\":\"" + mPile_id + "\",\"pile_state\":
+// {\"pile_state\":\"" + mPile_state + "\",\"fault1\":\"" + mPile_fault1 + "\",\"fault2\":\"" + mPile_fault2 + "\"},
+// \"vehicle_id\":\"" + mVehicle_id + "\",\"vehicle_state\":\"" + mVehicle_state + "\"}]}}";
 //                        mSocketClient.sendString(new JSONObject(reqJson82).toString());
 //                        Log.i("===", "读取状态后上报  " + reqJson82);
                         break;

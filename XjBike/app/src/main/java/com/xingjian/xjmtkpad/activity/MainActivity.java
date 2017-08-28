@@ -1,5 +1,6 @@
 package com.xingjian.xjmtkpad.activity;
 
+import android.app.Dialog;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
@@ -32,8 +33,6 @@ public class MainActivity extends AppCompatActivity implements InterLogin {
     TextView location;
     @BindView(R.id.humidity)
     TextView humidity;
-    @BindView(R.id.videoplayer)
-    MyVideoView videoplayer;
     @BindView(R.id.seek)
     SeekBar seek;
     private PresentLogin presentLogin;
@@ -88,11 +87,6 @@ public class MainActivity extends AppCompatActivity implements InterLogin {
     }
 
     @Override
-    public MyVideoView getVideoView() {
-        return videoplayer;
-    }
-
-    @Override
     public SeekBar getSeekBar() {
         return seek;
     }
@@ -101,15 +95,19 @@ public class MainActivity extends AppCompatActivity implements InterLogin {
     public void onClick(View view) {
         switch (view.getId()) {
             case R.id.net:
+                presentLogin.finishTask();
                 startActivity(new Intent(MainActivity.this, NetActivity.class));
                 break;
             case R.id.station:
+                presentLogin.finishTask();
                 startActivity(new Intent(MainActivity.this, StationActivity.class));
                 break;
             case R.id.btn_login:
+                presentLogin.finishTask();
                 presentLogin.showNoCardDialog();
                 break;
             case R.id.btn_login_staff:
+                presentLogin.finishTask();
                 startActivity(new Intent(MainActivity.this, StaffLoginActivity.class));
                 break;
         }
@@ -136,5 +134,14 @@ public class MainActivity extends AppCompatActivity implements InterLogin {
                 break;
         }
         return super.dispatchTouchEvent(ev);
+    }
+
+    @Override
+    protected void onStart() {
+        super.onStart();
+        Dialog videoDialog = presentLogin.videoDialog;
+        if (!videoDialog.isShowing()){
+            videoDialog.show();
+        }
     }
 }

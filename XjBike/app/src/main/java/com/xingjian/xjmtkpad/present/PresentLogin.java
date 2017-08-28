@@ -7,6 +7,9 @@ import android.content.Intent;
 import android.content.SharedPreferences;
 import android.media.AudioManager;
 import android.media.MediaPlayer;
+import android.os.Bundle;
+import android.os.Handler;
+import android.os.Message;
 import android.posapi.PosApi;
 import android.support.annotation.NonNull;
 import android.support.v7.app.ActionBar;
@@ -58,14 +61,12 @@ public class PresentLogin {
     private SocketClient client;
     private TextView tv_time, tv_temp, tv_name, tv_location, tv_humidity;
     private static String TAG = "haha";
-    //    private VideoView videoplayer;
-    private MyVideoView videoplayer;
     private String cardId;
     private SeekBar seek;
     private WeakHandler handler = new WeakHandler();
-    private long time = 1000;
-    private int count;
-    private Dialog videoDialog;
+    private long time = 10000;
+    private boolean isFull;
+    public Dialog videoDialog;
 
     public PresentLogin(InterLogin interLogin) {
         this.interLogin = interLogin;
@@ -77,7 +78,6 @@ public class PresentLogin {
         tv_name = interLogin.getDevice();
         tv_temp = interLogin.getTemp();
         tv_humidity = interLogin.getHumidity();
-        videoplayer = interLogin.getVideoView();
         seek = interLogin.getSeekBar();
     }
 
@@ -97,9 +97,40 @@ public class PresentLogin {
         setTime();
         context.startService(new Intent(context, ServiceDevice.class));
 //        setwelcomeDialog();
-        initVideo();
+        controlVoice();
+        initDialog();
 //        login("18045167739", "111111a");
-        startTask();
+    }
+
+    private void initDialog() {
+        videoDialog = new Dialog(context, R.style.Dialog_Fullscreen);
+        View inflate = LayoutInflater.from(context).inflate(R.layout.dialog_video, null);
+        MyVideoView videoView = (MyVideoView) inflate.findViewById(R.id.dialog_video);
+        FrameLayout frame = (FrameLayout) inflate.findViewById(R.id.frame);
+        videoView.setVideoPath("android.resource://com.xingjian.xjmtkpad/" + R.raw.jinchen);
+        videoView.setOnPreparedListener(new MediaPlayer.OnPreparedListener() {
+            @Override
+            public void onPrepared(MediaPlayer mediaPlayer) {
+                mediaPlayer.start();
+            }
+        });
+        videoView.setOnCompletionListener(new MediaPlayer.OnCompletionListener() {
+            @Override
+            public void onCompletion(MediaPlayer mediaPlayer) {
+                mediaPlayer.start();
+            }
+        });
+        frame.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                if (videoDialog.isShowing()) {
+                    videoDialog.dismiss();
+                    isFull = false;
+                    startTask();
+                }
+            }
+        });
+        videoDialog.setContentView(inflate);
     }
 
 
@@ -107,7 +138,7 @@ public class PresentLogin {
         final AlertDialog.Builder dialog = new AlertDialog.Builder(context);
         View view = LayoutInflater.from(context).inflate(R.layout.dialog_login, null);
         Button login = (Button) view.findViewById(R.id.btn_login);
-        Button cancle = (Button) view.findViewById(R.id.btn_cancel);
+        final Button cancle = (Button) view.findViewById(R.id.btn_cancel);
         final EditText username = (EditText) view.findViewById(R.id.et_username);
         final EditText password = (EditText) view.findViewById(R.id.et_password);
         dialog.setView(view);
@@ -133,6 +164,16 @@ public class PresentLogin {
                 show.dismiss();
             }
         });
+        handler.postDelayed(new Runnable() {
+            @Override
+            public void run() {
+                Log.i(TAG, "run: login");
+                if (show.isShowing()) {
+                    show.dismiss();
+                    videoDialog.show();
+                }
+            }
+        }, 60000);
     }
 
     //账号密码登录
@@ -148,7 +189,6 @@ public class PresentLogin {
         data.setPassword(password);
         req.setData(data);
         String s = JSON.toJSONString(req);
-        Log.i(TAG, s);
         client.sendString(s);
     }
 
@@ -353,22 +393,6 @@ public class PresentLogin {
         client.sendString(message);
     }
 
-    private void initVideo() {
-        videoplayer.setVideoPath("android.resource://com.xingjian.xjmtkpad/" + R.raw.jinchen);
-        videoplayer.setOnPreparedListener(new MediaPlayer.OnPreparedListener() {
-            @Override
-            public void onPrepared(MediaPlayer mediaPlayer) {
-                mediaPlayer.start();
-            }
-        });
-        videoplayer.setOnCompletionListener(new MediaPlayer.OnCompletionListener() {
-            @Override
-            public void onCompletion(MediaPlayer mediaPlayer) {
-                mediaPlayer.start();
-            }
-        });
-        controlVoice();
-    }
 
     //    控制系统媒体音量
     private void controlVoice() {
@@ -405,62 +429,33 @@ public class PresentLogin {
     }
 
 
-
     public void startTask() {
 //        stopTask
         handler.removeCallbacks(task);
-        count = 0;
+        if (!isFull) {
+            handler.postDelayed(task, time);
+        }
 //        每过1秒子线程运行
-        handler.postDelayed(task, time);
     }
 
-
+    public void finishTask() {
+        handler.removeCallbacks(task);
+        if (videoDialog.isShowing()) {
+            videoDialog.dismiss();
+        }
+    }
 
     private final Runnable task = new Runnable() {
         @Override
         public void run() {
-            count++;
-            Log.i("count", "run: "+count);
-            if (count == 3) {
-                showVideoDialog();
+            Log.i(TAG, "run: ");
+            isFull = true;
+            if (!videoDialog.isShowing()) {
+                videoDialog.show();
             }
-            handler.postDelayed(task, time);
-
         }
     };
 
-    private void showVideoDialog() {
-        videoDialog = new Dialog(context,R.style.Dialog_Fullscreen);
-        View inflate = LayoutInflater.from(context).inflate(R.layout.dialog_video, null);
-        MyVideoView videoView = (MyVideoView) inflate.findViewById(R.id.dialog_video);
-        FrameLayout frame = (FrameLayout) inflate.findViewById(R.id.frame);
-        videoView.setVideoPath("android.resource://com.xingjian.xjmtkpad/" + R.raw.jinchen);
-        videoView.setOnPreparedListener(new MediaPlayer.OnPreparedListener() {
-            @Override
-            public void onPrepared(MediaPlayer mediaPlayer) {
-                mediaPlayer.start();
-            }
-        });
-        videoView.setOnCompletionListener(new MediaPlayer.OnCompletionListener() {
-            @Override
-            public void onCompletion(MediaPlayer mediaPlayer) {
-                mediaPlayer.start();
-            }
-        });
-        frame.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                if (videoDialog.isShowing()){
-                    count = 0;
-                    videoDialog.dismiss();
-                    //        stopTask
-                    handler.removeCallbacks(task);
-                }
-            }
-        });
-        videoDialog.setContentView(inflate);
-        videoDialog.show();
-    }
 
     private void setwelcomeDialog() {
         final Dialog dialog = new Dialog(context, R.style.LodingDialog);
