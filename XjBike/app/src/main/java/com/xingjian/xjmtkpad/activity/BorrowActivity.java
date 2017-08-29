@@ -36,18 +36,18 @@ public class BorrowActivity extends AppCompatActivity {
         api = MyApp.posApi;
         setCan();
         api.canInit(4);
-        String data="  case \"81\"://0x01 锁桩ID编号请求"
-                +"\n" +"case \"8E\"://0x0E 请求时间"
-                +"\n" +"case \"83\"://0x03 锁桩上报方式请求"
-                +"\n" +" case \"44\"://0x04 锁桩上报方式设置"
-                +"\n" +" case \"85\"://0x05 锁桩工作模式请求"
-                +"\n" +" case \"87\"://0x07 站点id，发送的是站点id信息"
-                +"\n" +"case \"8A\"://0x0A 锁桩车辆状态上报"
-                +"\n" +"case \"4B\"://0x0B 锁桩车辆状态读取"
-                +"\n" +"case \"4C\"://0x0C 远程应急车辆锁定和解锁"
-                +"\n" +"case \"88\"://0x08 刷卡借车 cmd41"
-                +"\n" +" case \"8D\"://0x0D 还车未刷卡 cmd43"
-                +"\n" +"  case \"89\"://0x09 刷卡还车 cmd42";
+        String data = "  case \"81\"://0x01 锁桩ID编号请求"
+                + "\n" + "case \"8E\"://0x0E 请求时间"
+                + "\n" + "case \"83\"://0x03 锁桩上报方式请求"
+                + "\n" + " case \"44\"://0x04 锁桩上报方式设置"
+                + "\n" + " case \"85\"://0x05 锁桩工作模式请求"
+                + "\n" + " case \"87\"://0x07 站点id，发送的是站点id信息"
+                + "\n" + "case \"8A\"://0x0A 锁桩车辆状态上报"
+                + "\n" + "case \"4B\"://0x0B 锁桩车辆状态读取"
+                + "\n" + "case \"4C\"://0x0C 远程应急车辆锁定和解锁"
+                + "\n" + "case \"88\"://0x08 刷卡借车 cmd41"
+                + "\n" + " case \"8D\"://0x0D 还车未刷卡 cmd43"
+                + "\n" + "  case \"89\"://0x09 刷卡还车 cmd42";
         tv.setText(data);
     }
 
@@ -56,7 +56,7 @@ public class BorrowActivity extends AppCompatActivity {
             @Override
             public void onInit(int state) {
                 if (state == PosApi.COMM_STATUS_SUCCESS) {
-                    tv.append("\nCAN 设置成功");
+                    tv.append("CAN 设置成功\n");
                 } else {
                     tv.append("CAN 设置失败");
                 }
@@ -79,18 +79,12 @@ public class BorrowActivity extends AppCompatActivity {
                     //psam 执行成功
                     cmd = Conversion.Bytes2HexString(resp);
                     tv.append("接收数据:" + cmd + "\n");
-                    StringBuffer s = new StringBuffer();
-                    for (int c = 0; c < resp.length; c++) {
-                        s.append(resp[c]);
-                    }
-                    tv.append("没转之前数据：" + s.toString() + "\n");
                 }
-                Log.i("===", "接收数据:" + cmd + "\n");
                 String protocol = cmd.substring(4, 6);
 //                5，6
-                tv.append("发送请求为:" + protocol);
+//                tv.append("发送请求为:" + protocol);
                 mPileID = cmd.substring(0, 2);
-                tv.append("车辆编号为：" + mPileID + "\n");
+//                tv.append("车辆编号为：" + mPileID + "\n");
 //                01 09 81 5417031501020304
                 //01格式固定，表示发送方向，
                 // 00成功与否，默认为0失败，01成功，
@@ -98,12 +92,12 @@ public class BorrowActivity extends AppCompatActivity {
                 //6-8位以后就是校验位，
                 // 9-倒数两位 是数据域  700100000代表默认时间，
                 //最后的两位00也是校验位
-                tv.append("车辆请求为：" + protocol + "\n");
+//                tv.append("车辆请求为：" + protocol + "\n");
 
                 String[] pileOutIdArr = new String[100];
 
                 switch (protocol) {
-                    case "81"://0x01 锁桩ID编号请求
+                    case "81"://0x01 锁桩ID编号请求 通了
 //                        String pileInId = cmd.substring(6);
 //                        5
 //                        for (int i = 0; i < 100; i++) {
@@ -129,33 +123,22 @@ public class BorrowActivity extends AppCompatActivity {
 //                            }
 //                        }
                         String req = cmd.substring(cmd.length() - 16, cmd.length());
-                        Log.i(TAG, req);
                         //01代表车辆数
                         String src = "0100C1" + req + "01";
                         byte[] mCmd0B = Conversion.HexString2Bytes(src);
-                        tv.append("传过去81" + src + "\n");
-                        StringBuilder sb = new StringBuilder();
-                        for (int c = 0; c < mCmd0B.length; c++) {
-                            sb.append(mCmd0B[c]);
-                        }
-                        tv.append("传过去的81解析" + sb.toString() + "\n");
+                        tv.append("传过去81:   " + src + "\n");
                         api.canCmd(0, mCmd0B, mCmd0B.length);
                         break;
 
-                    case "8E"://0x0E 请求时间
+                    case "8E"://0x0E 请求时间 通了
                         SimpleDateFormat yyMMddHHmmss = new SimpleDateFormat("yyMMddHHmmss");
                         String src1 = "0100CE" + yyMMddHHmmss.format(new Date());
-                        tv.append("传过去8E" + src1 + "\n");
+                        tv.append("传过去8E:   " + src1 + "\n");
                         byte[] mCmd0E = Conversion.HexString2Bytes(src1);
-                        StringBuilder sb1 = new StringBuilder();
-                        for (int c = 0; c < mCmd0E.length; c++) {
-                            sb1.append(mCmd0E[c]);
-                        }
-                        tv.append("传过去的8E解析" + sb1.toString() + "\n");
                         api.canCmd(0, mCmd0E, mCmd0E.length);
                         break;
 //
-                    case "83"://0x03 锁桩上报方式请求
+                    case "83"://0x03 锁桩上报方式请求 通了
 //                        mSocketClient.sendString(new JSONObject(reqJson.reqStr07).toString());//设备状态上报模式请求
                         break;
 
@@ -163,20 +146,19 @@ public class BorrowActivity extends AppCompatActivity {
 //                        mSocketClient.sendString(new JSONObject(respJson.respStr88).toString());
                         break;
 
-                    case "85"://0x05 锁桩工作模式请求
-                        byte[] mCmd05 = Conversion.HexString2Bytes(mPileID + "00C501");
+                    case "85"://0x05 锁桩工作模式请求 通了
+                        //mPileID是锁桩id，后面01是发送方向
+                        String src4 = mPileID + "00C501";
+                        byte[] mCmd05 = Conversion.HexString2Bytes(src4);
                         api.canCmd(0, mCmd05, mCmd05.length);
+                        tv.append("传过去85:    " + src4 + "\n");
                         break;
 //
-                    case "87"://0x07 站点id，发送的是站点id信息
+                    case "87"://0x07 站点id，发送的是站点id信息 通了
+                        //前两个站点方向 00 Y/N C7协议 00校验位 59站点信息
                         byte[] mCmd07 = Conversion.HexString2Bytes("0100C70059");
-                        StringBuilder sb2 = new StringBuilder();
-                        for (int c = 0; c < mCmd07.length; c++) {
-                            sb2.append(mCmd07[c]);
-                        }
-                        tv.append("传过去的87解析" + sb2.toString() + "\n");
+                        tv.append("传过去的87:    " + "0100C70059" + "\n");
                         api.canCmd(0, mCmd07, mCmd07.length);
-
                         break;
 //
                     case "8A"://0x0A 锁桩车辆状态上报
@@ -236,8 +218,10 @@ public class BorrowActivity extends AppCompatActivity {
 //                        Log.i("===", "刷卡借车请求  " + reqJson41);
 
 //                            Log.i("===", "允许租车");
-//                            byte[] mCmd08 = Conversion.HexString2Bytes(mPileID + "00C8" + "170302111820" + "6464");
-//                            api.canCmd(0, mCmd08, mCmd08.length);
+                        String src2 = mPileID + "00C8" + "170302111820" + "6464";
+                        byte[] mCmd08 = Conversion.HexString2Bytes(src2);
+                        api.canCmd(0, mCmd08, mCmd08.length);
+                        tv.append("传过去88:   " + src2 + "\n");
                         break;
 
                     case "89"://0x09 刷卡还车 cmd42
@@ -255,9 +239,10 @@ public class BorrowActivity extends AppCompatActivity {
 //                        mSocketClient.sendString(new JSONObject(reqJson42).toString());
 //                        Log.i("===", "刷卡还车请求  " + reqJson42);
 
-                        Log.i("===", "允许还车");
-                        byte[] mCmd09 = Conversion.HexString2Bytes(mPileID + "00C9" + "6464" + "0001" + "01");
+                        String src3 = mPileID + "00C9" + "6464" + "0001" + "01";
+                        byte[] mCmd09 = Conversion.HexString2Bytes(src3);
                         api.canCmd(0, mCmd09, mCmd09.length);
+                        tv.append("传过去89:   " + src3 + "\n");
                         break;
 
                     case "8D"://0x0D 还车未刷卡 cmd43
@@ -272,8 +257,10 @@ public class BorrowActivity extends AppCompatActivity {
 //                        Log.i("===", "还车未刷卡请求  " + reqJson43);
 
 //                            Log.i("===", "允许还车");
-//                            byte[] mCmd0D = Conversion.HexString2Bytes(mPileID + "00CD" + "6464" + "0001" + "01");
-//                            api.canCmd(0, mCmd0D, mCmd0D.length);
+                        String src5 = mPileID + "00CD" + "6464" + "0001" + "01";
+                        byte[] mCmd0D = Conversion.HexString2Bytes(src5);
+                        api.canCmd(0, mCmd0D, mCmd0D.length);
+                        tv.append("传过去8D:   " + src5 + "\n");
                         break;
                 }
             }

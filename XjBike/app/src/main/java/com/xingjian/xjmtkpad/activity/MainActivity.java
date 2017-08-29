@@ -33,8 +33,6 @@ public class MainActivity extends AppCompatActivity implements InterLogin {
     TextView location;
     @BindView(R.id.humidity)
     TextView humidity;
-    @BindView(R.id.seek)
-    SeekBar seek;
     private PresentLogin presentLogin;
     private PosApi mPosApi;
 
@@ -86,10 +84,6 @@ public class MainActivity extends AppCompatActivity implements InterLogin {
         return location;
     }
 
-    @Override
-    public SeekBar getSeekBar() {
-        return seek;
-    }
 
     @OnClick({R.id.net, R.id.station, R.id.btn_login, R.id.btn_login_staff})
     public void onClick(View view) {

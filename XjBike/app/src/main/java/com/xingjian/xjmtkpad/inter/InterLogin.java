@@ -27,5 +27,4 @@ public interface InterLogin {
 
     TextView getLocation();
 
-    SeekBar getSeekBar();
 }

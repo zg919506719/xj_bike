@@ -62,7 +62,6 @@ public class PresentLogin {
     private TextView tv_time, tv_temp, tv_name, tv_location, tv_humidity;
     private static String TAG = "haha";
     private String cardId;
-    private SeekBar seek;
     private WeakHandler handler = new WeakHandler();
     private long time = 10000;
     private boolean isFull;
@@ -78,7 +77,6 @@ public class PresentLogin {
         tv_name = interLogin.getDevice();
         tv_temp = interLogin.getTemp();
         tv_humidity = interLogin.getHumidity();
-        seek = interLogin.getSeekBar();
     }
 
 
@@ -97,7 +95,6 @@ public class PresentLogin {
         setTime();
         context.startService(new Intent(context, ServiceDevice.class));
 //        setwelcomeDialog();
-        controlVoice();
         initDialog();
 //        login("18045167739", "111111a");
     }
@@ -107,6 +104,7 @@ public class PresentLogin {
         View inflate = LayoutInflater.from(context).inflate(R.layout.dialog_video, null);
         MyVideoView videoView = (MyVideoView) inflate.findViewById(R.id.dialog_video);
         FrameLayout frame = (FrameLayout) inflate.findViewById(R.id.frame);
+        SeekBar seekBar = (SeekBar) inflate.findViewById(R.id.seek);
         videoView.setVideoPath("android.resource://com.xingjian.xjmtkpad/" + R.raw.jinchen);
         videoView.setOnPreparedListener(new MediaPlayer.OnPreparedListener() {
             @Override
@@ -130,6 +128,7 @@ public class PresentLogin {
                 }
             }
         });
+        controlVoice(seekBar);
         videoDialog.setContentView(inflate);
     }
 
@@ -297,13 +296,14 @@ public class PresentLogin {
 //                sb.append("°C,湿度为：");
                 tv_temp.setText("温度:" + tem + "°C");
                 tv_humidity.setText("湿度:" + hum + "%");
-                if (tem > 30) {
+                if (tem > 30 | hum > 80) {
                     //开风扇
                     mPosApi.gpioControl((byte) 0x00, 0, 1);
                 } else {
                     //关风扇
                     mPosApi.gpioControl((byte) 0x00, 0, 0);
                 }
+
             }
         });
 
@@ -395,7 +395,7 @@ public class PresentLogin {
 
 
     //    控制系统媒体音量
-    private void controlVoice() {
+    private void controlVoice(final SeekBar seek) {
         final AudioManager audiomanage = (AudioManager) context.getSystemService(Context.AUDIO_SERVICE);
         int maxVolume = audiomanage.getStreamMaxVolume(AudioManager.STREAM_MUSIC);
         seek.setMax(maxVolume);   //拖动条最高值与系统最大声匹配
