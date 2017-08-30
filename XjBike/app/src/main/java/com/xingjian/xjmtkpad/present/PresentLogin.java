@@ -95,8 +95,8 @@ public class PresentLogin {
         setTime();
         context.startService(new Intent(context, ServiceDevice.class));
 //        setwelcomeDialog();
-        initDialog();
 //        login("18045167739", "111111a");
+        initDialog();
     }
 
     private void initDialog() {

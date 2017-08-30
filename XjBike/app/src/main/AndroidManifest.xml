@@ -55,10 +55,11 @@
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
                 <category android:name="android.intent.category.LAUNCHER"/>
+
             </intent-filter>
         </activity>
-                <!--<category android:name="android.intent.category.HOME"/>-->
-                <!--<category android:name="android.intent.category.DEFAULT" />-->
+        <!--<category android:name="android.intent.category.HOME"/>-->
+        <!--<category android:name="android.intent.category.DEFAULT" />-->
         <activity android:name=".activity.UserDataActivity" />
         <activity android:name=".activity.StaffLoginActivity" />
         <activity android:name=".activity.StaffRecordActivity" />

@@ -6,17 +6,17 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.posapi.PosApi;
 import android.support.v7.app.AppCompatActivity;
+import android.view.KeyEvent;
 import android.view.MotionEvent;
 import android.view.View;
 import android.view.WindowManager;
-import android.widget.SeekBar;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.xingjian.xjmtkpad.R;
 import com.xingjian.xjmtkpad.base.MyApp;
 import com.xingjian.xjmtkpad.inter.InterLogin;
 import com.xingjian.xjmtkpad.present.PresentLogin;
-import com.xingjian.xjmtkpad.view.MyVideoView;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -39,9 +39,9 @@ public class MainActivity extends AppCompatActivity implements InterLogin {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_main);
 //        全屏模式
         getWindow().setFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN, WindowManager.LayoutParams.FLAG_FULLSCREEN);
+        setContentView(R.layout.activity_main);
         ButterKnife.bind(this);
         mPosApi = MyApp.posApi;
         presentLogin = new PresentLogin(this);
@@ -116,6 +116,10 @@ public class MainActivity extends AppCompatActivity implements InterLogin {
     }
 
     @Override
+    public void onBackPressed() {
+    }
+
+    @Override
     public boolean dispatchTouchEvent(MotionEvent ev) {
         int action = ev.getAction();
         switch (action) {
@@ -134,8 +138,10 @@ public class MainActivity extends AppCompatActivity implements InterLogin {
     protected void onStart() {
         super.onStart();
         Dialog videoDialog = presentLogin.videoDialog;
-        if (!videoDialog.isShowing()){
+        if (!videoDialog.isShowing()) {
             videoDialog.show();
         }
     }
+
+
 }
