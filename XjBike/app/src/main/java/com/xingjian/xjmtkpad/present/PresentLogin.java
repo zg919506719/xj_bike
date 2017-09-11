@@ -35,6 +35,7 @@ import com.vilyever.socketclient.helper.SocketResponsePacket;
 import com.xingjian.xjmtkpad.R;
 import com.xingjian.xjmtkpad.activity.StaffAttendanceActivity;
 import com.xingjian.xjmtkpad.activity.UserDataActivity;
+import com.xingjian.xjmtkpad.base.Constant;
 import com.xingjian.xjmtkpad.base.MyApp;
 import com.xingjian.xjmtkpad.beanrequest.CardLLoginReq;
 import com.xingjian.xjmtkpad.beanrequest.LoginReq;
@@ -172,7 +173,7 @@ public class PresentLogin {
                     videoDialog.show();
                 }
             }
-        }, 60000);
+        }, Constant.AUTO_SHOW_TIME);
     }
 
     //账号密码登录
@@ -296,7 +297,7 @@ public class PresentLogin {
 //                sb.append("°C,湿度为：");
                 tv_temp.setText("温度:" + tem + "°C");
                 tv_humidity.setText("湿度:" + hum + "%");
-                if (tem > 30 | hum > 80) {
+                if (tem > Constant.TEM | hum > Constant.HUM) {
                     //开风扇
                     mPosApi.gpioControl((byte) 0x00, 0, 1);
                 } else {

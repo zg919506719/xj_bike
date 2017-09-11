@@ -5,7 +5,8 @@ import android.posapi.Conversion;
 import android.posapi.PosApi;
 import android.support.annotation.Nullable;
 import android.support.v7.app.AppCompatActivity;
-import android.util.Log;
+import android.view.View;
+import android.widget.EditText;
 import android.widget.TextView;
 
 import com.xingjian.xjmtkpad.R;
@@ -16,6 +17,7 @@ import java.util.Date;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
+import butterknife.OnClick;
 
 /**
  * Created by thinkpad on 2017/8/4.
@@ -26,6 +28,8 @@ public class BorrowActivity extends AppCompatActivity {
     @BindView(R.id.tv)
     TextView tv;
     private static String TAG = "haha";
+    @BindView(R.id.et_send)
+    EditText etSend;
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
@@ -79,20 +83,17 @@ public class BorrowActivity extends AppCompatActivity {
                     cmd = Conversion.Bytes2HexString(resp);
                     tv.append("接收数据:" + cmd + "\n");
                 }
-                String protocol = cmd.substring(4, 6);
-//                5，6
-//                tv.append("发送请求为:" + protocol);
-                mPileID = cmd.substring(0, 2);
-//                tv.append("车辆编号为：" + mPileID + "\n");
-//                01 09 81 5417031501020304
+
+
+//                01 09 81 54 170315010203  04
                 //01格式固定，表示发送方向，
-                // 00成功与否，默认为0失败，01成功，
-                // 81判断类型，protocol
+                // 0981判断类型，protocol
                 //6-8位以后就是校验位，
                 // 9-倒数两位 是数据域  700100000代表默认时间，
                 //最后的两位00也是校验位
-//                tv.append("车辆请求为：" + protocol + "\n");
-
+                String protocol = cmd.substring(4, 6);
+                tv.append("车辆请求为：" + protocol + "\n");
+//                5，6
 
                 switch (protocol) {
                     case "81"://0x01 锁桩ID编号请求 通了
@@ -120,9 +121,10 @@ public class BorrowActivity extends AppCompatActivity {
 //                                break;
 //                            }
 //                        }
-                        String req = cmd.substring(cmd.length() - 16, cmd.length());
-                        //01代表车辆数
-                        String src = "0100C1" + req + "01";
+
+//                        01方向，03*2表示位数，81协议，54校验位，00还不知道
+                        //01命名桩号
+                        String src = "0103C15400" + "01";
                         byte[] mCmd0B = Conversion.HexString2Bytes(src);
                         tv.append("传过去81:   " + src + "\n");
                         api.canCmd(0, mCmd0B, mCmd0B.length);
@@ -140,26 +142,26 @@ public class BorrowActivity extends AppCompatActivity {
 //                        mSocketClient.sendString(new JSONObject(reqJson.reqStr07).toString());//设备状态上报模式请求
 //车桩编号 acmd=07对应83 返回 00C3     周期和变化01 02 变化就是车辆状态有变化 后面有周期性上报间隔时间10,15这样
                         byte[] mCmd = Conversion.HexString2Bytes("0100C302");
-                        tv.append("云端回复8E:   " + "0100C302" + "\n");
+                        tv.append("云端回复83:   " + "0100C302" + "\n");
                         api.canCmd(0, mCmd, mCmd.length);
                         break;
 
-                    case "44"://0x04 锁桩上报方式设置
-//                        cmd=88
-//                        "report_way": "1",
-//                            "report_interval": "10"
-//                        report_way 上报方式（1-周期性上报 2-变化上报）
-//                        report_interval 周期性上报间隔（单位分钟）
-                        protocol = "0004";
-                        byte[] mCmd1 = Conversion.HexString2Bytes("01000402");
-                        tv.append("云端回复44:   " + "01000402" + "\n");
-                        api.canCmd(0, mCmd1, mCmd1.length);
-//                        mSocketClient.sendString(new JSONObject(respJson.respStr88).toString());
-                        break;
+//                    case "44"://0x04 锁桩上报方式设置
+////                        cmd=88
+////                        "report_way": "1",
+////                            "report_interval": "10"
+////                        report_way 上报方式（1-周期性上报 2-变化上报）
+////                        report_interval 周期性上报间隔（单位分钟）
+//                        protocol = "0004";
+//                        byte[] mCmd1 = Conversion.HexString2Bytes("01000402");
+//                        tv.append("云端回复44:   " + "01000402" + "\n");
+//                        api.canCmd(0, mCmd1, mCmd1.length);
+////                        mSocketClient.sendString(new JSONObject(respJson.respStr88).toString());
+//                        break;
 
                     case "85"://0x05 锁桩工作模式请求 通了
-                        //mPileID是锁桩id，后面01是发送方向
-                        String src4 = mPileID + "00C501";
+//                        01是处于在线状态02是离线状态
+                        String src4 = "0100C501";
                         byte[] mCmd05 = Conversion.HexString2Bytes(src4);
                         api.canCmd(0, mCmd05, mCmd05.length);
                         tv.append("传过去85:    " + src4 + "\n");
@@ -173,6 +175,13 @@ public class BorrowActivity extends AppCompatActivity {
                         break;
 //
                     case "8A"://0x0A 锁桩车辆状态上报
+//                        01 078A  02 00 01 01 0000
+//                            没有车辆信息
+//                            01078A是协议，02上报模式
+//                            00锁桩类型，01锁id，01状态，00 故障1 00故障2
+//                            后面的
+//                            车类型 81，车辆id 八位00000000，
+//                        车状态6位
 //                        mReport_type = cmd.substring(6, 8);
 //                        mPile_type = cmd.substring(8, 10);
 //                        mPile_id = cmd.substring(10, 12);
@@ -189,7 +198,7 @@ public class BorrowActivity extends AppCompatActivity {
 // \"vehicle_id\":\"" + mVehicle_id + "\",\"vehicle_state\":\"" + mVehicle_state + "\"}]}}";
 //                        mSocketClient.sendString(new JSONObject(reqJson01).toString());
 //                            Log.i("===", "站点锁桩车辆状态上报成功");
-//                        前面两位01是车桩号
+//                        后面两位01是车桩号
                         byte[] mCmd2 = Conversion.HexString2Bytes("0100CA01");
                         api.canCmd(0, mCmd2, mCmd2.length);
                         tv.append("云端回复8A:   " + "0100CA01" + "\n");
@@ -218,15 +227,15 @@ public class BorrowActivity extends AppCompatActivity {
 //                        Log.i("===", "读取状态后上报  " + reqJson82);
 //                        break;
 
-                    case "4C"://0x0C 远程应急车辆锁定和解锁
-//                        mSocketClient.sendString(new JSONObject(respJson.respStr8e).toString());
-//                        开头01桩号 云端vehicleId 车辆id  operation 01锁定02解锁
-                        String vehicleId = "1";
-                        String src6 = "01000C" + vehicleId + "01";
-                        byte[] mCmd3 = Conversion.HexString2Bytes(src6);
-                        tv.append("云端回复4C:   " + src6 + "\n");
-                        api.canCmd(0, mCmd3, mCmd3.length);
-                        break;
+//                    case "4C"://0x0C 远程应急车辆锁定和解锁
+////                        mSocketClient.sendString(new JSONObject(respJson.respStr8e).toString());
+////                        开头01桩号 云端vehicleId 车辆id  operation 01锁定02解锁
+//                        String vehicleId = "1";
+//                        String src6 = "01000C" + vehicleId + "01";
+//                        byte[] mCmd3 = Conversion.HexString2Bytes(src6);
+//                        tv.append("云端回复4C:   " + src6 + "\n");
+//                        api.canCmd(0, mCmd3, mCmd3.length);
+//                        break;
 
                     case "88"://0x08 刷卡借车 cmd41
 //                        mUser_cardInnerId = cmd.substring(6, 14);
@@ -245,7 +254,7 @@ public class BorrowActivity extends AppCompatActivity {
 //                            Log.i("===", "允许租车");
 //                        01桩号 00C8协议 170302111820开始借车时间到秒 0064余额
                         SimpleDateFormat time = new SimpleDateFormat("yyMMddHHmmss");
-                        String src2 = "0100C8" + time.format(new Date())+"0064";
+                        String src2 = "0100C8" + time.format(new Date()) + "0064";
                         byte[] mCmd08 = Conversion.HexString2Bytes(src2);
                         api.canCmd(0, mCmd08, mCmd08.length);
                         tv.append("云端返回88:   " + src2 + "\n");
@@ -262,7 +271,8 @@ public class BorrowActivity extends AppCompatActivity {
 //                        mVehicle_id = cmd.substring(28, 36);
 //                        mVehicle_state = cmd.substring(37, 38);
 //                        mBorrowCar_time = cmd.substring(39);
-//                        String reqJson42 = "{\"siteId\":\"59\",\"cmd\":\"42\",\"way\":\"1\",\"sn\":\"0\",\"data\":{\"address\":\"\\u6d4e\\u5357\",\"user_cardInnerId\":\"" + mUser_cardInnerId + "\",\"user_cardState\":\"" + mUser_cardState + "\",\"balance\":\"" + mBalance + "\",\"pile_id\":\"" + "1" + "\",\"pile_state\":{\"pile_state\":\"" + mPile_state + "\",\"fault1\":\"" + mPile_fault1 + "\",\"fault2\":\"" + mPile_fault2 + "\"},\"vehicle_id\":\"" + mVehicle_id + "\",\"vehicle_state\":\"" + mVehicle_state + "\",\"borrowCar_time\":\"" + mBorrowCar_time + "\"}}";
+//                        String reqJson42 = "{\"siteId\":\"59\",\"cmd\":\"42\",\"way\":\"1\",
+// \"sn\":\"0\",\"data\":{\"address\":\"\\u6d4e\\u5357\",\"user_cardInnerId\":\"" + mUser_cardInnerId + "\",\"user_cardState\":\"" + mUser_cardState + "\",\"balance\":\"" + mBalance + "\",\"pile_id\":\"" + "1" + "\",\"pile_state\":{\"pile_state\":\"" + mPile_state + "\",\"fault1\":\"" + mPile_fault1 + "\",\"fault2\":\"" + mPile_fault2 + "\"},\"vehicle_id\":\"" + mVehicle_id + "\",\"vehicle_state\":\"" + mVehicle_state + "\",\"borrowCar_time\":\"" + mBorrowCar_time + "\"}}";
 //                        mSocketClient.sendString(new JSONObject(reqJson42).toString());
 //                        Log.i("===", "刷卡还车请求  " + reqJson42);
 //                    前面的六位固定协议和桩号  0164余额 0001本次扣费 01时长
@@ -272,7 +282,7 @@ public class BorrowActivity extends AppCompatActivity {
                         tv.append("云端回复89:   " + src3 + "\n");
                         break;
 
-                    case "8D"://0x0D 还车未刷卡 cmd43
+                    case "8D"://0x0D 还车 cmd43
 //                        mPile_id = cmd.substring(7, 8);
 //                        mPile_state = cmd.substring(9, 10);
 //                        mPile_fault1 = cmd.substring(11, 12);
@@ -282,13 +292,13 @@ public class BorrowActivity extends AppCompatActivity {
 //                        String reqJson43 = "{\"siteId\":\"59\",\"cmd\":\"43\",\"way\":\"1\",\"sn\":\"0\",\"data\":{\"address\":\"\\u6d4e\\u5357\",\"pile_id\":\"" + "1" + "\",\"pile_state\":{\"pile_state\":\"" + mPile_state + "\",\"fault1\":\"" + mPile_fault1 + "\",\"fault2\":\"" + mPile_fault2 + "\"},\"vehicle_id\":\"" + mVehicle_id + "\",\"vehicle_state\":\"" + mVehicle_state + "\"}}";
 //                        mSocketClient.sendString(new JSONObject(reqJson43).toString());
 //                        Log.i("===", "还车未刷卡请求  " + reqJson43);
-
 //                            Log.i("===", "允许还车");
-  //                    前面的六位固定协议和桩号  0164余额 0001本次扣费 01时长
-                        String src5 = mPileID + "00CD" + "0164" + "0001" + "01";
+                        //                    前面的六位固定协议和桩号  0164余额 0001本次扣费 01时长
+                        String src5 = "0100CD" + "0164" + "0001" + "01";
                         byte[] mCmd0D = Conversion.HexString2Bytes(src5);
                         api.canCmd(0, mCmd0D, mCmd0D.length);
                         tv.append("云端回复8D:   " + src5 + "\n");
+
                         break;
                 }
             }
@@ -302,5 +312,24 @@ public class BorrowActivity extends AppCompatActivity {
                 }
             }
         });
+    }
+
+
+    @OnClick({R.id.btn_borrow, R.id.btn_send})
+    public void onClick(View view) {
+        switch (view.getId()) {
+            case R.id.btn_borrow:
+                //                        "cmd":"d1 appk开锁
+                tv.append("云端开锁11:   " + "01001101" + "\n");
+                byte[] mCmdd1 = Conversion.HexString2Bytes("01001101");
+                api.canCmd(0, mCmdd1, mCmdd1.length);
+                break;
+            case R.id.btn_send:
+                String s = etSend.getText().toString();
+                tv.append("自定义输入的值为:   " + s + "\n");
+                byte[] mCmdet = Conversion.HexString2Bytes(s);
+                api.canCmd(0, mCmdet, mCmdet.length);
+                break;
+        }
     }
 }

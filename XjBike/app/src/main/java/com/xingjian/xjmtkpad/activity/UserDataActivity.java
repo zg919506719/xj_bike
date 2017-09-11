@@ -23,6 +23,7 @@ public class UserDataActivity extends AppCompatActivity {
         setContentView(R.layout.activity_user_data);
         ButterKnife.bind(this);
         MyApp.addActivity(this);
+        startActivity(new Intent(this,BorrowActivity.class));
     }
 
     @OnClick({R.id.btn_back, R.id.user_info, R.id.card_info, R.id.search, R.id.money, R.id.borrow, R.id.returnBike, R.id.help})

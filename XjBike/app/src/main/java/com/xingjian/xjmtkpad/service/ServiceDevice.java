@@ -9,6 +9,7 @@ import android.util.Log;
 
 import com.alibaba.fastjson.JSON;
 import com.vilyever.socketclient.SocketClient;
+import com.xingjian.xjmtkpad.base.Constant;
 import com.xingjian.xjmtkpad.base.MyApp;
 import com.xingjian.xjmtkpad.beanrequest.TimeReq;
 import com.xingjian.xjmtkpad.utils.WeakHandler;
@@ -27,6 +28,7 @@ public class ServiceDevice extends Service {
         mPosApi= MyApp.posApi;
         client = MyApp.Client;
         handler.post(task);
+        handler.post(M1_task);
     }
 
     @Nullable
@@ -38,8 +40,14 @@ public class ServiceDevice extends Service {
     private Runnable task=new Runnable() {
         @Override
         public void run() {
-            mPosApi.m1Search(500);
             mPosApi.getTemperatureHumidity();
+            handler.postDelayed(task, Constant.CIRCLE_TIME);
+        }
+    };
+    private Runnable M1_task=new Runnable() {
+        @Override
+        public void run() {
+            mPosApi.m1Search(500);
             TimeReq req = new TimeReq();
             req.setSiteId("59");
             req.setCmd("05");
@@ -48,7 +56,7 @@ public class ServiceDevice extends Service {
             req.setData(new TimeReq.DataBean());
             String s = JSON.toJSONString(req);
             client.sendString(s);
-            handler.postDelayed(task,5000);
+            handler.postDelayed(M1_task, Constant.M1_CIRCLE_TIME);
         }
     };
 }
