@@ -3,14 +3,21 @@ package com.xingjian.xjmtkpad.activity;
 import android.os.Bundle;
 import android.posapi.Conversion;
 import android.posapi.PosApi;
+import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v7.app.AppCompatActivity;
+import android.util.Log;
 import android.view.View;
 import android.widget.EditText;
 import android.widget.TextView;
 
+import com.alibaba.fastjson.JSONObject;
+import com.vilyever.socketclient.SocketClient;
+import com.vilyever.socketclient.helper.SocketClientDelegate;
+import com.vilyever.socketclient.helper.SocketResponsePacket;
 import com.xingjian.xjmtkpad.R;
 import com.xingjian.xjmtkpad.base.MyApp;
+import com.xingjian.xjmtkpad.beanrequest.SiteUpReq;
 
 import java.text.SimpleDateFormat;
 import java.util.Date;
@@ -27,9 +34,10 @@ public class BorrowActivity extends AppCompatActivity {
     PosApi api;
     @BindView(R.id.tv)
     TextView tv;
-    private static String TAG = "haha";
+    private static String TAG = "siteTest";
     @BindView(R.id.et_send)
     EditText etSend;
+    private SocketClient client;
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
@@ -38,8 +46,10 @@ public class BorrowActivity extends AppCompatActivity {
         ButterKnife.bind(this);
         //can初始化
         api = MyApp.posApi;
+        client = MyApp.Client;
         setCan();
         api.canInit(4);
+        initSocket();
         String data = "  case \"81\"://0x01 锁桩ID编号请求"
                 + "\n" + "case \"8E\"://0x0E 请求时间"
                 + "\n" + "case \"83\"://0x03 锁桩上报方式请求"
@@ -52,6 +62,38 @@ public class BorrowActivity extends AppCompatActivity {
                 + "\n" + " case \"8D\"://0x0D 还车未刷卡 cmd43"
                 + "\n" + "  case \"89\"://0x09 刷卡还车 cmd42";
         tv.setText(data);
+    }
+
+    private void initSocket() {
+        client.registerSocketClientDelegate(new SocketClientDelegate() {
+            @Override
+            public void onConnected(SocketClient client) {
+
+            }
+
+            @Override
+            public void onDisconnected(SocketClient client) {
+
+            }
+
+            @Override
+            public void onResponse(SocketClient client, @NonNull SocketResponsePacket responsePacket) {
+                String json = responsePacket.getMessage();
+                if (json.contains("\"cmd\":\"07\"") || json.contains("\"cmd\":\"88\"")) {//设备状态上报模式 响应 或 设置
+                    Log.i(TAG, json);
+                } else if (json.contains("\"cmd\":\"8e\"")) {//远程应急车辆锁定和解锁
+
+                } else if (json.contains("\"cmd\":\"01\"")) {//站点锁桩车辆状态上报响应
+
+                } else if (json.contains("\"cmd\":\"82\"")) {//站点锁桩车辆状态读取
+
+                } else if (json.contains("\"cmd\":\"41\"")) {//刷卡借车响应
+
+                } else if (json.contains("\"cmd\":\"42\"") || json.contains("\"cmd\":\"43\"")) {//刷卡还车 或 还车未刷卡 响应
+                } else if (json.contains("\"cmd\":\"d1\"")) {//站点锁桩APP扫码借车
+                }
+            }
+        });
     }
 
     private void setCan() {
@@ -83,8 +125,6 @@ public class BorrowActivity extends AppCompatActivity {
                     cmd = Conversion.Bytes2HexString(resp);
                     tv.append("接收数据:" + cmd + "\n");
                 }
-
-
 //                01 09 81 54 170315010203  04
                 //01格式固定，表示发送方向，
                 // 0981判断类型，protocol
@@ -94,7 +134,6 @@ public class BorrowActivity extends AppCompatActivity {
                 String protocol = cmd.substring(4, 6);
                 tv.append("车辆请求为：" + protocol + "\n");
 //                5，6
-
                 switch (protocol) {
                     case "81"://0x01 锁桩ID编号请求 通了
 //                        String pileInId = cmd.substring(6);
@@ -121,7 +160,6 @@ public class BorrowActivity extends AppCompatActivity {
 //                                break;
 //                            }
 //                        }
-
 //                        01方向，03*2表示位数，81协议，54校验位，00还不知道
                         //01命名桩号
                         String src = "0103C15400" + "01";
@@ -141,6 +179,15 @@ public class BorrowActivity extends AppCompatActivity {
                     case "83"://0x03 锁桩上报方式请求 通了
 //                        mSocketClient.sendString(new JSONObject(reqJson.reqStr07).toString());//设备状态上报模式请求
 //车桩编号 acmd=07对应83 返回 00C3     周期和变化01 02 变化就是车辆状态有变化 后面有周期性上报间隔时间10,15这样
+                        SiteUpReq siteUpReq = new SiteUpReq();
+                        siteUpReq.setCmd("07");
+                        siteUpReq.setSiteId("59");
+                        siteUpReq.setWay("1");
+                        siteUpReq.setSn("0");
+                        SiteUpReq.DataBean data = new SiteUpReq.DataBean();
+                        data.setAddress("济南");
+                        siteUpReq.setData(data);
+                        client.sendString(JSONObject.toJSONString(siteUpReq));
                         byte[] mCmd = Conversion.HexString2Bytes("0100C302");
                         tv.append("云端回复83:   " + "0100C302" + "\n");
                         api.canCmd(0, mCmd, mCmd.length);
@@ -199,6 +246,8 @@ public class BorrowActivity extends AppCompatActivity {
 //                        mSocketClient.sendString(new JSONObject(reqJson01).toString());
 //                            Log.i("===", "站点锁桩车辆状态上报成功");
 //                        后面两位01是车桩号
+                        Log.i(TAG, cmd);
+//                        010D8A020001010000005234E79410
                         byte[] mCmd2 = Conversion.HexString2Bytes("0100CA01");
                         api.canCmd(0, mCmd2, mCmd2.length);
                         tv.append("云端回复8A:   " + "0100CA01" + "\n");

@@ -57,7 +57,7 @@ public class UserInfoActivity extends AppCompatActivity {
         UserInfoReq.DataBean data = new UserInfoReq.DataBean();
         data.setType("2");
         Log.i("haha", cardId);
-        if (!cardId.isEmpty()){
+        if (!cardId.isEmpty()) {
             data.setValue(cardId);
         }
 //        data.setValue("658D17E2");
@@ -96,26 +96,13 @@ public class UserInfoActivity extends AppCompatActivity {
         });
     }
 
-    @OnClick({R.id.btn_back, R.id.btn_phone, R.id.btn_password})
+    @OnClick({R.id.btn_back})
     public void onClick(View view) {
         switch (view.getId()) {
             case R.id.btn_back:
                 finish();
                 break;
-            case R.id.btn_phone:
-                modifyPhone();
-                break;
-            case R.id.btn_password:
-                modifyPassword();
-                break;
         }
     }
 
-    private void modifyPassword() {
-
-    }
-
-    private void modifyPhone() {
-
-    }
 }

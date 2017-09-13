@@ -195,14 +195,6 @@
                     android:src="@mipmap/card_reader_area" />
             </LinearLayout>
 
-            <Button
-                android:id="@+id/btn_login_staff"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:background="@mipmap/button"
-                android:text="员工无卡登录"
-                android:textColor="#fff"
-                android:textSize="22sp" />
         </LinearLayout>
 
     </LinearLayout>

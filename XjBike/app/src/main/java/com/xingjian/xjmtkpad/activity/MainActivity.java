@@ -85,7 +85,7 @@ public class MainActivity extends AppCompatActivity implements InterLogin {
     }
 
 
-    @OnClick({R.id.net, R.id.station, R.id.btn_login, R.id.btn_login_staff})
+    @OnClick({R.id.net, R.id.station, R.id.btn_login})
     public void onClick(View view) {
         switch (view.getId()) {
             case R.id.net:
@@ -99,10 +99,6 @@ public class MainActivity extends AppCompatActivity implements InterLogin {
             case R.id.btn_login:
                 presentLogin.finishTask();
                 presentLogin.showNoCardDialog();
-                break;
-            case R.id.btn_login_staff:
-                presentLogin.finishTask();
-                startActivity(new Intent(MainActivity.this, StaffLoginActivity.class));
                 break;
         }
     }
