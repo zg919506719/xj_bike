@@ -30,7 +30,8 @@ public class MainActivity extends AppCompatActivity {
         btn_borrow.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                tv.append("云端开锁11:   " + "01001101" + "\n");
+                tv.append("云端开锁11:   " + "01001 " +
+                        "101" + "\n");
                 byte[] mCmdd1 = Conversion.HexString2Bytes("01001101");
                 api.canCmd(0, mCmdd1, mCmdd1.length);
             }
@@ -48,17 +49,11 @@ public class MainActivity extends AppCompatActivity {
         deviceInit();
         setCan();
         api.canInit(4);
-        String data = "  case \"81\"://0x01 锁桩ID编号请求"
-                + "\n" + "case \"8E\"://0x0E 请求时间"
-                + "\n" + "case \"83\"://0x03 锁桩上报方式请求"
-                + "\n" + " case \"44\"://0x04 锁桩上报方式设置"
-                + "\n" + " case \"85\"://0x05 锁桩工作模式请求"
-                + "\n" + " case \"87\"://0x07 站点id，发送的是站点id信息"
+        String data = "case \"8E\"://0x0E 请求时间"
                 + "\n" + "case \"8A\"://0x0A 锁桩车辆状态"
-                + "\n" + "case \"4C\"://0x0C 远程应急车辆锁定和解锁"
                 + "\n" + "case \"88\"://0x08 刷卡借车 cmd41"
                 + "\n" + " case \"8D\"://0x0D 还车未刷卡 cmd43"
-                + "\n" + "  case \"89\"://0x09 刷卡还车 cmd42";
+                + "\n" + "  case \"91\"://0x09 云端  cmd42";
         tv.setText(data);
     }
 
@@ -84,104 +79,78 @@ public class MainActivity extends AppCompatActivity {
 
             @Override
             public void onReceived(int serialNo, byte[] resp, int length) {
+//                00成功，01失败
                 String cmd = null;
                 String mPileID;
                 if (resp != null) {
-                    //psam 执行成功
                     cmd = Conversion.Bytes2HexString(resp);
                     tv.append("接收数据:" + cmd + "\n");
                 }
-//                01 09 81 54 170315010203  04
-                //01格式固定，表示发送方向，
-                // 0981判断类型，protocol
-                //6-8位以后就是校验位，
-                // 9-倒数两位 是数据域  700100000代表默认时间，
-                //最后的两位00也是校验位
+                //1，2位为车辆编号
+                //3，4位为位数
+                //5，6为协议
+                String pileId = cmd.substring(0, 2);
                 String protocol = cmd.substring(4, 6);
-                tv.append("车辆请求为：" + protocol + "\n");
-//                5，6
+                tv.append("车辆编号为：" + pileId + ",车辆请求为：" + protocol + "\n");
                 switch (protocol) {
-                    case "81"://0x01 锁桩ID编号请求 通了
-//                        01方向，03*2表示位数，81协议，54校验位，00还不知道
-                        //01命名桩号
-                        String src = "0103C15400" + "01";
-                        byte[] mCmd0B = Conversion.HexString2Bytes(src);
-                        tv.append("传过去81:   " + src + "\n");
-                        api.canCmd(0, mCmd0B, mCmd0B.length);
-                        break;
-
                     case "8E"://0x0E 请求时间 通了
                         SimpleDateFormat yyMMddHHmmss = new SimpleDateFormat("yyMMddHHmmss");
-                        String src1 = "0100CE" + yyMMddHHmmss.format(new Date());
+                        String src1 = pileId + "00CE" + yyMMddHHmmss.format(new Date());
                         tv.append("传过去8E:   " + src1 + "\n");
                         byte[] mCmd0E = Conversion.HexString2Bytes(src1);
                         api.canCmd(0, mCmd0E, mCmd0E.length);
                         break;
-//
-                    case "83"://0x03 锁桩上报方式请求 通了
-//                        mSocketClient.sendString(new JSONObject(reqJson.reqStr07).toString());//设备状态上报模式请求
-//车桩编号 acmd=07对应83 返回 00C3     周期和变化01 02 变化就是车辆状态有变化 后面有周期性上报间隔时间10,15这样
-                        byte[] mCmd = Conversion.HexString2Bytes("0100C302");
-                        tv.append("云端回复83:   " + "0100C302" + "\n");
-                        api.canCmd(0, mCmd, mCmd.length);
-                        break;
-
-                    case "85"://0x05 锁桩工作模式请求 通了
-//                        01是处于在线状态02是离线状态
-                        String src4 = "0100C501";
-                        byte[] mCmd05 = Conversion.HexString2Bytes(src4);
-                        api.canCmd(0, mCmd05, mCmd05.length);
-                        tv.append("传过去85:    " + src4 + "\n");
-                        break;
-//
-                    case "87"://0x07 站点id，发送的是站点id信息 通了
-                        //前两个站点方向 00 Y/N C7协议 00校验位 59站点信息
-                        byte[] mCmd07 = Conversion.HexString2Bytes("0100C70059");
-                        tv.append("传过去的87:    " + "0100C70059" + "\n");
-                        api.canCmd(0, mCmd07, mCmd07.length);
-                        break;
-//
                     case "8A"://0x0A 锁桩车辆状态上报
-//                        01 078A  02 00 01 01 0000
+//                        01 0D8A  02 00 01 01 0000
 //                            没有车辆信息
-//                            01078A是协议，02上报模式
-//                            00锁桩类型，01锁id，01状态，00 故障1 00故障2
-//                            后面的
+//                            01078A是协议，00锁桩类型，
+//                              00锁桩状态，
+//                              0000锁桩 故障原因
+//                              00故障2
 //                            车类型 81，车辆id 八位00000000，
 //                        车状态6位
 //                        后面两位01是车桩号
-//                        010D8A020001010000005234E79410
-                        byte[] mCmd2 = Conversion.HexString2Bytes("0100CA01");
-                        api.canCmd(0, mCmd2, mCmd2.length);
-                        tv.append("云端回复8A:   " + "0100CA01" + "\n");
+//                        010D8A020001010000005234E794 10
+                        tv.append("已收到8A，上报云端");
                         break;
-
-
                     case "88"://0x08 刷卡借车 cmd41
-//                        01桩号 00C8协议 170302111820开始借车时间到秒 0064余额
-                        SimpleDateFormat time = new SimpleDateFormat("yyMMddHHmmss");
-                        String src2 = "0100C8" + time.format(new Date()) + "0064";
+//                        010D88  D0569B19
+//                      20卡类型 M1 08 银行卡20，28
+//                      01 锁桩状态 00没问题 01有问题 02停用
+//                        锁桩故障原因两位
+//	        0x01			// 	0x01-断网：表示该站点管理箱与锁桩之间通信链路不正常
+//   	        0x02			// 	0x02-锁止器异常
+//		    0x03			// 	0x03-读卡器异常
+//            0x04			// 	0x04-用户读卡器故障：0x04
+//	        0x05			// 	0x05-车辆读卡器故障：0x05
+//   		    0x07			//  0x07-读FLASH异常
+//		    0x09		    //	电量板故障
+//                              5234E794    82车类型普通车
+                        String result1 = cmd.substring(16, 18);
+                        tv.append("车量状态为"+result1+ "余额充足，准备借车\n");
+//                        01桩号 00C8协议  0064余额
+//                      借车成功00 失败01
+                        String src2 = "0100C8" + "00" + "0064";
                         byte[] mCmd08 = Conversion.HexString2Bytes(src2);
                         api.canCmd(0, mCmd08, mCmd08.length);
-                        tv.append("云端返回88:   " + src2 + "\n");
                         break;
-
-                    case "89"://0x09 刷卡还车 cmd42
-//                    前面的六位固定协议和桩号  0164余额 0001本次扣费 01时长
-                        String src3 = "0100C9" + "0164" + "0001" + "01";
-                        byte[] mCmd09 = Conversion.HexString2Bytes(src3);
-                        api.canCmd(0, mCmd09, mCmd09.length);
-                        tv.append("云端回复89:   " + src3 + "\n");
-                        break;
-
                     case "8D"://0x0D 还车 cmd43
-                        //                    前面的六位固定协议和桩号  0164余额 0001本次扣费 01时长
-                        String src5 = "0100CD" + "0164" + "0001" + "01";
+//                        01088D 01    5234E794   82
+                        //                    前面的六位固定协议和桩号  0164余额 0001本次扣费
+                        String result = cmd.substring(6, 8);
+                        tv.append("还车结果为"+result+"返回了余额"+"\n");
+                        String src5 = "0100CD" + "0164" + "0001";
                         byte[] mCmd0D = Conversion.HexString2Bytes(src5);
                         api.canCmd(0, mCmd0D, mCmd0D.length);
-                        tv.append("云端回复8D:   " + src5 + "\n");
-
                         break;
+                    case "91":
+                        //云端借车回复 01029100 00表示成功，01表示失败
+                        String state = cmd.substring(8, 10);
+                        if (state.equals("00")) {
+                            tv.append("借车成功\n");
+                        } else {
+                            tv.append("借车失败"+state+"\n");
+                        }
                 }
             }
 
