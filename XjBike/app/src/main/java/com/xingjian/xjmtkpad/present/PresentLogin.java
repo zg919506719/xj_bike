@@ -318,6 +318,7 @@ public class PresentLogin {
                 if (state == PosApi.COMM_STATUS_SUCCESS) {
 //                    respons.append("M1 寻卡成功\n");
 //                    respons.append("Card UID:"+uid+"\n");
+                    Log.i(TAG, "onSearch: "+uid);
                     char[] chars = uid.toCharArray();
                     StringBuffer sb = new StringBuffer();
                     if (chars.length == 8) {

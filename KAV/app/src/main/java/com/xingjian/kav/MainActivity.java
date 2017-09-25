@@ -130,7 +130,8 @@ public class MainActivity extends AppCompatActivity {
                         tv.append("车量状态为"+result1+ "余额充足，准备借车\n");
 //                        01桩号 00C8协议  0064余额
 //                      借车成功00 失败01
-                        String src2 = "0100C8" + "00" + "0064";
+                        String src2 = pileId+"00C8" + "00" + "0064";
+                        tv.append("借车回复的指令为"+src2+"\n");
                         byte[] mCmd08 = Conversion.HexString2Bytes(src2);
                         api.canCmd(0, mCmd08, mCmd08.length);
                         break;
@@ -139,7 +140,8 @@ public class MainActivity extends AppCompatActivity {
                         //                    前面的六位固定协议和桩号  0164余额 0001本次扣费
                         String result = cmd.substring(6, 8);
                         tv.append("还车结果为"+result+"返回了余额"+"\n");
-                        String src5 = "0100CD" + "0164" + "0001";
+                        String src5 = pileId+"00CD" + "0164" + "0001";
+                        tv.append("还车回复的指令为"+src5+"\n");
                         byte[] mCmd0D = Conversion.HexString2Bytes(src5);
                         api.canCmd(0, mCmd0D, mCmd0D.length);
                         break;
