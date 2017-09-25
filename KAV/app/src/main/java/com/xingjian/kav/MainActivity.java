@@ -153,6 +153,21 @@ public class MainActivity extends AppCompatActivity {
                         } else {
                             tv.append("借车失败"+state+"\n");
                         }
+                        break;
+                    case "84":
+//                        锁桩充电 02 0984 AD06BBA4车号 00车类型 00电量 01打开充电端口
+                        String bikeId = cmd.substring(6, 14);
+                        String data = cmd.substring(14,18);
+                        tv.append("充电车位"+bikeId+"车型电量为"+data+"\n");
+                        String isOpen = cmd.substring(18,20);
+                        String response=null;
+                        if (isOpen.equals("01")){
+                             response=pileId+"00C4"+isOpen;
+                        }else if (isOpen.equals("00")){
+                             response=pileId+"00C4"+isOpen;
+                        }
+                        tv.append("充电回复"+response+"\n");
+                        break;
                 }
             }
 
