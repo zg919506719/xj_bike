@@ -1,10 +1,9 @@
 package com.xingjian.kav;
 
+import android.os.Bundle;
 import android.posapi.Conversion;
 import android.posapi.PosApi;
 import android.support.v7.app.AppCompatActivity;
-import android.os.Bundle;
-import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
@@ -127,11 +126,11 @@ public class MainActivity extends AppCompatActivity {
 //		    0x09		    //	电量板故障
 //                              5234E794    82车类型普通车
                         String result1 = cmd.substring(16, 18);
-                        tv.append("车量状态为"+result1+ "余额充足，准备借车\n");
+                        tv.append("车量状态为" + result1 + "余额充足，准备借车\n");
 //                        01桩号 00C8协议  0064余额
 //                      借车成功00 失败01
-                        String src2 = pileId+"00C8" + "00" + "0064";
-                        tv.append("借车回复的指令为"+src2+"\n");
+                        String src2 = pileId + "00C8" + "00" + "0064";
+                        tv.append("借车回复的指令为" + src2 + "\n");
                         byte[] mCmd08 = Conversion.HexString2Bytes(src2);
                         api.canCmd(0, mCmd08, mCmd08.length);
                         break;
@@ -139,9 +138,9 @@ public class MainActivity extends AppCompatActivity {
 //                        01088D 01    5234E794   82
                         //                    前面的六位固定协议和桩号  0164余额 0001本次扣费
                         String result = cmd.substring(6, 8);
-                        tv.append("还车结果为"+result+"返回了余额"+"\n");
-                        String src5 = pileId+"00CD" + "0164" + "0001";
-                        tv.append("还车回复的指令为"+src5+"\n");
+                        tv.append("还车结果为" + result + "返回了余额" + "\n");
+                        String src5 = pileId + "00CD" + "0164" + "0001";
+                        tv.append("还车回复的指令为" + src5 + "\n");
                         byte[] mCmd0D = Conversion.HexString2Bytes(src5);
                         api.canCmd(0, mCmd0D, mCmd0D.length);
                         break;
@@ -151,22 +150,24 @@ public class MainActivity extends AppCompatActivity {
                         if (state.equals("00")) {
                             tv.append("借车成功\n");
                         } else {
-                            tv.append("借车失败"+state+"\n");
+                            tv.append("借车失败" + state + "\n");
                         }
                         break;
                     case "84":
 //                        锁桩充电 02 0984 AD06BBA4车号 00车类型 00电量 01打开充电端口
                         String bikeId = cmd.substring(6, 14);
-                        String data = cmd.substring(14,18);
-                        tv.append("充电车位"+bikeId+"车型电量为"+data+"\n");
-                        String isOpen = cmd.substring(18,20);
-                        String response=null;
-                        if (isOpen.equals("01")){
-                             response=pileId+"00C4"+isOpen;
-                        }else if (isOpen.equals("00")){
-                             response=pileId+"00C4"+isOpen;
+                        String data = cmd.substring(14, 18);
+                        tv.append("充电车位" + bikeId + "车型电量为" + data + "\n");
+                        String isOpen = cmd.substring(18, 20);
+                        String response = null;
+                        if (isOpen.equals("01")) {
+                            response = pileId + "00C4" + isOpen;
+                        } else if (isOpen.equals("00")) {
+                            response = pileId + "00C4" + isOpen;
                         }
-                        tv.append("充电回复"+response+"\n");
+                        tv.append("充电回复" + response + "\n");
+                        byte[] mCmdC4 = Conversion.HexString2Bytes(response);
+                        api.canCmd(0, mCmdC4, mCmdC4.length);
                         break;
                 }
             }
