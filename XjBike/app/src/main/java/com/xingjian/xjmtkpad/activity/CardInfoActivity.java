@@ -13,6 +13,7 @@ import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONObject;
 import com.vilyever.socketclient.SocketClient;
 import com.vilyever.socketclient.helper.SocketClientDelegate;
+import com.vilyever.socketclient.helper.SocketPacket;
 import com.vilyever.socketclient.helper.SocketResponsePacket;
 import com.xingjian.xjmtkpad.R;
 import com.xingjian.xjmtkpad.adapter.AdapterCard;
@@ -68,7 +69,7 @@ public class CardInfoActivity extends AppCompatActivity {
         req.setSn("0");
         CardInfoReq.DataBean data = new CardInfoReq.DataBean();
         data.setType("2");
-        if (!cardId.isEmpty()){
+        if (!cardId.isEmpty()) {
             data.setValue(cardId);
         }
         req.setData(data);
@@ -86,7 +87,7 @@ public class CardInfoActivity extends AppCompatActivity {
 
             @Override
             public void onDisconnected(SocketClient client) {
-
+                client.connect();
             }
 
             @Override
@@ -111,7 +112,7 @@ public class CardInfoActivity extends AppCompatActivity {
                     page.setText(data.getPage());
                     prepage.setText(data.getPrepage());
                     ArrayList<CardInfoRes.DataBean.ListBean> list = (ArrayList<CardInfoRes.DataBean.ListBean>) data.getList();
-                   lv.setAdapter(new AdapterCard(list));
+                    lv.setAdapter(new AdapterCard(list));
                 }
             }
         });

@@ -81,7 +81,7 @@ public class MySocket {
         /**
          * 设置读取策略为自动读取到指定的包尾
          */
-        socketClient.getSocketPacketHelper().setReadStrategy(SocketPacketHelper.ReadStrategy.AutoReadToTrailer);
+        socketClient.getSocketPacketHelper().setReadStrategy(SocketPacketHelper.ReadStrategy.AutoReadByLength);
 
         /**
          * 根据连接双方协议设置的包尾数据

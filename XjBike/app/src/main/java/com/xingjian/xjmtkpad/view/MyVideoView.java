@@ -13,9 +13,6 @@ public class MyVideoView extends VideoView {
         super(context, attrs, defStyleAttr);
     }
 
-    public MyVideoView(Context context, AttributeSet attrs, int defStyleAttr, int defStyleRes) {
-        super(context, attrs, defStyleAttr, defStyleRes);
-    }
 
     public MyVideoView(Context context) {
         super(context);

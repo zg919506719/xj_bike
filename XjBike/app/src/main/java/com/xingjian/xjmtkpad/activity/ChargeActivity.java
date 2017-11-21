@@ -65,7 +65,6 @@ public class ChargeActivity extends AppCompatActivity {
             @Override
             public void onItemSelected(AdapterView<?> adapterView, View view, int i, long l) {
                 String reqJson25_2 = "{\"siteId\":\"59\",\"cmd\":\"25\",\"way\":\"1\",\"sn\":\"0\",\"data\":{\"type\":\"2\",\"value\":\"2B0EF1E4\",\"query\":[{\"query_type\":\"2\",\"query_way\":{\"start_time\":\"2017-06-20 16:53:30\",\"end_time\":\"2017-07-10 17:53:30\"}}]}}";
-
                 RechargeReq req = new RechargeReq();
                 req.setSiteId("59");
                 req.setCmd("26");

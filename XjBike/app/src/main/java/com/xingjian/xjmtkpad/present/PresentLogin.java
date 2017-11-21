@@ -1,36 +1,29 @@
 package com.xingjian.xjmtkpad.present;
 
 import android.app.Dialog;
-import android.app.Service;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.media.AudioManager;
 import android.media.MediaPlayer;
-import android.os.Bundle;
-import android.os.Handler;
-import android.os.Message;
 import android.posapi.PosApi;
 import android.support.annotation.NonNull;
-import android.support.v7.app.ActionBar;
 import android.support.v7.app.AlertDialog;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
-import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.FrameLayout;
-import android.widget.MediaController;
 import android.widget.ProgressBar;
 import android.widget.SeekBar;
 import android.widget.TextView;
-import android.widget.VideoView;
 
 import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONObject;
 import com.vilyever.socketclient.SocketClient;
 import com.vilyever.socketclient.helper.SocketClientDelegate;
+import com.vilyever.socketclient.helper.SocketPacket;
 import com.vilyever.socketclient.helper.SocketResponsePacket;
 import com.xingjian.xjmtkpad.R;
 import com.xingjian.xjmtkpad.activity.StaffAttendanceActivity;
@@ -318,7 +311,7 @@ public class PresentLogin {
                 if (state == PosApi.COMM_STATUS_SUCCESS) {
 //                    respons.append("M1 寻卡成功\n");
 //                    respons.append("Card UID:"+uid+"\n");
-                    Log.i(TAG, "onSearch: "+uid);
+                    Log.i(TAG, "onSearch: " + uid);
                     char[] chars = uid.toCharArray();
                     StringBuffer sb = new StringBuffer();
                     if (chars.length == 8) {
@@ -343,7 +336,7 @@ public class PresentLogin {
 //                    员工卡测试
 //                    bean.setUser_cardId("000001");
                     req.setData(bean);
-                    client.sendString(JSONObject.toJSONString(req));
+                    SocketPacket socketPacket = client.sendString(JSONObject.toJSONString(req));
                 }
             }
 

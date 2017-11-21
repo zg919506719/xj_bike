@@ -15,8 +15,7 @@ import java.util.Date;
 public class MainActivity extends AppCompatActivity {
     private PosApi api;
     private TextView tv;
-    private Button btn_borrow, btn_send;
-    private EditText etSend;
+    private Button btn_borrow, btn_send,btn_stop,btn_start,btn_battery;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -25,34 +24,71 @@ public class MainActivity extends AppCompatActivity {
         tv = (TextView) findViewById(R.id.tv);
         btn_borrow = (Button) findViewById(R.id.btn_borrow);
         btn_send = (Button) findViewById(R.id.btn_send);
-        etSend = (EditText) findViewById(R.id.et_send);
+        btn_stop = (Button) findViewById(R.id.btn_stop);
+        btn_start = (Button) findViewById(R.id.btn_start);
+        btn_battery = (Button) findViewById(R.id.btn_battery);
+        //04锁桩版本更新
+
+
         btn_borrow.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                tv.append("云端开锁11:   " + "01001 " +
-                        "101" + "\n");
-                byte[] mCmdd1 = Conversion.HexString2Bytes("01001101");
+                tv.append("开锁CB" + "\n");
+                byte[] mCmdd1 = Conversion.HexString2Bytes("0100CB");
                 api.canCmd(0, mCmdd1, mCmdd1.length);
             }
         });
         btn_send.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                String s = etSend.getText().toString();
-                tv.append("自定义输入的值为:   " + s + "\n");
-                byte[] mCmdet = Conversion.HexString2Bytes(s);
+//                获取锁桩状态
+                SimpleDateFormat yyMMddHHmmss = new SimpleDateFormat("yyyyMMddHHmmss");
+                String src1 = "0100C6" + yyMMddHHmmss.format(new Date());
+                tv.append("获取锁桩状态C6:   " + src1 + "\n");
+                byte[] mCmdet = Conversion.HexString2Bytes(src1);
                 api.canCmd(0, mCmdet, mCmdet.length);
+            }
+        });
+//        btn_stop,btn_start,btn_battery
+        btn_stop.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                tv.append("停用C3" + "\n");
+                //        response = pileId + "0003" + isOpen;00启用，01停用
+                byte[] mCmdd1 = Conversion.HexString2Bytes("0100C301");
+                api.canCmd(0, mCmdd1, mCmdd1.length);
+            }
+        });
+        btn_start.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                tv.append("启用C3" + "\n");
+                byte[] mCmdd1 = Conversion.HexString2Bytes("0100C300");
+                api.canCmd(0, mCmdd1, mCmdd1.length);
+            }
+        });
+        //response = pileId + "0005" + isOpen 00不充，01充
+        btn_battery.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                tv.append("充电C5" + "\n");
+                byte[] mCmdd1 = Conversion.HexString2Bytes("0100C501");
+                api.canCmd(0, mCmdd1, mCmdd1.length);
             }
         });
         api = MyApp.posApi;
         deviceInit();
         setCan();
         api.canInit(4);
-        String data = "case \"8E\"://0x0E 请求时间"
-                + "\n" + "case \"8A\"://0x0A 锁桩车辆状态"
-                + "\n" + "case \"88\"://0x08 刷卡借车 cmd41"
-                + "\n" + " case \"8D\"://0x0D 还车未刷卡 cmd43"
-                + "\n" + "  case \"91\"://0x09 云端  cmd42";
+        String data = "case \"01\"://0x01 锁桩状态上报和时间同步"
+                + "\n" + "case \"02\"://0x02 锁桩充电申请与关闭"
+                + "\n" + "case \"03\"://0x03 锁桩停启用"
+                + "\n" + " case \"04\"://0x04 更新锁桩程序"
+                + "\n" + "  case \"05\"://0x05 站点下发充电许可"
+                + "\n" + "  case \"06\"://0x06 获取锁桩状态"
+                + "\n" + "  case \"0A\"://0x0A 锁桩还车请求"
+                + "\n" + "  case \"0B\"://0x0B 站点下发开锁指令，获取推车结果" +
+                "\n" + "  case \"0C\"://0x0C 开锁成功与否确认\n";
         tv.setText(data);
     }
 
@@ -63,7 +99,7 @@ public class MainActivity extends AppCompatActivity {
                 if (state == PosApi.COMM_STATUS_SUCCESS) {
                     tv.append("CAN 设置成功\n");
                 } else {
-                    tv.append("CAN 设置失败");
+                    tv.append("CAN 设置失败\n");
                 }
             }
 
@@ -92,15 +128,8 @@ public class MainActivity extends AppCompatActivity {
                 String protocol = cmd.substring(4, 6);
                 tv.append("车辆编号为：" + pileId + ",车辆请求为：" + protocol + "\n");
                 switch (protocol) {
-                    case "8E"://0x0E 请求时间 通了
-                        SimpleDateFormat yyMMddHHmmss = new SimpleDateFormat("yyMMddHHmmss");
-                        String src1 = pileId + "00CE" + yyMMddHHmmss.format(new Date());
-                        tv.append("传过去8E:   " + src1 + "\n");
-                        byte[] mCmd0E = Conversion.HexString2Bytes(src1);
-                        api.canCmd(0, mCmd0E, mCmd0E.length);
-                        break;
-                    case "8A"://0x0A 锁桩车辆状态上报
-//                        01 0D8A  02 00 01 01 0000
+                    case "81"://0x01 请求时间 通了
+                        //                        01 0D8A  02 00 01 01 0000
 //                            没有车辆信息
 //                            01078A是协议，00锁桩类型，
 //                              00锁桩状态，
@@ -110,50 +139,13 @@ public class MainActivity extends AppCompatActivity {
 //                        车状态6位
 //                        后面两位01是车桩号
 //                        010D8A020001010000005234E794 10
-                        tv.append("已收到8A，上报云端");
+                        SimpleDateFormat yyMMddHHmmss = new SimpleDateFormat("yyyyMMddHHmmss");
+                        String src1 = pileId + "00C1" + yyMMddHHmmss.format(new Date());
+                        tv.append("传过去C1:   " + src1 + "\n");
+                        byte[] mCmd0E = Conversion.HexString2Bytes(src1);
+                        api.canCmd(0, mCmd0E, mCmd0E.length);
                         break;
-                    case "88"://0x08 刷卡借车 cmd41
-//                        010D88  D0569B19
-//                      20卡类型 M1 08 银行卡20，28
-//                      01 锁桩状态 00没问题 01有问题 02停用
-//                        锁桩故障原因两位
-//	        0x01			// 	0x01-断网：表示该站点管理箱与锁桩之间通信链路不正常
-//   	        0x02			// 	0x02-锁止器异常
-//		    0x03			// 	0x03-读卡器异常
-//            0x04			// 	0x04-用户读卡器故障：0x04
-//	        0x05			// 	0x05-车辆读卡器故障：0x05
-//   		    0x07			//  0x07-读FLASH异常
-//		    0x09		    //	电量板故障
-//                              5234E794    82车类型普通车
-                        String result1 = cmd.substring(16, 18);
-                        tv.append("车量状态为" + result1 + "余额充足，准备借车\n");
-//                        01桩号 00C8协议  0064余额
-//                      借车成功00 失败01
-                        String src2 = pileId + "00C8" + "00" + "0064";
-                        tv.append("借车回复的指令为" + src2 + "\n");
-                        byte[] mCmd08 = Conversion.HexString2Bytes(src2);
-                        api.canCmd(0, mCmd08, mCmd08.length);
-                        break;
-                    case "8D"://0x0D 还车 cmd43
-//                        01088D 01    5234E794   82
-                        //                    前面的六位固定协议和桩号  0164余额 0001本次扣费
-                        String result = cmd.substring(6, 8);
-                        tv.append("还车结果为" + result + "返回了余额" + "\n");
-                        String src5 = pileId + "00CD" + "0164" + "0001";
-                        tv.append("还车回复的指令为" + src5 + "\n");
-                        byte[] mCmd0D = Conversion.HexString2Bytes(src5);
-                        api.canCmd(0, mCmd0D, mCmd0D.length);
-                        break;
-                    case "91":
-                        //云端借车回复 01029100 00表示成功，01表示失败
-                        String state = cmd.substring(8, 10);
-                        if (state.equals("00")) {
-                            tv.append("借车成功\n");
-                        } else {
-                            tv.append("借车失败" + state + "\n");
-                        }
-                        break;
-                    case "84":
+                    case "82"://0x02 锁桩充电申请与关闭
 //                        锁桩充电 02 0984 AD06BBA4车号 00车类型 00电量 01打开充电端口
                         String bikeId = cmd.substring(6, 14);
                         String data = cmd.substring(14, 18);
@@ -161,13 +153,46 @@ public class MainActivity extends AppCompatActivity {
                         String isOpen = cmd.substring(18, 20);
                         String response = null;
                         if (isOpen.equals("01")) {
-                            response = pileId + "00C4" + isOpen;
+                            response = pileId + "00C2" + isOpen;
                         } else if (isOpen.equals("00")) {
-                            response = pileId + "00C4" + isOpen;
+                            response = pileId + "00C2" + isOpen;
                         }
                         tv.append("充电回复" + response + "\n");
                         byte[] mCmdC4 = Conversion.HexString2Bytes(response);
                         api.canCmd(0, mCmdC4, mCmdC4.length);
+                        break;
+                    case "83"://0x03 锁桩停启用结果
+                        String isStart = cmd.substring(6, 8);
+//                            启用结果，00成功，01失败
+                        tv.append("锁桩停启用结果" + isStart + "\n");
+                        break;
+                    case "84"://0x04 更新锁桩程序
+                        break;
+                    case "85"://站点下发充电回复
+//                        当前充电状态00不充，01充
+                        //云端借车回复 01029100 00表示成功，01表示失败
+                        String state = cmd.substring(6, 8);
+                        tv.append("充电回复" + state + "\n");
+                        break;
+                    case "86":
+                        tv.append("获取锁装状态" + "\n");
+                        break;
+                    case "8A":
+//                        01088D 01    5234E794   82
+                        tv.append("还车结果为" + "\n");
+                        String src5 = pileId + "00CA" + "0001";
+                        tv.append("还车回复的指令为" + src5 + "\n");
+                        byte[] mCmd0D = Conversion.HexString2Bytes(src5);
+                        api.canCmd(0, mCmd0D, mCmd0D.length);
+                        break;
+                    case "8B":
+                        String state2 = cmd.substring(6, 8);
+                        tv.append("推车结果" + state2 + "\n");
+                        break;
+                    case "8C":
+//                        开锁成功与否确认，开锁成功结果00成功，01失败
+                        String state3 = cmd.substring(6, 8);
+                        tv.append("开锁结果" + state3 + "\n");
                         break;
                 }
             }
