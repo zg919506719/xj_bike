@@ -50,16 +50,16 @@ public class MainActivity extends AppCompatActivity {
         btn_stop.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                tv.append("停用03" + "\n");
+                tv.append("停用03：01000301" + "\n");
                 //        response = pileId + "0003" + isOpen;00启用，01停用
-                byte[] mCmdd1 = Conversion.HexString2Bytes("0100C0301");
+                byte[] mCmdd1 = Conversion.HexString2Bytes("01000301");
                 api.canCmd(0, mCmdd1, mCmdd1.length);
             }
         });
         btn_start.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                tv.append("启用03" + "\n");
+                tv.append("启用03：01000300" + "\n");
                 byte[] mCmdd1 = Conversion.HexString2Bytes("01000300");
                 api.canCmd(0, mCmdd1, mCmdd1.length);
             }
@@ -68,7 +68,7 @@ public class MainActivity extends AppCompatActivity {
         btn_battery.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                tv.append("充电05" + "\n");
+                tv.append("充电05：01000501" + "\n");
                 byte[] mCmdd1 = Conversion.HexString2Bytes("01000501");
                 api.canCmd(0, mCmdd1, mCmdd1.length);
             }
