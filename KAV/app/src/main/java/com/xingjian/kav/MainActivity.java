@@ -15,7 +15,7 @@ import java.util.Date;
 public class MainActivity extends AppCompatActivity {
     private PosApi api;
     private TextView tv;
-    private Button btn_borrow, btn_send,btn_stop,btn_start,btn_battery;
+    private Button btn_borrow, btn_send, btn_stop, btn_start, btn_battery;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -27,14 +27,11 @@ public class MainActivity extends AppCompatActivity {
         btn_stop = (Button) findViewById(R.id.btn_stop);
         btn_start = (Button) findViewById(R.id.btn_start);
         btn_battery = (Button) findViewById(R.id.btn_battery);
-        //04锁桩版本更新
-
-
         btn_borrow.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                tv.append("开锁CB" + "\n");
-                byte[] mCmdd1 = Conversion.HexString2Bytes("0100CB");
+                tv.append("开锁0B" + "\n");
+                byte[] mCmdd1 = Conversion.HexString2Bytes("01000B");
                 api.canCmd(0, mCmdd1, mCmdd1.length);
             }
         });
@@ -43,8 +40,8 @@ public class MainActivity extends AppCompatActivity {
             public void onClick(View view) {
 //                获取锁桩状态
                 SimpleDateFormat yyMMddHHmmss = new SimpleDateFormat("yyyyMMddHHmmss");
-                String src1 = "0100C6" + yyMMddHHmmss.format(new Date());
-                tv.append("获取锁桩状态C6:   " + src1 + "\n");
+                String src1 = "010006" + yyMMddHHmmss.format(new Date());
+                tv.append("获取锁桩状态06:   " + src1 + "\n");
                 byte[] mCmdet = Conversion.HexString2Bytes(src1);
                 api.canCmd(0, mCmdet, mCmdet.length);
             }
@@ -53,17 +50,17 @@ public class MainActivity extends AppCompatActivity {
         btn_stop.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                tv.append("停用C3" + "\n");
+                tv.append("停用03" + "\n");
                 //        response = pileId + "0003" + isOpen;00启用，01停用
-                byte[] mCmdd1 = Conversion.HexString2Bytes("0100C301");
+                byte[] mCmdd1 = Conversion.HexString2Bytes("0100C0301");
                 api.canCmd(0, mCmdd1, mCmdd1.length);
             }
         });
         btn_start.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                tv.append("启用C3" + "\n");
-                byte[] mCmdd1 = Conversion.HexString2Bytes("0100C300");
+                tv.append("启用03" + "\n");
+                byte[] mCmdd1 = Conversion.HexString2Bytes("01000300");
                 api.canCmd(0, mCmdd1, mCmdd1.length);
             }
         });
@@ -71,8 +68,8 @@ public class MainActivity extends AppCompatActivity {
         btn_battery.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                tv.append("充电C5" + "\n");
-                byte[] mCmdd1 = Conversion.HexString2Bytes("0100C501");
+                tv.append("充电05" + "\n");
+                byte[] mCmdd1 = Conversion.HexString2Bytes("01000501");
                 api.canCmd(0, mCmdd1, mCmdd1.length);
             }
         });
@@ -129,7 +126,7 @@ public class MainActivity extends AppCompatActivity {
                 tv.append("车辆编号为：" + pileId + ",车辆请求为：" + protocol + "\n");
                 switch (protocol) {
                     case "81"://0x01 请求时间 通了
-                        //                        01 0D8A  02 00 01 01 0000
+                        //    01 0D8A  02 00 01 01 0000
 //                            没有车辆信息
 //                            01078A是协议，00锁桩类型，
 //                              00锁桩状态，
@@ -145,7 +142,7 @@ public class MainActivity extends AppCompatActivity {
                         byte[] mCmd0E = Conversion.HexString2Bytes(src1);
                         api.canCmd(0, mCmd0E, mCmd0E.length);
                         break;
-                    case "82"://0x02 锁桩充电申请与关闭
+                    case "82"://0x02 锁桩充电申请与关闭a``
 //                        锁桩充电 02 0984 AD06BBA4车号 00车类型 00电量 01打开充电端口
                         String bikeId = cmd.substring(6, 14);
                         String data = cmd.substring(14, 18);
