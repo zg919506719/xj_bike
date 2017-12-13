@@ -1,21 +1,28 @@
 package com.xingjian.kav;
 
 import android.os.Bundle;
+import android.os.Handler;
+import android.os.Message;
 import android.posapi.Conversion;
 import android.posapi.PosApi;
 import android.support.v7.app.AppCompatActivity;
+import android.util.Log;
 import android.view.View;
 import android.widget.Button;
-import android.widget.EditText;
 import android.widget.TextView;
+import android.widget.Toast;
 
+import java.io.ByteArrayOutputStream;
+import java.io.File;
+import java.io.IOException;
+import java.io.InputStream;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 
 public class MainActivity extends AppCompatActivity {
     private PosApi api;
     private TextView tv;
-    private Button btn_borrow, btn_send, btn_stop, btn_start, btn_battery;
+    private Button btn_borrow, btn_send, btn_stop, btn_start, btn_battery, btn_battery_close, btn_update;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -27,11 +34,21 @@ public class MainActivity extends AppCompatActivity {
         btn_stop = (Button) findViewById(R.id.btn_stop);
         btn_start = (Button) findViewById(R.id.btn_start);
         btn_battery = (Button) findViewById(R.id.btn_battery);
+        btn_battery_close = (Button) findViewById(R.id.btn_battery_close);
+        btn_update = (Button) findViewById(R.id.btn_update);
+        btn_update.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                tv.append("更新：02020405" + "\n");
+                byte[] mCmdd1 = Conversion.HexString2Bytes("02020405");
+                api.canCmd(0, mCmdd1, mCmdd1.length);
+            }
+        });
         btn_borrow.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 tv.append("开锁0B" + "\n");
-                byte[] mCmdd1 = Conversion.HexString2Bytes("01000B");
+                byte[] mCmdd1 = Conversion.HexString2Bytes("02000B");
                 api.canCmd(0, mCmdd1, mCmdd1.length);
             }
         });
@@ -40,7 +57,7 @@ public class MainActivity extends AppCompatActivity {
             public void onClick(View view) {
 //                获取锁桩状态
                 SimpleDateFormat yyMMddHHmmss = new SimpleDateFormat("yyyyMMddHHmmss");
-                String src1 = "010006" + yyMMddHHmmss.format(new Date());
+                String src1 = "020006" + yyMMddHHmmss.format(new Date());
                 tv.append("获取锁桩状态06:   " + src1 + "\n");
                 byte[] mCmdet = Conversion.HexString2Bytes(src1);
                 api.canCmd(0, mCmdet, mCmdet.length);
@@ -52,7 +69,7 @@ public class MainActivity extends AppCompatActivity {
             public void onClick(View view) {
                 tv.append("停用03：01000301" + "\n");
                 //        response = pileId + "0003" + isOpen;00启用，01停用
-                byte[] mCmdd1 = Conversion.HexString2Bytes("01000301");
+                byte[] mCmdd1 = Conversion.HexString2Bytes("02000301");
                 api.canCmd(0, mCmdd1, mCmdd1.length);
             }
         });
@@ -60,7 +77,7 @@ public class MainActivity extends AppCompatActivity {
             @Override
             public void onClick(View view) {
                 tv.append("启用03：01000300" + "\n");
-                byte[] mCmdd1 = Conversion.HexString2Bytes("01000300");
+                byte[] mCmdd1 = Conversion.HexString2Bytes("02000300");
                 api.canCmd(0, mCmdd1, mCmdd1.length);
             }
         });
@@ -69,7 +86,16 @@ public class MainActivity extends AppCompatActivity {
             @Override
             public void onClick(View view) {
                 tv.append("充电05：01000501" + "\n");
-                byte[] mCmdd1 = Conversion.HexString2Bytes("01000501");
+                byte[] mCmdd1 = Conversion.HexString2Bytes("02000501");
+                api.canCmd(0, mCmdd1, mCmdd1.length);
+            }
+        });
+        btn_battery_close.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+//                File file=new File("android.resource://com.xingjian.xjmtkpad/" + R.raw.update);
+                tv.append("充电05：01000500" + "\n");
+                byte[] mCmdd1 = Conversion.HexString2Bytes("02000500");
                 api.canCmd(0, mCmdd1, mCmdd1.length);
             }
         });
@@ -87,7 +113,9 @@ public class MainActivity extends AppCompatActivity {
                 + "\n" + "  case \"0B\"://0x0B 站点下发开锁指令，获取推车结果" +
                 "\n" + "  case \"0C\"://0x0C 开锁成功与否确认\n";
         tv.setText(data);
+        test();
     }
+
 
     private void setCan() {
         api.setOnCanEventListener(new PosApi.OnCanEventListener() {
@@ -163,8 +191,6 @@ public class MainActivity extends AppCompatActivity {
 //                            启用结果，00成功，01失败
                         tv.append("锁桩停启用结果" + isStart + "\n");
                         break;
-                    case "84"://0x04 更新锁桩程序
-                        break;
                     case "85"://站点下发充电回复
 //                        当前充电状态00不充，01充
                         //云端借车回复 01029100 00表示成功，01表示失败
@@ -191,6 +217,30 @@ public class MainActivity extends AppCompatActivity {
                         String state3 = cmd.substring(6, 8);
                         tv.append("开锁结果" + state3 + "\n");
                         break;
+                    case "84":
+//                        02028401
+                        String state4 = cmd.substring(6, 8);
+                        switch (state4) {
+                            case "01":
+//                                开始更新
+                                handler.sendEmptyMessage(0);
+                                break;
+                            case "02":
+                                //继续发
+                                handler.sendEmptyMessage(1);
+                                break;
+                            case "03":
+                                tv.append("更新成功" + "\n");
+                                break;
+                            case "04":
+                                tv.append("更新失败" + "\n");
+                                break;
+                            case "05":
+                                //确认版本
+                                byte[] mCmdd1 = Conversion.HexString2Bytes("020504CCCCCCCC");
+                                api.canCmd(0, mCmdd1, mCmdd1.length);
+                                break;
+                        }
                 }
             }
 
@@ -205,6 +255,60 @@ public class MainActivity extends AppCompatActivity {
         });
     }
 
+    //                while(){	//send
+//                    id+len+04+256bt+CRCH+CRCL	//data crc是对整段数据包的数据的描述
+//                    id+len+04+020202	//recv and write flash is success
+//                }
+//                id+len+04+BBBBBBBB	//end
+    private Handler handler = new Handler() ;
+    Runnable r = new Runnable() {
+        @Override
+        public void run() {
+            thisTime++;
+            testIs();
+            handler.postDelayed(r,2000);
+        }
+    };
+    private boolean isFirst = true;
+    private int max = 0;
+    private int thisTime = 0;
+    private int count = 0;
+    private void test(){handler.postDelayed(r,1000);}
+    private void testIs() {
+        InputStream is = getResources().openRawResource(R.raw.pile);
+        //确认版本
+        ByteArrayOutputStream outSteam = new ByteArrayOutputStream();
+        byte[] buffer = new byte[256];
+        try {
+            int len = -1;
+            while ((len = is.read(buffer)) != -1) {
+                count++;
+                if (thisTime == count&&thisTime<max) {
+                    outSteam.write(buffer, 0, len);
+                }
+                if (isFirst) {
+                    max++;
+                }
+            }
+            count = 0;
+            isFirst = false;
+            outSteam.close();
+            is.close();
+            byte[] bytes = outSteam.toByteArray();
+            int length = bytes.length;
+            Log.i("haha", "length: " + length+"thisTime:"+thisTime+"max:"+max);
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
+
+    //java 合并两个byte数组
+    public static byte[] byteMerger(byte[] byte_1, byte[] byte_2) {
+        byte[] byte_3 = new byte[byte_1.length + byte_2.length];
+        System.arraycopy(byte_1, 0, byte_3, 0, byte_1.length);
+        System.arraycopy(byte_2, 0, byte_3, byte_1.length, byte_2.length);
+        return byte_3;
+    }
 
     private void deviceInit() {
         //        设备初始化
