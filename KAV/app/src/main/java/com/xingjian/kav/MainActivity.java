@@ -1,5 +1,6 @@
 package com.xingjian.kav;
 
+import android.net.Uri;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
@@ -14,9 +15,12 @@ import android.widget.Toast;
 
 import java.io.ByteArrayOutputStream;
 import java.io.File;
+import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.InputStream;
+import java.io.RandomAccessFile;
 import java.text.SimpleDateFormat;
+import java.util.Arrays;
 import java.util.Date;
 
 public class MainActivity extends AppCompatActivity {
@@ -260,43 +264,49 @@ public class MainActivity extends AppCompatActivity {
 //                    id+len+04+020202	//recv and write flash is success
 //                }
 //                id+len+04+BBBBBBBB	//end
-    private Handler handler = new Handler() ;
+    private Handler handler = new Handler();
     Runnable r = new Runnable() {
         @Override
         public void run() {
-            thisTime++;
             testIs();
-            handler.postDelayed(r,2000);
         }
     };
     private boolean isFirst = true;
-    private int max = 0;
+    long max = 0;
     private int thisTime = 0;
-    private int count = 0;
-    private void test(){handler.postDelayed(r,1000);}
+
+        private int count = 0;
+    private void test() {
+        handler.postDelayed(r, 1000);
+    }
+
     private void testIs() {
-        InputStream is = getResources().openRawResource(R.raw.pile);
-        //确认版本
-        ByteArrayOutputStream outSteam = new ByteArrayOutputStream();
-        byte[] buffer = new byte[256];
+        thisTime++;
         try {
-            int len = -1;
-            while ((len = is.read(buffer)) != -1) {
-                count++;
-                if (thisTime == count&&thisTime<max) {
-                    outSteam.write(buffer, 0, len);
-                }
-                if (isFirst) {
-                    max++;
-                }
+            String path = "/storage/emulated/0/download/pile.bin";
+            File file = new File(path);
+            RandomAccessFile raf = new RandomAccessFile(file, "r");
+            long max = raf.length();
+            byte[] buffer = new byte[20480];
+            raf.seek(20480 * (thisTime-1));
+            int length=0;
+            if ((length =raf.read(buffer)) != -1) {
+                byte b = buffer[0];
+                Log.i("haha", "testIs: "+b);
             }
-            count = 0;
-            isFirst = false;
-            outSteam.close();
-            is.close();
-            byte[] bytes = outSteam.toByteArray();
-            int length = bytes.length;
-            Log.i("haha", "length: " + length+"thisTime:"+thisTime+"max:"+max);
+            if (length<buffer.length){
+                handler.removeCallbacks(r);
+                byte[] bytes = Arrays.copyOfRange(buffer,0,length);
+                byte b = bytes[0];
+                Log.i("haha", "last: "+b);
+            }else {
+                handler.postDelayed(r, 2000);
+            }
+            count+=length;
+            Log.i("haha", "length: " + length + "thisTime:" + thisTime + "max:" + max
+            +"count"+count);
+        } catch (FileNotFoundException e) {
+            e.printStackTrace();
         } catch (IOException e) {
             e.printStackTrace();
         }
