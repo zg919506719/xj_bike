@@ -26,7 +26,7 @@ import java.util.Date;
 public class MainActivity extends AppCompatActivity {
     private PosApi api;
     private TextView tv;
-    private Button btn_borrow, btn_send, btn_stop, btn_start, btn_battery, btn_battery_close, btn_update;
+    private Button btn_borrow, btn_send, btn_stop, btn_start, btn_battery, btn_battery_close, btn_update, btn_update1, btn_update2;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -40,6 +40,26 @@ public class MainActivity extends AppCompatActivity {
         btn_battery = (Button) findViewById(R.id.btn_battery);
         btn_battery_close = (Button) findViewById(R.id.btn_battery_close);
         btn_update = (Button) findViewById(R.id.btn_update);
+        btn_update1 = (Button) findViewById(R.id.btn_update1);
+        btn_update2 = (Button) findViewById(R.id.btn_update2);
+        btn_update1.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                byte[] mCmdd1 = Conversion.HexString2Bytes("0204CCCCCCCC");
+                api.canCmd(0, mCmdd1, mCmdd1.length);
+                handler.sendEmptyMessage(1);
+                tv.append("更新:0204CCCCCCCC" + "\n");
+            }
+        });
+        btn_update2.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                byte[] mCmdd1 = Conversion.HexString2Bytes("02CCCCCCCC");
+                api.canCmd(0, mCmdd1, mCmdd1.length);
+                handler.sendEmptyMessage(1);
+                tv.append("更新:02CCCCCCCC" + "\n");
+            }
+        });
         btn_update.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -117,7 +137,6 @@ public class MainActivity extends AppCompatActivity {
                 + "\n" + "  case \"0B\"://0x0B 站点下发开锁指令，获取推车结果" +
                 "\n" + "  case \"0C\"://0x0C 开锁成功与否确认\n";
         tv.setText(data);
-        test();
     }
 
 
@@ -227,22 +246,31 @@ public class MainActivity extends AppCompatActivity {
                         switch (state4) {
                             case "01":
 //                                开始更新
-                                handler.sendEmptyMessage(0);
+                                handler.sendEmptyMessage(2);
                                 break;
                             case "02":
                                 //继续发
-                                handler.sendEmptyMessage(1);
+                                handler.sendEmptyMessage(3);
                                 break;
                             case "03":
                                 tv.append("更新成功" + "\n");
                                 break;
                             case "04":
                                 tv.append("更新失败" + "\n");
+                                handler.sendEmptyMessage(4);
                                 break;
                             case "05":
-                                //确认版本
-                                byte[] mCmdd1 = Conversion.HexString2Bytes("020504CCCCCCCC");
-                                api.canCmd(0, mCmdd1, mCmdd1.length);
+//                                handler.postDelayed(new Runnable() {
+//                                    @Override
+//                                    public void run() {
+//                                        //确认版本
+//                                        byte[] mCmdd1 = Conversion.HexString2Bytes("020504CCCCCCCC");
+//                                        api.canCmd(0, mCmdd1, mCmdd1.length);
+//                                        handler.sendEmptyMessage(1);
+//                                        tv.append("更新开始" + "\n");
+//                                    }
+//                                },10000);
+
                                 break;
                         }
                 }
@@ -264,56 +292,91 @@ public class MainActivity extends AppCompatActivity {
 //                    id+len+04+020202	//recv and write flash is success
 //                }
 //                id+len+04+BBBBBBBB	//end
-    private Handler handler = new Handler();
-    Runnable r = new Runnable() {
+    private RandomAccessFile raf;
+    private Handler handler = new Handler() {
         @Override
-        public void run() {
-            testIs();
+        public void handleMessage(Message msg) {
+            super.handleMessage(msg);
+            try {
+                switch (msg.what) {
+                    case 1:
+//                        String path = "/storage/emulated/0/download/pile.bin";
+//                        File file = new File(path);
+//                        raf = new RandomAccessFile(file, "r");
+//                        max = raf.length();
+                        break;
+                    case 2:
+                    case 3:
+                        String path = "/storage/emulated/0/download/update.txt";
+                        File file = new File(path);
+                        raf = new RandomAccessFile(file, "r");
+                        max = raf.length();
+                        thisTime++;
+//                        byte[] end = Conversion.HexString2Bytes("CRCHCRCL");
+                        byte[] head = Conversion.HexString2Bytes("0204");
+
+                        byte[] buffer = new byte[256];
+                        raf.seek(256 * (thisTime - 1));
+                        int length = 0;
+                        if ((length = raf.read(buffer)) != -1) {
+                            if (length < buffer.length) {
+                                byte[] bytes = Arrays.copyOfRange(buffer, 0, length);
+                                byte[] end = Conversion.HexString2Bytes(getCRC(bytes));
+                                byte[] send = byteMerger(head, byteMerger(bytes, end));
+                                api.canCmd(0, send, send.length);
+                                tv.append("更新最后一包，大小为：" + length + "\n");
+                                raf.close();
+                                break;
+                            } else {
+                                byte[] end = Conversion.HexString2Bytes(getCRC(buffer));
+                                byte[] send = byteMerger(head, byteMerger(buffer, end));
+                                api.canCmd(0, send, send.length);
+                                for (int i = 0; i < send.length; i++) {
+                                    tv.append(send[i] + "");
+                                }
+                                tv.append("\n更新第" + thisTime + "次，大小为：" + length + "\n");
+                            }
+                        } else {
+                            byte[] mCmdBB = Conversion.HexString2Bytes("020504BBBBBBBB");
+                            api.canCmd(0, mCmdBB, mCmdBB.length);
+                            tv.append("020504BBBBBBBB" + "\n");
+                        }
+                    case 4:
+                        raf.close();
+                        break;
+                }
+            } catch (FileNotFoundException e1) {
+                e1.printStackTrace();
+            } catch (IOException e1) {
+                e1.printStackTrace();
+            }
         }
     };
-    private boolean isFirst = true;
+
     long max = 0;
     private int thisTime = 0;
 
-        private int count = 0;
-    private void test() {
-        handler.postDelayed(r, 1000);
+    public static String getCRC(byte[] bytes) {
+        int CRC = 0x0000ffff;
+        int POLYNOMIAL = 0x0000a001;
+        int i, j;
+        for (i = 0; i < bytes.length; i++) {
+            CRC ^= ((int) bytes[i] & 0x000000ff);
+            for (j = 0; j < 8; j++) {
+                if ((CRC & 0x00000001) != 0) {
+                    CRC >>= 1;
+                    CRC ^= POLYNOMIAL;
+                } else {
+                    CRC >>= 1;
+                }
+            }
+        }
+        return Integer.toHexString(CRC);
     }
 
-    private void testIs() {
-        thisTime++;
-        try {
-            String path = "/storage/emulated/0/download/pile.bin";
-            File file = new File(path);
-            RandomAccessFile raf = new RandomAccessFile(file, "r");
-            long max = raf.length();
-            byte[] buffer = new byte[20480];
-            raf.seek(20480 * (thisTime-1));
-            int length=0;
-            if ((length =raf.read(buffer)) != -1) {
-                byte b = buffer[0];
-                Log.i("haha", "testIs: "+b);
-            }
-            if (length<buffer.length){
-                handler.removeCallbacks(r);
-                byte[] bytes = Arrays.copyOfRange(buffer,0,length);
-                byte b = bytes[0];
-                Log.i("haha", "last: "+b);
-            }else {
-                handler.postDelayed(r, 2000);
-            }
-            count+=length;
-            Log.i("haha", "length: " + length + "thisTime:" + thisTime + "max:" + max
-            +"count"+count);
-        } catch (FileNotFoundException e) {
-            e.printStackTrace();
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-    }
 
     //java 合并两个byte数组
-    public static byte[] byteMerger(byte[] byte_1, byte[] byte_2) {
+    public byte[] byteMerger(byte[] byte_1, byte[] byte_2) {
         byte[] byte_3 = new byte[byte_1.length + byte_2.length];
         System.arraycopy(byte_1, 0, byte_3, 0, byte_1.length);
         System.arraycopy(byte_2, 0, byte_3, byte_1.length, byte_2.length);

@@ -41,7 +41,16 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="远程更新"/>
-
+    <Button
+        android:id="@+id/btn_update1"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="远程更新去掉len"/>
+    <Button
+        android:id="@+id/btn_update2"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="远程更新去掉len04"/>
 </LinearLayout>
 
     <ScrollView
