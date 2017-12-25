@@ -58,10 +58,10 @@ public class MainActivity extends AppCompatActivity {
         btn_update2.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                byte[] mCmdd1 = Conversion.HexString2Bytes("02CCCCCCCC");
+                byte[] mCmdd1 = Conversion.HexString2Bytes("0204CCCCCCCC");
                 api.canCmd(0, mCmdd1, mCmdd1.length);
-                handler.sendEmptyMessage(1);
-                tv.append("更新:02CCCCCCCC" + "\n");
+                tv.append("更新:0204CCCCCCCC" + "\n");
+
             }
         });
         btn_update.setOnClickListener(new View.OnClickListener() {
@@ -228,6 +228,14 @@ public class MainActivity extends AppCompatActivity {
                     case "86":
                         tv.append("获取锁装状态" + "\n");
                         break;
+                    case "87":
+                        String state9 = cmd.substring(6, 30);
+                        String src7="000DC7"+state9+"02";
+                        tv.append("87:" +src7+ "\n");
+                        byte[] mCmd97 = Conversion.HexString2Bytes(src7);
+                        api.canCmd(0, mCmd97, mCmd97.length);
+                        break;
+
                     case "8A":
 //                        01088D 01    5234E794   82
                         tv.append("还车结果为" + "\n");
@@ -251,18 +259,18 @@ public class MainActivity extends AppCompatActivity {
                         switch (state4) {
                             case "01":
 //                                开始更新
-                                handler.sendEmptyMessage(2);
+//                                handler.sendEmptyMessage(2);
                                 break;
-                            case "02":
-                                //继续发
-                                handler.sendEmptyMessage(3);
-                                break;
+//                            case "02":
+//                                //继续发
+//                                handler.sendEmptyMessage(3);
+//                                break;
                             case "03":
                                 tv.append("更新成功" + "\n");
                                 break;
                             case "04":
                                 tv.append("更新失败" + "\n");
-                                handler.sendEmptyMessage(4);
+//                                handler.sendEmptyMessage(4);
                                 break;
                             case "05":
 //                                handler.postDelayed(new Runnable() {
@@ -313,40 +321,6 @@ public class MainActivity extends AppCompatActivity {
                         break;
                     case 2:
                     case 3:
-                        thisTime++;
-//                        byte[] end = Conversion.HexString2Bytes("CRCHCRCL");
-                        byte[] head = Conversion.HexString2Bytes("0204");
-
-                        byte[] buffer = new byte[7];
-                        raf.seek(7 * (thisTime - 1));
-                        int length = 0;
-                        if ((length = raf.read(buffer)) != -1) {
-                            if (length < buffer.length) {
-                                byte[] bytes = Arrays.copyOfRange(buffer, 0, length);
-//                                byte[] end = Conversion.HexString2Bytes(getCRC(bytes));
-                                byte[] send = byteMerger(head, bytes);
-//                                byte[] send = byteMerger(head, byteMerger(bytes, end));
-                                api.canCmd(0, send, send.length);
-                                tv.append("更新最后一包，大小为：" + length + "\n");
-                                raf.close();
-                                break;
-                            } else {
-//                                byte[] end = Conversion.HexString2Bytes(getCRC(buffer));
-                                String data = getStringByte();
-//                                byte[] send = byteMerger(head, buffer);
-//                                byte[] send = byteMerger(head, byteMerger(buffer, end));
-                                byte[] send = Conversion.HexString2Bytes("0204"+data);
-                                api.canCmd(0, send, send.length);
-                                for (int i = 0; i < send.length; i++) {
-                                    tv.append(send[i] + "");
-                                }
-                                tv.append("\n更新第" + thisTime + "次，大小为：" + length + "\n");
-                            }
-                        } else {
-                            byte[] mCmdBB = Conversion.HexString2Bytes("020504BBBBBBBB");
-                            api.canCmd(0, mCmdBB, mCmdBB.length);
-                            tv.append("020504BBBBBBBB" + "\n");
-                        }
                     case 4:
                         raf.close();
                         break;
@@ -358,13 +332,13 @@ public class MainActivity extends AppCompatActivity {
             }
         }
     };
-private Handler handler1=new Handler(){
-    @Override
-    public void handleMessage(Message msg) {
-        super.handleMessage(msg);
-        switch (msg.what){
-            case 2:
-               getStringByte();
+    private Handler handler1 = new Handler() {
+        @Override
+        public void handleMessage(Message msg) {
+            super.handleMessage(msg);
+            switch (msg.what) {
+                case 2:
+                    getStringByte();
 //                                byte[] send = byteMerger(head, buffer);
 //                                byte[] send = byteMerger(head, byteMerger(buffer, end));
 
@@ -372,39 +346,65 @@ private Handler handler1=new Handler(){
 //                    tv.append(send[i] + "");
 //                }
 //                tv.append("\n更新第" + thisTime + "次"  + "\n");
-                break;
-        }
-    }
-};
-    private String getStringByte()  {
-        FileInputStream in = null;
-        try {
-            in = new FileInputStream("/storage/emulated/0/download/update.txt");
-            InputStreamReader isr = new InputStreamReader(in, "utf-8");// 默认项目编码，文件编码
-            char[] buf = new char[64];
-            int a;
-            // 批量读取从第0个位置放入buf字符数组中的字符
-            while ((a = isr.read(buf, 0, buf.length)) != -1) {
-                String s = new String(buf, 0, a);
-//                String src = "0204" + s;
-                StringBuffer sb=new StringBuffer();
-                sb.append("0204");
-                sb.append(s);
-                String src = sb.toString();
-                tv.append("\n包:" +src + "\n");
-                byte[] send = Conversion.HexString2Bytes(src);
-                api.canCmd(0, send, send.length);
-                return s;
+                    break;
             }
-            isr.close();
-        } catch (FileNotFoundException e) {
-            e.printStackTrace();
-        } catch (UnsupportedEncodingException e) {
-            e.printStackTrace();
-        } catch (IOException e) {
-            e.printStackTrace();
         }
-        return null;
+    };
+    Runnable r = new Runnable() {
+        @Override
+        public void run() {
+            String path = "/storage/emulated/0/download/update.txt";
+            File file = new File(path);
+            try {
+//                thisTime++;
+                raf = new RandomAccessFile(file, "r");
+                max = raf.length();
+                byte[] buffer = new byte[128];
+                int length;
+//                raf.seek(8 * (thisTime - 1));
+                while ((length = raf.read(buffer)) != -1) {
+                    if (length < buffer.length) {
+                        String s = new String(buffer, 0, length);
+                        StringBuffer sb = new StringBuffer();
+                        sb.append("0204");
+                        sb.append(s);
+                        for (int i = 0; i < buffer.length - length; i++) {
+                            sb.append("F");
+                        }
+                        String src = sb.toString();
+                        tv.append("\n包:" + src + "次数：" + thisTime + "\n");
+                        byte[] send = Conversion.HexString2Bytes(src);
+                        api.canCmd(0, send, send.length);
+                    } else {
+                        String s = new String(buffer, 0, length);
+                        StringBuffer sb = new StringBuffer();
+                        sb.append("0204");
+                        sb.append(s);
+                        String src = sb.toString();
+                        tv.append("\n包:" + src + "次数：" + thisTime + "\n");
+                        byte[] send = Conversion.HexString2Bytes(src);
+                        api.canCmd(0, send, send.length);
+                    }
+                }
+                String end = "0204BBBBBBBB";
+                byte[] cmdEnd = Conversion.HexString2Bytes(end);
+                api.canCmd(0, cmdEnd, cmdEnd.length);
+            } catch (FileNotFoundException e) {
+                e.printStackTrace();
+            } catch (IOException e) {
+                e.printStackTrace();
+            } finally {
+                try {
+                    raf.close();
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
+            }
+        }
+    };
+
+    private void getStringByte() {
+        handler1.postDelayed(r, 100);
     }
 
     long max = 0;
